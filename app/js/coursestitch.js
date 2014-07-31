@@ -16,6 +16,8 @@ value('map', {
         url: "http://learn.code.org/hoc/1",
         image: "http://learn.code.org/blockly/media/skins/birds/small_static_avatar.png",
         summary: "Can you help me to catch the naughty pig? Stack a couple of \"move forward\" blocks together and press \"Run\" to help me get there.",
+        teaches: ["visual programming"],
+        requires: ["reading"],
     }],
 }).
 controller('mapsCtrl', function($scope, maps) {
@@ -24,4 +26,5 @@ controller('mapsCtrl', function($scope, maps) {
 controller('viewerCtrl', function($scope, map) {
     $scope.map = map;
     $scope.resource = map.resources[0];
+    $scope.tags = ["teaches", "requires"];
 });
