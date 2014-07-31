@@ -1,4 +1,4 @@
-angular.module('coursestitch', ['angularParse']).
+angular.module('coursestitch', ['ngRoute', 'angularParse']).
 
 value('map', {
     title: "Learn to program",
@@ -13,6 +13,24 @@ value('map', {
     }],
 }).
 
+config(function($routeProvider, $locationProvider) {
+    $routeProvider
+    .when('/', {
+        templateUrl: 'templates/home.html',
+    })
+    .when('/maps', {
+        templateUrl: 'templates/maps.html',
+        controller: 'MapsCtrl',
+    })
+    .when('/map', {
+        templateUrl: 'templates/map.html',
+        controller: 'ViewerCtrl',
+    });
+
+    $locationProvider
+        .html5Mode(false)
+        .hashPrefix('!');
+}).
 config(function() {
     var parseKeys = {
         app: 'QrE6nn4lKuwE9Mon6CcxH7nLQa6eScKwBgqh5oTH',
@@ -22,7 +40,7 @@ config(function() {
     Parse.initialize(parseKeys.app, parseKeys.js);
 }).
 
-controller('mapsCtrl', function($scope, parseQuery) {
+controller('MapsCtrl', function($scope, parseQuery) {
     parseQuery.new('Map')
         .find()
     .then(function(maps) {
@@ -30,7 +48,7 @@ controller('mapsCtrl', function($scope, parseQuery) {
         $scope.$apply();
     });
 }).
-controller('viewerCtrl', function($scope, map) {
+controller('ViewerCtrl', function($scope, map) {
     $scope.map = map;
     $scope.resource = map.resources[0];
     $scope.tags = ["teaches", "requires"];
