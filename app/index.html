@@ -3,6 +3,10 @@
     <head>
         <title>course stitch</title>
 
+        <!-- Bootstrap and Flat-UI Styling -->
+        <link href="lib/Flat-UI/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="lib/Flat-UI/css/flat-ui.css" rel="stylesheet">
+
         <!-- Angular JavaScript -->
         <script src="lib/angular/angular.js"></script>
         <script src="lib/angular-route/angular-route.js"></script>
@@ -11,7 +15,7 @@
         <script src="js/coursestitch.js"></script>
         <!-- endbuild -->
     </head>
-    <body>
+    <body class="container">
         <ng-include src="'templates/header.html'"></ng-include>
         <h1 ng-bind="'stitch '+x"></h1>
         <input ng-model="x">
