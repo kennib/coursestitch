@@ -1,13 +1,5 @@
-angular.module('coursestitch', []).
-value('maps', [{
-    title: "Learn to Program",
-}, {
-    title: "Program an Arduino",
-}, {
-    title: "Create a website",
-}, {
-    title: "Make an App",
-}]).
+angular.module('coursestitch', ['angularParse']).
+
 value('map', {
     title: "Learn to program",
     resources: [{
@@ -20,8 +12,23 @@ value('map', {
         requires: ["reading"],
     }],
 }).
-controller('mapsCtrl', function($scope, maps) {
-    $scope.maps = maps;
+
+config(function() {
+    var parseKeys = {
+        app: 'QrE6nn4lKuwE9Mon6CcxH7nLQa6eScKwBgqh5oTH',
+        js: 'NO1PZLeyugXkKDfDPuL8wAINf0356iTWiCVaTfGJ',
+    };
+
+    Parse.initialize(parseKeys.app, parseKeys.js);
+}).
+
+controller('mapsCtrl', function($scope, parseQuery) {
+    parseQuery.new('Map')
+        .find()
+    .then(function(maps) {
+        $scope.maps = maps.map(function(o) { return o.attributes; });
+        $scope.$apply();
+    });
 }).
 controller('viewerCtrl', function($scope, map) {
     $scope.map = map;
