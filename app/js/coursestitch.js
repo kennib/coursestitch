@@ -63,6 +63,25 @@ service('getConcept', function(parseQuery) {
     };
 }).
 
+controller('LoginCtrl', function($scope) {
+    if (Parse.User.current())
+        $scope.loginStatus = 'logged in';
+    else
+        $scope.loginStatus = 'login needed';
+
+    $scope.login = function() {
+        Parse.User.logIn($scope.email, $scope.password)
+        .then(function(user) {
+            $scope.loginStatus = 'success';
+        })
+        .fail(function(error) {
+            $scope.loginStatus = error.message;
+        })
+        .always(function() {
+            $scope.$apply();
+        });
+    };
+}).
 controller('MapsCtrl', function($scope, parseQuery) {
     parseQuery.new('Map')
         .find()
