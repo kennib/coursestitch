@@ -3,18 +3,18 @@ angular.module('coursestitch', ['ngRoute', 'angularParse']).
 config(function($routeProvider, $locationProvider) {
     $routeProvider
     .when('/', {
-        templateUrl: 'templates/home.html',
+        templateUrl: '/templates/home.html',
     })
     .when('/maps', {
-        templateUrl: 'templates/maps.html',
+        templateUrl: '/templates/maps.html',
         controller: 'MapsCtrl',
     })
     .when('/map/:mapTitle', {
-        templateUrl: 'templates/map.html',
+        templateUrl: '/templates/map.html',
         controller: 'MapCtrl',
     })
     .when('/map/:mapTitle/resource/:resourceTitle/:resourceSubtitle', {
-        templateUrl: 'templates/map.html',
+        templateUrl: '/templates/map.html',
         controller: 'MapCtrl',
     });
 
