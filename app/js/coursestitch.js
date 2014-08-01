@@ -1,18 +1,5 @@
 angular.module('coursestitch', ['ngRoute', 'angularParse']).
 
-value('map', {
-    title: "Learn to program",
-    resources: [{
-        title: "Angry Birds Hour of Code",
-        subtitle: "Level 1",
-        url: "http://learn.code.org/hoc/1",
-        image: "http://learn.code.org/blockly/media/skins/birds/small_static_avatar.png",
-        summary: "Can you help me to catch the naughty pig? Stack a couple of \"move forward\" blocks together and press \"Run\" to help me get there.",
-        teaches: ["visual programming"],
-        requires: ["reading"],
-    }],
-}).
-
 config(function($routeProvider, $locationProvider) {
     $routeProvider
     .when('/', {
@@ -22,9 +9,9 @@ config(function($routeProvider, $locationProvider) {
         templateUrl: 'templates/maps.html',
         controller: 'MapsCtrl',
     })
-    .when('/map', {
+    .when('/map/:mapTitle', {
         templateUrl: 'templates/map.html',
-        controller: 'ViewerCtrl',
+        controller: 'MapCtrl',
     });
 
     $locationProvider
@@ -40,6 +27,18 @@ config(function() {
     Parse.initialize(parseKeys.app, parseKeys.js);
 }).
 
+filter('urlize', function() {
+    return function(string) {
+        return string.replace(/ /g, '-');
+    };
+}).
+
+filter('deurlize', function() {
+    return function(string) {
+        return string.replace(/-/g, ' ');
+    };
+}).
+
 controller('MapsCtrl', function($scope, parseQuery) {
     parseQuery.new('Map')
         .find()
@@ -48,8 +47,15 @@ controller('MapsCtrl', function($scope, parseQuery) {
         $scope.$apply();
     });
 }).
-controller('ViewerCtrl', function($scope, map) {
-    $scope.map = map;
-    $scope.resource = map.resources[0];
+controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery) {
     $scope.tags = ["teaches", "requires"];
+
+    var mapTitle = deurlizeFilter($routeParams.mapTitle);
+    parseQuery.new('Map')
+        .equalTo('title', mapTitle)
+        .first()
+    .then(function(map) {
+        $scope.map = map.attributes;
+        $scope.$apply();
+    });
 });
