@@ -13,6 +13,10 @@ config(function($routeProvider, $locationProvider) {
         templateUrl: '/templates/map.html',
         controller: 'MapCtrl',
     })
+    .when('/map/:mapTitle/concept/:conceptTitle', {
+        templateUrl: '/templates/map.html',
+        controller: 'MapCtrl',
+    })
     .when('/map/:mapTitle/resource/:resourceTitle/:resourceSubtitle', {
         templateUrl: '/templates/map.html',
         controller: 'MapCtrl',
@@ -57,8 +61,15 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery)
     $scope.tags = ["teaches", "requires"];
 
     var mapTitle = deurlizeFilter($routeParams.mapTitle);
+    var conceptTitle = deurlizeFilter($routeParams.conceptTitle);
     var resourceTitle = deurlizeFilter($routeParams.resourceTitle);
     var resourceSubtitle = deurlizeFilter($routeParams.resourceSubtitle);
+
+    if (conceptTitle) {
+        $scope.viewType = 'concept';
+    } else if (resourceTitle && resourceSubtitle) {
+        $scope.viewType = 'resource';
+    }
 
     parseQuery.new('Map')
         .equalTo('title', mapTitle)
@@ -70,14 +81,20 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery)
         if (map.get('resources')) {
             $scope.resources = map.get('resources').map(function(o) { return o.attributes; });
 
-            if (resourceTitle && resourceSubtitle)
+            if ($scope.viewType === 'resource')
                 $scope.resource = $scope.resources.filter(function(r) {
                     var hasTitle = r.title === resourceTitle;
                     var hasSubtitle = r.subtitle === resourceSubtitle;
                     return hasTitle && hasSubtitle;
                 })[0];
-            else
+            else if ($scope.viewType === 'concept')
+                $scope.concept = {
+                    title: conceptTitle,
+                };
+            else {
                 $scope.resource = $scope.resources[0];
+                $scope.viewType = 'resource';
+            }
         }
 
         $scope.$apply();

@@ -3,9 +3,16 @@
 
 <div class="row">
     <div class="col-md-5">
-        <ng-include src="'/templates/resource-heading.html'"></ng-include>
-        <ng-include src="'/templates/resource-preview.html'"></ng-include>
-        <ng-include src="'/templates/resource-tags.html'"></ng-include>
+        <article ng-switch on="viewType">
+            <div ng-switch-when="resource">
+                <ng-include src="'/templates/resource-heading.html'"></ng-include>
+                <ng-include src="'/templates/resource-preview.html'"></ng-include>
+                <ng-include src="'/templates/resource-tags.html'"></ng-include>
+            </div>
+            <div ng-switch-when="concept">
+                <ng-include src="'/templates/concept-heading.html'"></ng-include>
+            </div>
+        </article>
     </div>
     <div class="col-md-7 well">
         <ng-include src="'/templates/resources.html'"></ng-include>

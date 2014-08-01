@@ -3,7 +3,7 @@
     <h4 ng-bind="tagLabel"></h4>
     <ul class="list-inline">
         <li ng-repeat="tag in resource[tagLabel]">
-            <a ng-href="#{{ tag }}">
+            <a ng-href="/#!/map/{{ map.title | urlize }}/concept/{{ tag | urlize }}">
                 <span class="label label-default"
                       ng-bind="tag"></span>
             </a>
