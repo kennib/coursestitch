@@ -51,9 +51,15 @@ filter('deurlize', function() {
 
 service('getConcept', function(parseQuery) {
     return function(conceptTitle) {
-        return parseQuery.new('Concept')
+        var conceptQuery = parseQuery.new('Concept')
             .equalTo('title', conceptTitle)
             .first();
+
+        var resourceQuery = parseQuery.new('Resource')
+            .equalTo('teaches', conceptTitle)
+            .find();
+
+        return Parse.Promise.when(conceptQuery, resourceQuery);
     };
 }).
 
@@ -97,9 +103,11 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery,
                 })[0];
             else if ($scope.viewType === 'concept')
                 getConcept(conceptTitle)
-                .then(function(concept) {
-                    if (concept)
+                .then(function(concept, resources) {
+                    if (concept) {
                         $scope.concept = concept.attributes;
+                        $scope.concept.resources = resources.map(function(o) { return o.attributes; });
+                    }
 
                     $scope.$apply();
                 });
