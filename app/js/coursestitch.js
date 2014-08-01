@@ -53,9 +53,14 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery)
     var mapTitle = deurlizeFilter($routeParams.mapTitle);
     parseQuery.new('Map')
         .equalTo('title', mapTitle)
+        .include(['resources'])
         .first()
     .then(function(map) {
         $scope.map = map.attributes;
+
+        $scope.resources = map.get('resources').map(function(o) { return o.attributes; });
+        $scope.resource = $scope.resources[0];
+
         $scope.$apply();
     });
 });
