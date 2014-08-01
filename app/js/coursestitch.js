@@ -64,18 +64,22 @@ service('getConcept', function(parseQuery) {
 }).
 
 controller('LoginCtrl', function($scope) {
-    if (Parse.User.current())
-        $scope.loginStatus = 'logged in';
-    else
-        $scope.loginStatus = 'login needed';
+    if (Parse.User.current()) {
+        $scope.loggedIn = true;
+        $scope.user = Parse.User.current().attributes;
+    } else {
+        $scope.loggedIn = false;
+    }
 
     $scope.login = function() {
         Parse.User.logIn($scope.email, $scope.password)
         .then(function(user) {
-            $scope.loginStatus = 'success';
+            $scope.loggedIn = true;
+            $scope.user = user.attributes;
         })
         .fail(function(error) {
-            $scope.loginStatus = error.message;
+            $scope.loggedIn = false;
+            $scope.error = error;
         })
         .always(function() {
             $scope.$apply();
