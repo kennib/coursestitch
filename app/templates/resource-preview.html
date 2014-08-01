@@ -1,0 +1,13 @@
+<div class="media">
+    <a class="pull-left" ng-href="{{ resource.url }}">
+        <img class="media-object" ng-src="{{ resource.image }}" alt="{{ resource.title }}" width="60px">
+    </a>
+    <div class="media-body">
+        <blockquote>
+        {{ resource.summary }}
+        <a ng-href="{{ resource.url }}">
+            <small ng-bind="resource.url"></small>
+        </a>
+        </blockquote>
+    </div>
+</div>
