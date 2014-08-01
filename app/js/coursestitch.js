@@ -12,6 +12,10 @@ config(function($routeProvider, $locationProvider) {
     .when('/map/:mapTitle', {
         templateUrl: 'templates/map.html',
         controller: 'MapCtrl',
+    })
+    .when('/map/:mapTitle/resource/:resourceTitle/:resourceSubtitle', {
+        templateUrl: 'templates/map.html',
+        controller: 'MapCtrl',
     });
 
     $locationProvider
@@ -29,13 +33,15 @@ config(function() {
 
 filter('urlize', function() {
     return function(string) {
-        return string.replace(/ /g, '-');
+        if (string)
+            return string.replace(/ /g, '-');
     };
 }).
 
 filter('deurlize', function() {
     return function(string) {
-        return string.replace(/-/g, ' ');
+        if (string)
+            return string.replace(/-/g, ' ');
     };
 }).
 
@@ -51,6 +57,9 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery)
     $scope.tags = ["teaches", "requires"];
 
     var mapTitle = deurlizeFilter($routeParams.mapTitle);
+    var resourceTitle = deurlizeFilter($routeParams.resourceTitle);
+    var resourceSubtitle = deurlizeFilter($routeParams.resourceSubtitle);
+
     parseQuery.new('Map')
         .equalTo('title', mapTitle)
         .include(['resources'])
@@ -58,8 +67,18 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery)
     .then(function(map) {
         $scope.map = map.attributes;
 
-        $scope.resources = map.get('resources').map(function(o) { return o.attributes; });
-        $scope.resource = $scope.resources[0];
+        if (map.get('resources')) {
+            $scope.resources = map.get('resources').map(function(o) { return o.attributes; });
+
+            if (resourceTitle && resourceSubtitle)
+                $scope.resource = $scope.resources.filter(function(r) {
+                    var hasTitle = r.title === resourceTitle;
+                    var hasSubtitle = r.subtitle === resourceSubtitle;
+                    return hasTitle && hasSubtitle;
+                })[0];
+            else
+                $scope.resource = $scope.resources[0];
+        }
 
         $scope.$apply();
     });
