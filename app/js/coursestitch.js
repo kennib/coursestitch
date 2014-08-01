@@ -49,6 +49,14 @@ filter('deurlize', function() {
     };
 }).
 
+service('getConcept', function(parseQuery) {
+    return function(conceptTitle) {
+        return parseQuery.new('Concept')
+            .equalTo('title', conceptTitle)
+            .first();
+    };
+}).
+
 controller('MapsCtrl', function($scope, parseQuery) {
     parseQuery.new('Map')
         .find()
@@ -57,7 +65,7 @@ controller('MapsCtrl', function($scope, parseQuery) {
         $scope.$apply();
     });
 }).
-controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery) {
+controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery, getConcept) {
     $scope.tags = ["teaches", "requires"];
 
     var mapTitle = deurlizeFilter($routeParams.mapTitle);
@@ -88,9 +96,13 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery)
                     return hasTitle && hasSubtitle;
                 })[0];
             else if ($scope.viewType === 'concept')
-                $scope.concept = {
-                    title: conceptTitle,
-                };
+                getConcept(conceptTitle)
+                .then(function(concept) {
+                    if (concept)
+                        $scope.concept = concept.attributes;
+
+                    $scope.$apply();
+                });
             else {
                 $scope.resource = $scope.resources[0];
                 $scope.viewType = 'resource';
