@@ -12,4 +12,18 @@ service('getConcept', function(parseQuery) {
 
         return Parse.Promise.when(conceptQuery, resourceQuery);
     };
+}).
+
+directive('concept', function() {
+    return {
+        restrict: 'E',
+        templateUrl: '/templates/concept.html',
+        scope: {
+            map: '=',
+            concept: '=',
+            mode: '@',
+        },
+        link: function(scope, elem, attrs) {
+        },
+    };
 });
