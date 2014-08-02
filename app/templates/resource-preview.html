@@ -4,10 +4,17 @@
     </a>
     <div class="media-body">
         <blockquote>
-        {{ resource.summary }}
-        <a ng-href="{{ resource.url }}">
-            <small ng-bind="resource.url"></small>
-        </a>
+            <div ng-switch="mode">
+                <span ng-bind="resource.summary"
+                      ng-switch-when="view"></span>
+                <textarea class="form-control" rows="10"
+                          ng-model="resource.summary"
+                          ng-switch-when="edit"></textarea>
+            </div>
+
+            <a ng-href="{{ resource.url }}">
+                <small ng-bind="resource.url"></small>
+            </a>
         </blockquote>
     </div>
 </div>
