@@ -1,4 +1,10 @@
-angular.module('coursestitch-resources', []).
+angular.module('coursestitch-resources', ['decipher.tags', 'ui.bootstrap.typeahead']).
+
+filter('join', function() {
+    return function(list, string) {
+        return list.join(string || ',');
+    };
+}).
 
 directive('flatuiSwitch', function() {
     return {

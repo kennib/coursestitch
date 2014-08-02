@@ -6,6 +6,7 @@
     "angular": "1.2.x",
     "angular-route": "1.2.x",
     "Flat-UI": "~2.1.3",
-    "angularparse": "felipesabino/angular-parse#~0.2.0"
+    "angularparse": "felipesabino/angular-parse#~0.2.0",
+    "angular-tags": "~0.2.10"
   }
 }

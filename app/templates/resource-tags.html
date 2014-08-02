@@ -1,12 +1,22 @@
 <div class="row"
      ng-repeat="tagLabel in tags">
-    <h4 ng-bind="tagLabel"></h4>
-    <ul class="list-inline">
-        <li ng-repeat="tag in resource[tagLabel]">
-            <a ng-href="/#!/map/{{ map.title | urlize }}/concept/{{ tag | urlize }}">
-                <span class="label label-default"
-                      ng-bind="tag"></span>
-            </a>
-        </li>
-    </ul>
+    <div class="col-xs-12">
+        <h4 ng-bind="tagLabel"></h4>
+
+        <div ng-switch="mode">
+            <ul class="list-inline"
+                ng-switch-when="view">
+                <li ng-repeat="tag in resource[tagLabel]">
+                    <a ng-href="/#!/map/{{ map.title | urlize }}/concept/{{ tag | urlize }}">
+                        <span class="label label-default"
+                              ng-bind="tag"></span>
+                    </a>
+                </li>
+            </ul>
+
+            <div ng-switch-when="edit">
+                <tags model="resource[tagLabel]"></tags>
+            </div>
+        </div>
+    </div>
 </div>
