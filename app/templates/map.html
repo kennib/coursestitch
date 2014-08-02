@@ -5,7 +5,7 @@
     <div class="col-md-5">
         <article ng-switch on="viewType">
             <div ng-switch-when="resource">
-                <ng-include src="'/templates/resource.html'"></ng-include>
+                <resource map="map" resource="resource"></resource>
             </div>
             <div ng-switch-when="concept">
                 <ng-include src="'/templates/concept.html'"></ng-include>

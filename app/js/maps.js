@@ -9,8 +9,6 @@ controller('MapsCtrl', function($scope, parseQuery) {
     });
 }).
 controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery, getConcept) {
-    $scope.tags = ["teaches", "requires"];
-
     var mapTitle = deurlizeFilter($routeParams.mapTitle);
     var conceptTitle = deurlizeFilter($routeParams.conceptTitle);
     var resourceTitle = deurlizeFilter($routeParams.resourceTitle);
