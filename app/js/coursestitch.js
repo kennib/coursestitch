@@ -1,6 +1,7 @@
 angular.module('coursestitch', [
     'ngRoute', 'angularParse',
-    'coursestitch-maps', 'coursestitch-resources'
+    'coursestitch-maps', 'coursestitch-resources',
+    'coursestitch-components'
 ]).
 
 config(function($routeProvider, $locationProvider) {
