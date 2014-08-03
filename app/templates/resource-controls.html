@@ -2,6 +2,17 @@
     <div class="navbar-brand navbar-header">
         <switch model="$parent.editMode" on-label="edit" off-label="view"></switch>
     </div>
+    <div class="navbar-text navbar-right pull-right"
+          ng-show="mode == 'edit'">
+        <button class="btn btn-inverse">
+            <i class="fui-cross"></i>
+            <span class="hidden-md">reset</span>
+        </button>
+        <button class="btn btn-primary">
+            <i class="fui-check"></i>
+            <span class="hidden-md">save</span>
+        </button>
+    </div>
 
     <div class="navbar-brand navbar-header navbar-right pull-right"
           ng-hide="mode == 'edit'">
