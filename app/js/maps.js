@@ -31,12 +31,12 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept)
         $scope.map = map.attributes;
 
         if (map.get('resources')) {
-            $scope.resources = map.get('resources').map(function(o) { return o.attributes; });
+            $scope.resources = map.get('resources');
 
             if ($scope.viewType === 'resource')
-                $scope.resource = $scope.resources.filter(function(r) {
-                    var hasTitle = r.title === resourceTitle;
-                    var hasSubtitle = r.subtitle === resourceSubtitle;
+                $scope.resource = map.get('resources').filter(function(r) {
+                    var hasTitle = r.attributes.title === resourceTitle;
+                    var hasSubtitle = r.attributes.subtitle === resourceSubtitle;
                     return hasTitle && hasSubtitle;
                 })[0];
             else if ($scope.viewType === 'concept')
@@ -44,11 +44,11 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept)
                 .then(function(concept, resources) {
                     if (concept) {
                         $scope.concept = concept.attributes;
-                        $scope.concept.resources = resources.map(function(o) { return o.attributes; });
+                        $scope.concept.resources = resources;
                     }
                 });
             else {
-                $scope.resource = $scope.resources[0];
+                $scope.resource = map.get('resources')[0];
                 $scope.viewType = 'resource';
             }
         }

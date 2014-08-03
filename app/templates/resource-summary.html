@@ -1,15 +1,15 @@
 <div class="media">
-    <a class="pull-left" ng-href="/#!/map/{{ map.title | urlize }}/resource/{{ resource.title | urlize }}/{{ resource.subtitle | urlize }}">
-        <img class="media-object" ng-src="{{ resource.image }}" alt="{{ resource.title }}" width="60px">
+    <a class="pull-left" ng-href="/#!/map/{{ map.title | urlize }}/resource/{{ resource.attributes.title | urlize }}/{{ resource.attributes.subtitle | urlize }}">
+        <img class="media-object" ng-src="{{ resource.attributes.image }}" alt="{{ resource.attributes.title }}" width="60px">
     </a>
     <div class="media-body">
-        <a ng-href="/#!/map/{{ map.title | urlize }}/resource/{{ resource.title | urlize }}/{{ resource.subtitle | urlize }}">
+        <a ng-href="/#!/map/{{ map.title | urlize }}/resource/{{ resource.attributes.title | urlize }}/{{ resource.attributes.subtitle | urlize }}">
             <h4 class="media-heading">
-                {{ resource.title }}
-                <small ng-bind="resource.subtitle"></small>
+                {{ resource.attributes.title }}
+                <small ng-bind="resource.attributes.subtitle"></small>
             </h4>
         </a>
-        <blockquote ng-bind="resource.summary">
+        <blockquote ng-bind="resource.attributes.summary">
         </blockquote>
     </div>
 </div>
