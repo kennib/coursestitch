@@ -31,15 +31,26 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept)
         $scope.map = map.attributes;
 
         if (map.get('resources')) {
-            $scope.resources = map.get('resources');
+            var resources = map.get('resources')
+            $scope.resources = resources;
 
-            if ($scope.viewType === 'resource')
-                $scope.resource = map.get('resources').filter(function(r) {
+            if ($scope.viewType === 'resource') {
+                $scope.resource = resources.filter(function(r) {
                     var hasTitle = r.attributes.title === resourceTitle;
                     var hasSubtitle = r.attributes.subtitle === resourceSubtitle;
                     return hasTitle && hasSubtitle;
                 })[0];
-            else if ($scope.viewType === 'concept')
+
+                if ($scope.resource === undefined) {
+                    new Parse.Query('Resource')
+                        .equalTo('title', resourceTitle)
+                        .equalTo('subtitle', resourceSubtitle)
+                        .first()
+                    .then(function(resource) {
+                        $scope.resource = resource;
+                    });
+                }
+            } else if ($scope.viewType === 'concept')
                 getConcept(conceptTitle)
                 .then(function(concept, resources) {
                     if (concept) {
@@ -48,9 +59,19 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept)
                     }
                 });
             else {
-                $scope.resource = map.get('resources')[0];
+                $scope.resource = resources[0];
                 $scope.viewType = 'resource';
             }
+
+            $scope.inMap = resources.indexOf($scope.resource) !== -1;
+            $scope.$watch('inMap', function() {
+                if ($scope.inMap && resources.indexOf($scope.resource) === -1)
+                    resources.push($scope.resource);
+                if (!$scope.inMap && resources.indexOf($scope.resource) !== -1)
+                    resources.splice(resources.indexOf($scope.resource), 1);
+
+                map.save();
+            });
         }
     });
 });
