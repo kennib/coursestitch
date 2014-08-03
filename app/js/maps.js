@@ -1,14 +1,17 @@
-angular.module('coursestitch-maps', ['coursestitch-resources', 'coursestitch-concepts']).
+angular.module('coursestitch-maps', [
+    'parse-angular',
+    'coursestitch-resources', 'coursestitch-concepts'
+]).
 
-controller('MapsCtrl', function($scope, parseQuery) {
-    parseQuery.new('Map')
+controller('MapsCtrl', function($scope) {
+    new Parse.Query('Map')
         .find()
     .then(function(maps) {
         $scope.maps = maps.map(function(o) { return o.attributes; });
         $scope.$apply();
     });
 }).
-controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery, getConcept) {
+controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept) {
     var mapTitle = deurlizeFilter($routeParams.mapTitle);
     var conceptTitle = deurlizeFilter($routeParams.conceptTitle);
     var resourceTitle = deurlizeFilter($routeParams.resourceTitle);
@@ -20,7 +23,7 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery,
         $scope.viewType = 'resource';
     }
 
-    parseQuery.new('Map')
+    new Parse.Query('Map')
         .equalTo('title', mapTitle)
         .include(['resources'])
         .first()
@@ -43,15 +46,11 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, parseQuery,
                         $scope.concept = concept.attributes;
                         $scope.concept.resources = resources.map(function(o) { return o.attributes; });
                     }
-
-                    $scope.$apply();
                 });
             else {
                 $scope.resource = $scope.resources[0];
                 $scope.viewType = 'resource';
             }
         }
-
-        $scope.$apply();
     });
 });

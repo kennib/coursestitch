@@ -1,12 +1,12 @@
 angular.module('coursestitch-concepts', []).
 
-service('getConcept', function(parseQuery) {
+service('getConcept', function() {
     return function(conceptTitle) {
-        var conceptQuery = parseQuery.new('Concept')
+        var conceptQuery = new Parse.Query('Concept')
             .equalTo('title', conceptTitle)
             .first();
 
-        var resourceQuery = parseQuery.new('Resource')
+        var resourceQuery = new Parse.Query('Resource')
             .equalTo('teaches', conceptTitle)
             .find();
 

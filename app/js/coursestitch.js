@@ -1,5 +1,5 @@
 angular.module('coursestitch', [
-    'ngRoute', 'angularParse',
+    'ngRoute', 'parse-angular',
     'coursestitch-maps', 'coursestitch-resources',
     'coursestitch-components'
 ]).
@@ -70,9 +70,6 @@ controller('LoginCtrl', function($scope) {
         .fail(function(error) {
             $scope.loggedIn = false;
             $scope.error = error;
-        })
-        .always(function() {
-            $scope.$apply();
         });
     };
 });
