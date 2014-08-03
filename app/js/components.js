@@ -3,20 +3,22 @@ angular.module('coursestitch-components', []).
 directive('switch', function() {
     return {
         restrict: 'AE',
-        template: '<div ng-click="model = disabled && model || !disabled && !model" ng-class="{\'deactivate\': disabled, \'switch-square\': square}" class="switch has-switch"><div ng-class="{\'switch-off\': !model, \'switch-on\': model}" class="switch-animate"><span ng-bind="onLabel" class="switch-left"></span><label>&nbsp</label><span ng-bind="offLabel" class="switch-right"></span></div></div>',
+        template: '<div ng-click="model = disabled && model || !disabled && !model" ng-class="{\'deactivate\': disabled, \'switch-square\': square}" class="switch has-switch"><div ng-class="{\'switch-off\': !model, \'switch-on\': model}" class="switch-animate"><span class="switch-left">{{onLabel}}<i class="{{onIcon}}"></i></span><label>&nbsp</label><span class="switch-right">{{offLabel}}<i class="{{offIcon}}"></i></span></div></div>',
         replace: true,
         scope: {
             model: '=',
             disabled: '@',
             square: '@',
             onLabel: '@',
-            offLabel: '@'
+            offLabel: '@',
+            onIcon: '@',
+            offIcon: '@',
         },
         compile: function(element, attrs) {
-            if (attrs.onLabel === void 0) {
+            if (attrs.onLabel === void 0 && attrs.onIcon === void 0) {
                 attrs.onLabel = 'ON';
             }
-            if (attrs.offLabel === void 0) {
+            if (attrs.offLabel === void 0 && attrs.offIcon === void 0) {
                 attrs.offLabel = 'OFF';
             }
             if (attrs.disabled === void 0) {
