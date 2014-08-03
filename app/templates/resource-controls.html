@@ -5,13 +5,17 @@
     <div class="navbar-text navbar-right pull-right"
           ng-show="mode == 'edit'">
         <button class="btn btn-inverse"
-                ng-click="reset()">
-            <i class="fui-cross"></i>
+                ng-class="{'btn-success': resetState == 'success'}"
+                ng-disabled="resetState == 'pending'"
+                ng-click="resetResource()">
+            <i ng-class="{'fui-cross': resetState != 'pending', 'fui-time': resetState == 'pending'}"></i>
             <span class="hidden-md">reset</span>
         </button>
         <button class="btn btn-primary"
-                ng-click="save()">
-            <i class="fui-check"></i>
+                ng-class="{'btn-success': saveState == 'success', 'btn-danger': saveState == 'error'}"
+                ng-disabled="saveState == 'pending'"
+                ng-click="saveResource()">
+            <i ng-class="{'fui-check': saveState != 'pending', 'fui-time': saveState == 'pending', 'fui-cross': saveState == 'error'}"></i>
             <span class="hidden-md">save</span>
         </button>
     </div>
