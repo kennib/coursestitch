@@ -13,6 +13,8 @@ directive('resource', function() {
         scope: {
             map: '=',
             resource: '=',
+            save: '&',
+            reset: '&',
         },
         link: function(scope, elem, attrs) {
             scope.tags = ["teaches", "requires"];

@@ -4,11 +4,13 @@
     </div>
     <div class="navbar-text navbar-right pull-right"
           ng-show="mode == 'edit'">
-        <button class="btn btn-inverse">
+        <button class="btn btn-inverse"
+                ng-click="reset()">
             <i class="fui-cross"></i>
             <span class="hidden-md">reset</span>
         </button>
-        <button class="btn btn-primary">
+        <button class="btn btn-primary"
+                ng-click="save()">
             <i class="fui-check"></i>
             <span class="hidden-md">save</span>
         </button>

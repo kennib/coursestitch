@@ -5,7 +5,7 @@
     <div class="col-md-5">
         <article ng-switch on="viewType">
             <div ng-switch-when="resource">
-                <resource map="map" resource="resource.attributes"></resource>
+                <resource map="map" resource="resource.attributes" save="resource.save(resource.attributes)" reset="resource.fetch()"></resource>
             </div>
             <div ng-switch-when="concept">
                 <concept map="map" concept="concept"></concept>
