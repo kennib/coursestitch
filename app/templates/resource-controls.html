@@ -1,11 +1,14 @@
-<div>
-    <switch model="$parent.editMode" on-label="edit" off-label="view"></switch>
-    <switch class="pull-right"
-            model="resource.inMap"
-            on-icon="glyphicon glyphicon-plus"
-            off-icon="glyphicon glyphicon-minus">
-    </switch>
-</div>
-<div class="well" ng-hide="mode == 'edit'">
-    <understanding-slider ng-model="$parent.understanding"></understanding-slider>
+<div class="navbar navbar-default">
+    <div class="navbar-brand navbar-header">
+        <switch model="$parent.editMode" on-label="edit" off-label="view"></switch>
+    </div>
+
+    <div class="navbar-brand navbar-header navbar-right pull-right"
+          ng-hide="mode == 'edit'">
+        <switch
+                model="resource.inMap"
+                on-icon="glyphicon glyphicon-plus"
+                off-icon="glyphicon glyphicon-minus">
+        </switch>
+    </div>
 </div>
