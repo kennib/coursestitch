@@ -1,5 +1,11 @@
 angular.module('coursestitch-resources', ['decipher.tags', 'ui.bootstrap.typeahead']).
 
+service('newResource', function() {
+    return function(resourceUrl, mapId) {
+        return Parse.Cloud.run('summariseResource', {url: resourceUrl, mapId: mapId});
+    };
+}).
+
 filter('join', function() {
     return function(list, string) {
         return list.join(string || ',');

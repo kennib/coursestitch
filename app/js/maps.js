@@ -11,7 +11,9 @@ controller('MapsCtrl', function($scope) {
         $scope.$apply();
     });
 }).
-controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept) {
+controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept, newResource) {
+    $scope.newResource = newResource;
+
     var mapTitle = deurlizeFilter($routeParams.mapTitle);
     var conceptTitle = deurlizeFilter($routeParams.conceptTitle);
     var resourceTitle = deurlizeFilter($routeParams.resourceTitle);
@@ -28,6 +30,7 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept)
         .include(['resources'])
         .first()
     .then(function(map) {
+        $scope.mapId = map.id;
         $scope.map = map.attributes;
 
         if (map.get('resources')) {
