@@ -13,15 +13,11 @@ config(function($routeProvider, $locationProvider) {
         templateUrl: '/templates/maps.html',
         controller: 'MapsCtrl',
     })
-    .when('/map/:mapTitle', {
+    .when('/map/:mapId/:mapTitle', {
         templateUrl: '/templates/map.html',
         controller: 'MapCtrl',
     })
-    .when('/map/:mapTitle/concept/:conceptTitle', {
-        templateUrl: '/templates/map.html',
-        controller: 'MapCtrl',
-    })
-    .when('/map/:mapTitle/resource/:resourceTitle/:resourceSubtitle', {
+    .when('/map/:mapId/:mapTitle/:viewType/:viewId/:viewTitle/:viewSubtitle?', {
         templateUrl: '/templates/map.html',
         controller: 'MapCtrl',
     });
