@@ -35,7 +35,7 @@ directive('switch', function() {
     };
 }).
 
-directive('actionButton', function() {
+directive('actionButton', function($timeout) {
     return {
         restrict: 'E',
         templateUrl: '/templates/action-button.html',
@@ -74,6 +74,12 @@ directive('actionButton', function() {
                         animate: true,
                     })
                     .popover('show');
+                })
+                .always(function() {
+                    $timeout(function() {
+                        scope.status = 'idle';
+                        element.popover('hide');
+                    }, 6000);
                 });
             };
 
