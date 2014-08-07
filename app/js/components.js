@@ -64,8 +64,16 @@ directive('actionButton', function() {
                 .then(function() {
                     scope.status = 'success';
                 })
-                .fail(function() {
+                .fail(function(error) {
                     scope.status = 'error';
+                    
+                    // Show a helpful error message
+                    element.popover({
+                        content: error.message,
+                        placement: 'top',
+                        animate: true,
+                    })
+                    .popover('show');
                 });
             };
 
