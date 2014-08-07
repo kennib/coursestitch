@@ -7,8 +7,7 @@ controller('MapsCtrl', function($scope) {
     new Parse.Query('Map')
         .find()
     .then(function(maps) {
-        $scope.maps = maps.map(function(o) { return o.attributes; });
-        $scope.$apply();
+        $scope.maps = maps;
     });
 }).
 controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept) {
@@ -73,4 +72,8 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept)
             });
         }
     });
+}).
+
+controller('URLCtrl', function($scope, makeURL) {
+    $scope.makeURL = makeURL;
 });

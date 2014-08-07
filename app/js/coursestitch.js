@@ -35,6 +35,26 @@ config(function() {
     Parse.initialize(parseKeys.app, parseKeys.js);
 }).
 
+service('makeURL', function(urlizeFilter) {
+    return function(mapObject, viewObject) {
+        var fields = [
+            mapObject.id,
+            urlizeFilter(mapObject.attributes.title)
+        ];
+        if (viewObject) {
+            [   
+                viewObject.className.toLowerCase(),
+                viewObject.id,
+                urlizeFilter(viewObject.attributes.title),
+                urlizeFilter(viewObject.attributes.subtitle)
+            ].forEach(function(field) {
+                fields.push(field);
+            });
+        }
+        return '#!/map/' + fields.join('/');
+    };
+}).
+
 filter('urlize', function() {
     return function(string) {
         if (string)
