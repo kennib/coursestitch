@@ -36,20 +36,23 @@ config(function() {
 }).
 
 service('makeURL', function(urlizeFilter) {
+    // Create a URL string from various attributes of a given map
+    // and view object (which can be a resource or a concept).
+    // The return string should match the URL format given in
+    // the routeProvider above.
     return function(mapObject, viewObject) {
         var fields = [
             mapObject.id,
             urlizeFilter(mapObject.attributes.title)
         ];
         if (viewObject) {
+            fields.concat(
             [   
                 viewObject.className.toLowerCase(),
                 viewObject.id,
                 urlizeFilter(viewObject.attributes.title),
                 urlizeFilter(viewObject.attributes.subtitle)
-            ].forEach(function(field) {
-                fields.push(field);
-            });
+            ]);
         }
         return '#!/map/' + fields.join('/');
     };
