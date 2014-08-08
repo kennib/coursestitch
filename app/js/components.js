@@ -110,6 +110,7 @@ directive('understandingSlider', function($timeout) {
         templateUrl: '/templates/understanding-slider.html',
         scope: {
             ngModel: '=?',
+            onChange: '=',
         },
         link: function(scope, element, attrs) {
             // Number of milliseconds an animation takes
@@ -136,7 +137,12 @@ directive('understandingSlider', function($timeout) {
 
             scope.$watch('ngModel', function() {
                 // Update the slider if the model changes
-                slider.slider('value', scope.ngModel);
+                if (scope.ngModel !== undefined)
+                    slider.slider('value', scope.ngModel);
+
+                // Call change event
+                if (scope.onChange)
+                    scope.onChange(scope.ngModel);
             });
         },
     };
