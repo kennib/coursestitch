@@ -1,9 +1,9 @@
 <div class="media">
-    <a class="pull-left" ng-href="/#!/map/{{ map.title | urlize }}/resource/{{ resource.attributes.title | urlize }}/{{ resource.attributes.subtitle | urlize }}">
+    <a class="pull-left" ng-href="{{ makeURL(map, resource) }}">
         <img class="media-object" ng-src="{{ resource.attributes.image }}" alt="{{ resource.attributes.title }}" width="60px">
     </a>
     <div class="media-body">
-        <a ng-href="/#!/map/{{ map.title | urlize }}/resource/{{ resource.attributes.title | urlize }}/{{ resource.attributes.subtitle | urlize }}">
+        <a ng-href="{{ makeURL(map, resource) }}">
             <h4 class="media-heading">
                 {{ resource.attributes.title }}
                 <small ng-bind="resource.attributes.subtitle"></small>
