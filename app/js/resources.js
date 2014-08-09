@@ -47,7 +47,6 @@ directive('resource', function(getUnderstanding) {
         scope: {
             map: '=',
             resource: '=',
-            resourceObj: '=',
             save: '&',
             reset: '&',
         },
@@ -56,9 +55,9 @@ directive('resource', function(getUnderstanding) {
             scope.editMode = false;
 
             // Get the user's understanding of this resource
-            scope.$watch('resourceObj', function() {
-                if (scope.resourceObj)
-                    getUnderstanding(scope.resourceObj)
+            scope.$watch('resource', function() {
+                if (scope.resource)
+                    getUnderstanding(scope.resource)
                     .then(function(understanding) {
                         scope.understanding = understanding;
                         scope.setUnderstanding = function(understands) {

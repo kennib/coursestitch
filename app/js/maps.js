@@ -7,57 +7,54 @@ controller('MapsCtrl', function($scope) {
     new Parse.Query('Map')
         .find()
     .then(function(maps) {
-        $scope.maps = maps.map(function(o) { return o.attributes; });
-        $scope.$apply();
+        $scope.maps = maps;
     });
 }).
 controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept, newResource) {
     $scope.newResource = newResource;
 
-    var mapTitle = deurlizeFilter($routeParams.mapTitle);
-    var conceptTitle = deurlizeFilter($routeParams.conceptTitle);
-    var resourceTitle = deurlizeFilter($routeParams.resourceTitle);
-    var resourceSubtitle = deurlizeFilter($routeParams.resourceSubtitle);
+    var mapId = $routeParams.mapId;
+    var mapTitle = $routeParams.mapTitle;
+    var viewType = $routeParams.viewType;
+    var viewId = $routeParams.viewId;
+    var viewTitle = $routeParams.viewTitle;
+    var viewSubtitle = $routeParams.viewSubtitle;
 
-    if (conceptTitle) {
-        $scope.viewType = 'concept';
-    } else if (resourceTitle && resourceSubtitle) {
-        $scope.viewType = 'resource';
+    if (viewType == 'concept' || viewType == 'resource') {
+      $scope.viewType = viewType;
+    } else {
+      // Do something if the type is not concept or resource. Or something.
     }
 
     new Parse.Query('Map')
-        .equalTo('title', mapTitle)
+        .equalTo('objectId', mapId)
         .include(['resources'])
         .first()
     .then(function(map) {
-        $scope.mapId = map.id;
-        $scope.map = map.attributes;
+        $scope.map = map;
 
         if (map.get('resources')) {
             var resources = map.get('resources')
+            // Set the map's resources to be used in the scope, which allows it to be rendered.
+            // This could be empty if the map has no associated resources.
             $scope.resources = resources;
 
             if ($scope.viewType === 'resource') {
-                $scope.resource = resources.filter(function(r) {
-                    var hasTitle = r.attributes.title === resourceTitle;
-                    var hasSubtitle = r.attributes.subtitle === resourceSubtitle;
-                    return hasTitle && hasSubtitle;
-                })[0];
+                // Retrieve the resource with the given ID parsed from the route, regardless of
+                // whether the resource is in the map or not.
+                new Parse.Query('Resource')
+                    .get(viewId)
+                .then(function(resource) {
+                    $scope.resource = resource;
+                });
 
-                if ($scope.resource === undefined) {
-                    new Parse.Query('Resource')
-                        .equalTo('title', resourceTitle)
-                        .equalTo('subtitle', resourceSubtitle)
-                        .first()
-                    .then(function(resource) {
-                        $scope.resource = resource;
-                    });
-                }
             } else if ($scope.viewType === 'concept')
-                getConcept(conceptTitle)
+                // Retrieves the Concept object given with the ID, as well as all resources that
+                // teach the concept.
+                getConcept(viewId)
                 .then(function(concept, resources) {
                     if (concept) {
-                        $scope.concept = concept.attributes;
+                        $scope.concept = concept;
                         $scope.concept.resources = resources;
                     }
                 });

@@ -13,15 +13,11 @@ config(function($routeProvider, $locationProvider) {
         templateUrl: '/templates/maps.html',
         controller: 'MapsCtrl',
     })
-    .when('/map/:mapTitle', {
+    .when('/map/:mapId/:mapTitle', {
         templateUrl: '/templates/map.html',
         controller: 'MapCtrl',
     })
-    .when('/map/:mapTitle/concept/:conceptTitle', {
-        templateUrl: '/templates/map.html',
-        controller: 'MapCtrl',
-    })
-    .when('/map/:mapTitle/resource/:resourceTitle/:resourceSubtitle', {
+    .when('/map/:mapId/:mapTitle/:viewType/:viewId/:viewTitle/:viewSubtitle?', {
         templateUrl: '/templates/map.html',
         controller: 'MapCtrl',
     });
@@ -39,6 +35,28 @@ config(function() {
     Parse.initialize(parseKeys.app, parseKeys.js);
 }).
 
+service('makeURL', function(urlizeFilter) {
+    // Create a URL string from various attributes of a given map
+    // and view object (which can be a resource or a concept).
+    // The return string should match the URL format given in
+    // the routeProvider above.
+    return function(mapObject, viewObject) {
+        var fields = [
+            mapObject.id,
+            urlizeFilter(mapObject.attributes.title)
+        ];
+        if (viewObject) {
+            fields = fields.concat([   
+                viewObject.className.toLowerCase(),
+                viewObject.id,
+                urlizeFilter(viewObject.attributes.title),
+                urlizeFilter(viewObject.attributes.subtitle)
+            ]);
+        }
+        return '#!/map/' + fields.join('/');
+    };
+}).
+
 filter('urlize', function() {
     return function(string) {
         if (string)
@@ -51,6 +69,11 @@ filter('deurlize', function() {
         if (string)
             return string.replace(/-/g, ' ');
     };
+}).
+
+
+controller('RootCtrl', function($scope, makeURL) {
+    $scope.makeURL = makeURL;
 }).
 
 controller('LoginCtrl', function($scope) {

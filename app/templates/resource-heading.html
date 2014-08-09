@@ -2,20 +2,20 @@
     <a ng-href="{{ resource.url }}"
        ng-switch-when="view">
         <h2 class="media-heading"
-            ng-bind="resource.title"></h2>
+            ng-bind="resource.attributes.title"></h2>
         <h3 class="media-heading"
-            ng-bind="resource.subtitle"></h3>
+            ng-bind="resource.attributes.subtitle"></h3>
     </a>
     <div ng-switch-when="edit">
         <form role="form">
             <div class="form-group">
                 <label for="title">Title</label>
                 <input id="title" class="form-control"
-                       ng-model="resource.title"></input>
+                       ng-model="resource.attributes.title"></input>
 
                 <label for="subtitle">Subtitle</label>
                 <input id="subtitle" class="form-control"
-                       ng-model="resource.subtitle"></input>
+                       ng-model="resource.attributes.subtitle"></input>
             <div>
         </form>
     </div>

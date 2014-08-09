@@ -1,11 +1,11 @@
 <div class="media">
     <a class="pull-left" href="/map">
-        <img class="media-object" src="lib/Flat-UI/images/icons/png/Gift-Box.png" alt="{{ map.title }}" width="60px">
+        <img class="media-object" src="lib/Flat-UI/images/icons/png/Gift-Box.png" alt="{{ map.attributes.title }}" width="60px">
     </a>
     <div class="media-body">
-        <a href="/#!/map/{{ map.title | urlize }}">
+        <a ng-href="{{ makeURL(map) }}">
             <h3 class="media-heading"
-                ng-bind="map.title"></h3>
+                ng-bind="map.attributes.title"></h3>
         </a>
         <p>
         Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus. 

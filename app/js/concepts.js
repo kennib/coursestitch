@@ -1,16 +1,16 @@
 angular.module('coursestitch-concepts', []).
 
 service('getConcept', function() {
-    return function(conceptTitle) {
+    return function(conceptId) {
         var conceptQuery = new Parse.Query('Concept')
-            .equalTo('title', conceptTitle)
-            .first();
-
-        var resourceQuery = new Parse.Query('Resource')
-            .equalTo('teaches', conceptTitle)
-            .find();
-
-        return Parse.Promise.when(conceptQuery, resourceQuery);
+            .get(conceptId)
+        .then(function(concept) {
+            var resourceQuery = new Parse.Query('Resource')
+                .equalTo('teaches', concept.get('title'))
+                .find();
+            return Parse.Promise.when(concept, resourceQuery);
+        });
+        return conceptQuery;
     };
 }).
 
