@@ -33,6 +33,21 @@ service('getUnderstanding', function(Understanding) {
         });
     };
 }).
+service('toggleResource', function() {
+    return function(map, resource) {
+        var resources = map.get('resources');
+        var index = resources.findIndex(function(r) {
+            return r.id === resource.id;
+        });
+        
+        if (index === -1)
+            resources.push(resource);
+        else
+            resources.splice(index, 1);
+
+        map.save();
+    };
+}).
 
 filter('join', function() {
     return function(list, string) {
@@ -40,7 +55,7 @@ filter('join', function() {
     };
 }).
 
-directive('resource', function(getUnderstanding) {
+directive('resource', function(getUnderstanding, toggleResource) {
     return {
         restrict: 'E',
         templateUrl: '/templates/resource.html',
@@ -72,6 +87,20 @@ directive('resource', function(getUnderstanding) {
                     scope.mode = 'edit';
                 else
                     scope.mode = 'view';
+            });
+
+            scope.toggleResource = function() {
+                toggleResource(scope.map, scope.resource);
+            };
+        
+            // Update whether the resource is part of the map or not
+            scope.$watch('resource', function() {
+                if (scope.map) {
+                    var resources = scope.map.get('resources');
+                    scope.inMap = resources.findIndex(function(r) {
+                        return r.id === scope.resource.id;
+                    }) !== -1;
+                }
             });
         },
     };

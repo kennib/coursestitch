@@ -62,16 +62,6 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept,
                 $scope.resource = resources[0];
                 $scope.viewType = 'resource';
             }
-
-            $scope.inMap = resources.indexOf($scope.resource) !== -1;
-            $scope.$watch('inMap', function() {
-                if ($scope.inMap && resources.indexOf($scope.resource) === -1)
-                    resources.push($scope.resource);
-                if (!$scope.inMap && resources.indexOf($scope.resource) !== -1)
-                    resources.splice(resources.indexOf($scope.resource), 1);
-
-                map.save();
-            });
         }
     });
 });
