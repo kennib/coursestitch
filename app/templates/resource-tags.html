@@ -7,7 +7,7 @@
             <ul class="list-inline"
                 ng-switch-when="view">
                 <li ng-repeat="tag in resource.attributes.[tagLabel]">
-                    <a ng-href="/#!/map/{{ map.attributes.title | urlize }}/concept/{{ tag | urlize }}">
+                    <a ng-href="{{ makeURL(map, concept) }}">
                         <span class="label label-default"
                               ng-bind="tag"></span>
                     </a>
