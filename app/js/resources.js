@@ -5,6 +5,34 @@ service('newResource', function() {
         return Parse.Cloud.run('summariseResource', {url: resourceUrl, mapId: mapId});
     };
 }).
+service('Understanding', function() {
+    return Parse.Object.extend('Understanding');
+}).
+service('getUnderstanding', function(Understanding) {
+    return function(resource) {
+        // Get the understanding of the given resource
+        var understandingQuery = new Parse.Query('Understanding')
+            .equalTo('user', Parse.User.current())
+            .equalTo('resource', resource)
+            .first();
+
+        return understandingQuery
+        .then(function(understanding) {
+            // Create a new understanding if none exists
+            if (understanding === undefined) {
+                understanding = new Understanding();
+
+                understanding.set('user', Parse.User.current());
+                understanding.set('resource', resource);
+                understanding.set('understanding', 0);
+
+                return understanding.save();
+            } else {
+                return understanding;
+            }
+        });
+    };
+}).
 service('toggleResource', function() {
     return function(map, resource) {
         var resources = map.get('resources');
@@ -27,7 +55,7 @@ filter('join', function() {
     };
 }).
 
-directive('resource', function(toggleResource) {
+directive('resource', function(getUnderstanding, toggleResource) {
     return {
         restrict: 'E',
         templateUrl: '/templates/resource.html',
@@ -40,6 +68,19 @@ directive('resource', function(toggleResource) {
         link: function(scope, elem, attrs) {
             scope.tags = ["teaches", "requires"];
             scope.editMode = false;
+
+            // Get the user's understanding of this resource
+            scope.$watch('resource', function() {
+                if (scope.resource)
+                    getUnderstanding(scope.resource)
+                    .then(function(understanding) {
+                        scope.understanding = understanding;
+                        scope.setUnderstanding = function(understands) {
+                            scope.understanding.set('understands', understands);
+                            scope.understanding.save(scope.understanding.attributes);
+                        };
+                    });
+            });
 
             scope.$watch('editMode', function() {
                 if (scope.editMode)

@@ -114,33 +114,45 @@ directive('actionButton', function($timeout) {
     };
 }).
 
-directive('understandingSlider', function() {
+directive('understandingSlider', function($timeout) {
     return {
         restrict: 'E',
         templateUrl: '/templates/understanding-slider.html',
         scope: {
-            ngModel: '=',
+            ngModel: '=?',
+            onChange: '=',
         },
         link: function(scope, element, attrs) {
+            // Number of milliseconds an animation takes
+            var animateTime = 1000;
+
             var slider = $(element).children(".ui-slider");
             slider.slider({
                 min: -1,
                 max: 1,
-                step: 0.5,
+                step: 0.01,
                 value: 0,
                 orientation: 'horizontal',
-                animate: 'fast',
+                animate: animateTime,
                 range: false,
             });
 
-            slider.on('slide', function(event, ui) {
-                scope.ngModel = ui.value;
-                scope.$apply();
+            slider.on('slidestop', function(event, ui) {
+                // Set model value when animation stops
+                $timeout(function() {
+                    scope.ngModel = ui.value;
+                    scope.$apply();
+                }, animateTime);
             });
 
             scope.$watch('ngModel', function() {
+                // Update the slider if the model changes
                 if (scope.ngModel !== undefined)
                     slider.slider('value', scope.ngModel);
+
+                // Call change event
+                if (scope.onChange)
+                    scope.onChange(scope.ngModel);
             });
         },
     };
