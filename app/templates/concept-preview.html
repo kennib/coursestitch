@@ -1,12 +1,12 @@
 <div class="media">
-    <a class="pull-left" ng-href="{{ concept.url }}">
-        <img class="media-object" ng-src="{{ concept.image }}" alt="{{ concept.title }}" width="60px">
+    <a class="pull-left" ng-href="{{ concept.attributes.url }}">
+        <img class="media-object" ng-src="{{ concept.attributes.image }}" alt="{{ concept.attributes.title }}" width="60px">
     </a>
     <div class="media-body">
         <blockquote>
-        {{ concept.summary }}
-        <a ng-href="{{ concept.url }}">
-            <small ng-bind="concept.url"></small>
+        {{ concept.attributes.summary }}
+        <a ng-href="{{ concept.attributes.url }}">
+            <small ng-bind="concept.attributes.url"></small>
         </a>
         </blockquote>
     </div>

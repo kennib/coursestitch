@@ -1,19 +1,19 @@
 <div class="media">
-    <a class="pull-left" ng-href="{{ resource.url }}">
-        <img class="media-object" ng-src="{{ resource.image }}" alt="{{ resource.title }}" width="60px">
+    <a class="pull-left" ng-href="{{ resource.attributes.url }}">
+        <img class="media-object" ng-src="{{ resource.attributes.image }}" alt="{{ resource.attributes.title }}" width="60px">
     </a>
     <div class="media-body">
         <blockquote>
             <div ng-switch="mode">
-                <span ng-bind="resource.summary"
+                <span ng-bind="resource.attributes.summary"
                       ng-switch-when="view"></span>
                 <textarea class="form-control" rows="10"
-                          ng-model="resource.summary"
+                          ng-model="resource.attributes.summary"
                           ng-switch-when="edit"></textarea>
             </div>
 
-            <a ng-href="{{ resource.url }}">
-                <small ng-bind="resource.url"></small>
+            <a ng-href="{{ resource.attributes.url }}">
+                <small ng-bind="resource.attributes.url"></small>
             </a>
         </blockquote>
     </div>

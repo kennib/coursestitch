@@ -29,7 +29,7 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept)
         .include(['resources'])
         .first()
     .then(function(map) {
-        $scope.map = map.attributes;
+        $scope.map = map;
 
         if (map.get('resources')) {
             var resources = map.get('resources')
@@ -52,7 +52,7 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept)
                 getConcept(viewId)
                 .then(function(concept, resources) {
                     if (concept) {
-                        $scope.concept = concept.attributes;
+                        $scope.concept = concept;
                         $scope.concept.resources = resources;
                     }
                 });

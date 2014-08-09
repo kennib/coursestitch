@@ -6,8 +6,8 @@
         <div ng-switch="mode">
             <ul class="list-inline"
                 ng-switch-when="view">
-                <li ng-repeat="tag in resource[tagLabel]">
-                    <a ng-href="/#!/map/{{ map.title | urlize }}/concept/{{ tag | urlize }}">
+                <li ng-repeat="tag in resource.attributes.[tagLabel]">
+                    <a ng-href="/#!/map/{{ map.attributes.title | urlize }}/concept/{{ tag | urlize }}">
                         <span class="label label-default"
                               ng-bind="tag"></span>
                     </a>
@@ -15,7 +15,7 @@
             </ul>
 
             <div ng-switch-when="edit">
-                <tags model="resource[tagLabel]"></tags>
+                <tags model="resource.attributes[tagLabel]"></tags>
             </div>
         </div>
     </div>
