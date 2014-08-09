@@ -3,10 +3,11 @@ angular.module('coursestitch-components', []).
 directive('switch', function() {
     return {
         restrict: 'AE',
-        template: '<div ng-click="model = disabled && model || !disabled && !model;" ng-class="{\'deactivate\': disabled, \'switch-square\': square}" class="switch has-switch"><div ng-class="{\'switch-off\': !model, \'switch-on\': model}" class="switch-animate"><span class="switch-left">{{onLabel}}<i class="{{onIcon}}"></i></span><label>&nbsp</label><span class="switch-right">{{offLabel}}<i class="{{offIcon}}"></i></span></div></div>',
+        template: '<div ng-click="change()" ng-class="{\'deactivate\': disabled, \'switch-square\': square}" class="switch has-switch"><div ng-class="{\'switch-off\': !model, \'switch-on\': model}" class="switch-animate"><span class="switch-left">{{onLabel}}<i class="{{onIcon}}"></i></span><label>&nbsp</label><span class="switch-right">{{offLabel}}<i class="{{offIcon}}"></i></span></div></div>',
         replace: true,
         scope: {
             model: '=',
+            onChange: '=',
             disabled: '@',
             square: '@',
             onLabel: '@',
@@ -14,7 +15,7 @@ directive('switch', function() {
             onIcon: '@',
             offIcon: '@',
         },
-        compile: function(element, attrs) {
+        link: function(scope, element, attrs) {
             if (attrs.onLabel === void 0 && attrs.onIcon === void 0) {
                 attrs.onLabel = 'ON';
             }
@@ -31,7 +32,16 @@ directive('switch', function() {
             } else {
                 attrs.square = true;
             }
-        }
+
+            scope.change = function() {
+                // Update the model
+                scope.model = scope.disabled && scope.model || !scope.disabled && !scope.model;
+
+                // Fire the on change event
+                if (scope.onChange)
+                    scope.onChange();
+            };
+        },
     };
 }).
 

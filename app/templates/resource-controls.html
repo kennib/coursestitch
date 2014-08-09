@@ -17,7 +17,8 @@
     <div class="navbar-brand navbar-header navbar-right pull-right"
           ng-hide="mode == 'edit'">
         <switch
-                model="$parent.$parent.$parent.inMap"
+                model="inMap"
+                on-change="toggleResource"
                 on-icon="glyphicon glyphicon-plus"
                 off-icon="glyphicon glyphicon-minus">
         </switch>
