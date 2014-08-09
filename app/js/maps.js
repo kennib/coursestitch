@@ -72,8 +72,4 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept)
             });
         }
     });
-}).
-
-controller('URLCtrl', function($scope, makeURL) {
-    $scope.makeURL = makeURL;
 });

@@ -46,8 +46,7 @@ service('makeURL', function(urlizeFilter) {
             urlizeFilter(mapObject.attributes.title)
         ];
         if (viewObject) {
-            fields.concat(
-            [   
+            fields = fields.concat([   
                 viewObject.className.toLowerCase(),
                 viewObject.id,
                 urlizeFilter(viewObject.attributes.title),
@@ -70,6 +69,11 @@ filter('deurlize', function() {
         if (string)
             return string.replace(/-/g, ' ');
     };
+}).
+
+
+controller('RootCtrl', function($scope, makeURL) {
+    $scope.makeURL = makeURL;
 }).
 
 controller('LoginCtrl', function($scope) {
