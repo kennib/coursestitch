@@ -1,5 +1,11 @@
 angular.module('coursestitch-resources', ['decipher.tags', 'ui.bootstrap.typeahead']).
 
+service('newResource', function() {
+    return function(resourceUrl, mapId) {
+        return Parse.Cloud.run('summariseResource', {url: resourceUrl, mapId: mapId});
+    };
+}).
+
 filter('join', function() {
     return function(list, string) {
         return list.join(string || ',');
@@ -26,30 +32,6 @@ directive('resource', function() {
                 else
                     scope.mode = 'view';
             });
-
-            // Add state of remote resource actions to the scope
-            scope.resetResource = function() {
-                scope.resetState = 'pending';
-
-                scope.reset()
-                .then(function() {
-                    scope.resetState = 'success';
-                })
-                .fail(function() {
-                    scope.resetSate = 'error';
-                });
-            };
-            scope.saveResource = function() {
-                scope.saveState = 'pending';
-
-                scope.save()
-                .then(function() {
-                    scope.saveState = 'success';
-                })
-                .fail(function() {
-                    scope.saveState = 'error';
-                });
-            };
         },
     };
 });

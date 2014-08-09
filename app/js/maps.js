@@ -10,7 +10,9 @@ controller('MapsCtrl', function($scope) {
         $scope.maps = maps;
     });
 }).
-controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept) {
+controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept, newResource) {
+    $scope.newResource = newResource;
+
     var mapId = $routeParams.mapId;
     var mapTitle = $routeParams.mapTitle;
     var viewType = $routeParams.viewType;

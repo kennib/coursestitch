@@ -35,6 +35,75 @@ directive('switch', function() {
     };
 }).
 
+directive('actionButton', function($timeout) {
+    return {
+        restrict: 'E',
+        templateUrl: '/templates/action-button.html',
+        scope: {
+            action: '&',
+            label: '@',
+            idleStyle: '@',
+            pendingStyle: '@',
+            successStyle: '@',
+            errorStyle: '@',
+            idleIcon: '@',
+            pendingIcon: '@',
+            successIcon: '@',
+            errorIcon: '@',
+        },
+        replace: true,
+        link: function(scope, element, attrs) {
+            // Default status
+            scope.status = 'idle';
+
+            // Action consequences
+            scope.doAction = function() {
+                scope.status = 'pending';
+
+                scope.action()
+                .then(function() {
+                    scope.status = 'success';
+                })
+                .fail(function(error) {
+                    scope.status = 'error';
+                    
+                    // Show a helpful error message
+                    element.popover({
+                        content: error.message,
+                        placement: 'top',
+                        animate: true,
+                    })
+                    .popover('show');
+                })
+                .always(function() {
+                    $timeout(function() {
+                        scope.status = 'idle';
+                        element.popover('hide');
+                    }, 6000);
+                });
+            };
+
+            // Status styles and icons
+            scope.$watch('status', function(status) {
+                var style = status+'Style';
+                var icon = status+'Icon';
+
+                // By default show the idle style or icon
+                if (scope[style] === undefined)
+                    scope.style = scope.idleStyle;
+                else
+                    scope.style = scope[style];
+
+                if (scope[icon] === undefined)
+                    scope.icon = scope.idleIcon;
+                else
+                    scope.icon = scope[icon];
+
+            });
+        },
+    };
+}).
+
 directive('understandingSlider', function() {
     return {
         restrict: 'E',

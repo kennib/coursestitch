@@ -4,20 +4,14 @@
     </div>
     <div class="navbar-text navbar-right pull-right"
           ng-show="mode == 'edit'">
-        <button class="btn btn-inverse"
-                ng-class="{'btn-success': resetState == 'success'}"
-                ng-disabled="resetState == 'pending'"
-                ng-click="resetResource()">
-            <i ng-class="{'fui-cross': resetState != 'pending', 'fui-time': resetState == 'pending'}"></i>
-            <span class="hidden-md">reset</span>
-        </button>
-        <button class="btn btn-primary"
-                ng-class="{'btn-success': saveState == 'success', 'btn-danger': saveState == 'error'}"
-                ng-disabled="saveState == 'pending'"
-                ng-click="saveResource()">
-            <i ng-class="{'fui-check': saveState != 'pending', 'fui-time': saveState == 'pending', 'fui-cross': saveState == 'error'}"></i>
-            <span class="hidden-md">save</span>
-        </button>
+        <action-button action="reset()" label="reset"
+                       idle-style="btn-inverse"
+                       idle-icon="glyphicon glyphicon-refresh" pending-icon="fui-time">
+        </action-button>
+        <action-button action="save()" label="save"
+                       idle-style="btn-primary" success-style="btn-success"
+                       idle-icon="glyphicon glyphicon-floppy-disk" pending-icon="fui-time" success-icon="fui-check" error-icon="fui-cross">
+        </action-button>
     </div>
 
     <div class="navbar-brand navbar-header navbar-right pull-right"
