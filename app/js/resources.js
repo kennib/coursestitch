@@ -55,7 +55,7 @@ filter('join', function() {
     };
 }).
 
-directive('resource', function(getUnderstanding, toggleResource) {
+directive('resource', function(getUnderstanding, toggleResource, makeURL) {
     return {
         restrict: 'E',
         templateUrl: '/templates/resource.html',
@@ -66,8 +66,25 @@ directive('resource', function(getUnderstanding, toggleResource) {
             reset: '&',
         },
         link: function(scope, elem, attrs) {
+            scope.makeURL = makeURL;
             scope.tags = ["teaches", "requires"];
             scope.editMode = false;
+
+            // Get the tags for this resource
+            scope.$watch('resource', function() {
+                if (scope.resource === undefined)
+                    return;
+
+                scope.resource.tags = {};
+
+                scope.tags.forEach(function(tagLabel) {
+                    var tags = scope.resource.get(tagLabel);
+                    if (tags)
+                        scope.resource.tags[tagLabel] = tags.map(function(concept) {
+                            return concept.get('title');
+                        });
+                });
+            });
 
             // Get the user's understanding of this resource
             scope.$watch('resource', function() {
