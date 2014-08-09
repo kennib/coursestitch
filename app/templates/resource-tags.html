@@ -6,8 +6,8 @@
         <div ng-switch="mode">
             <ul class="list-inline"
                 ng-switch-when="view">
-                <li ng-repeat="tag in resource.attributes.[tagLabel]">
-                    <a ng-href="{{ makeURL(map, concept) }}">
+                <li ng-repeat="tag in resource.attributes[tagLabel]">
+                    <a ng-href="{{ makeURL(map, tag) }}">
                         <span class="label label-default"
                               ng-bind="tag"></span>
                     </a>
