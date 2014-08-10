@@ -1,14 +1,17 @@
-<div class="media">
-    <a class="pull-left" ng-href="{{ makeURL(map, resource) }}">
-        <img class="media-object" ng-src="{{ resource.attributes.image }}" alt="{{ resource.attributes.title }}" width="60px">
-    </a>
-    <div class="media-body">
+<div class="panel panel-success">
+    <div class="panel-heading">
         <a ng-href="{{ makeURL(map, resource) }}">
-            <h4 class="media-heading">
+            <img class="" ng-src="{{ resource.attributes.image }}" alt="{{ resource.attributes.title }}" width="60px">
+            <span class="label {{ resource.understanding() | understandingClass }}"
+                  ng-bind-template="{{ resource.understanding() | understandingLabel }}">
+            </span>
+            <h4>
                 {{ resource.attributes.title }}
                 <small ng-bind="resource.attributes.subtitle"></small>
             </h4>
         </a>
+    </div>
+    <div class="panel-body">
         <blockquote ng-bind="resource.attributes.summary">
         </blockquote>
     </div>
