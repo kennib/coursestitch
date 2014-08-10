@@ -24,7 +24,7 @@ service('getUnderstanding', function(Understanding) {
 
                 understanding.set('user', Parse.User.current());
                 understanding.set('resource', resource);
-                understanding.set('understanding', 0);
+                understanding.set('understands', 0);
 
                 return understanding.save();
             } else {
@@ -88,15 +88,20 @@ directive('resource', function(getUnderstanding, toggleResource, makeURL) {
 
             // Get the user's understanding of this resource
             scope.$watch('resource', function() {
-                if (scope.resource)
-                    getUnderstanding(scope.resource)
-                    .then(function(understanding) {
-                        scope.understanding = understanding;
-                        scope.setUnderstanding = function(understands) {
-                            scope.understanding.set('understands', understands);
-                            scope.understanding.save(scope.understanding.attributes);
-                        };
-                    });
+                if (scope.resource) {
+                    if (scope.resource.understandingObj)
+                        scope.understanding = scope.resource.understandingObj;
+                    else
+                        getUnderstanding(scope.resource)
+                        .then(function(understanding) {
+                            scope.understanding = understanding;
+                        });
+
+                    scope.setUnderstanding = function(understands) {
+                        scope.understanding.set('understands', understands);
+                        scope.understanding.save(scope.understanding.attributes);
+                    }
+                }
             });
 
             scope.$watch('editMode', function() {
