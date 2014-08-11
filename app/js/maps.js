@@ -21,7 +21,10 @@ service('getMap', function() {
 
     Parse.Object.extend('Resource', {
         understanding: function() {
-            return this.understandingObj.get('understands');
+            if (this.understandingObj)
+                return this.understandingObj.get('understands');
+            else
+                return undefined;
         },
     });
 

@@ -98,8 +98,9 @@ directive('resource', function(getUnderstanding, toggleResource, makeURL) {
                         });
 
                     scope.setUnderstanding = function(understands) {
-                        scope.understanding.set('understands', understands);
-                        scope.understanding.save(scope.understanding.attributes);
+                        if (scope.understanding)
+                            scope.understanding.set('understands', understands);
+                            scope.understanding.save(scope.understanding.attributes);
                     }
                 }
             });
