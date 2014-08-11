@@ -6,16 +6,16 @@
         <div ng-switch="mode">
             <ul class="list-inline"
                 ng-switch-when="view">
-                <li ng-repeat="tag in resource.attributes[tagLabel]">
-                    <a ng-href="{{ makeURL(map, tag) }}">
+                <li ng-repeat="concept in resource.attributes[tagLabel]">
+                    <a ng-href="{{ makeURL(map, concept) }}">
                         <span class="label label-default"
-                              ng-bind="tag"></span>
+                              ng-bind="concept.attributes.title"></span>
                     </a>
                 </li>
             </ul>
 
             <div ng-switch-when="edit">
-                <tags model="resource.attributes[tagLabel]"></tags>
+                <tags model="resource.tags[tagLabel]"></tags>
             </div>
         </div>
     </div>

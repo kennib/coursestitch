@@ -6,7 +6,7 @@ service('getConcept', function() {
             .get(conceptId)
         .then(function(concept) {
             var resourceQuery = new Parse.Query('Resource')
-                .equalTo('teaches', concept.get('title'))
+                .equalTo('teaches', concept)
                 .find();
             return Parse.Promise.when(concept, resourceQuery);
         });
@@ -14,7 +14,7 @@ service('getConcept', function() {
     };
 }).
 
-directive('concept', function() {
+directive('concept', function(makeURL) {
     return {
         restrict: 'E',
         templateUrl: '/templates/concept.html',
@@ -24,6 +24,7 @@ directive('concept', function() {
             mode: '@',
         },
         link: function(scope, elem, attrs) {
+            scope.makeURL = makeURL;
         },
     };
 });

@@ -3,6 +3,48 @@ angular.module('coursestitch-maps', [
     'coursestitch-resources', 'coursestitch-concepts'
 ]).
 
+service('getMap', function() {
+    Parse.Object.extend('Map', {
+        understanding: function() {
+            var resources = this.get('resources');
+
+            var us = resources.reduce(function(u, r) {
+                if (r.understanding())
+                    return u + r.understanding();
+                else
+                    return r;
+            }, 0);
+
+            return us / resources.length;
+        },
+    });
+
+    Parse.Object.extend('Resource', {
+        understanding: function() {
+            if (this.understandingObj)
+                return this.understandingObj.get('understands');
+            else
+                return undefined;
+        },
+    });
+
+    return function(mapId, userId) {
+        return Parse.Cloud.run('getUnderstandingMap', {mapId: mapId, userId: userId})
+        .then(function(result) {
+            result.understandings.forEach(function(u) {
+                var resource = result.map.get('resources').find(function(resource) {
+                    return resource.id === u.get('resource').id;
+                });
+
+                resource.understandingObj = u;
+                u.get('resource').understandingObj = u;
+            });
+
+            return result.map;
+        });
+    };
+}).
+
 controller('MapsCtrl', function($scope) {
     new Parse.Query('Map')
         .find()
@@ -10,7 +52,7 @@ controller('MapsCtrl', function($scope) {
         $scope.maps = maps;
     });
 }).
-controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept, newResource) {
+controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getMap, getConcept, newResource) {
     $scope.newResource = newResource;
 
     var mapId = $routeParams.mapId;
@@ -26,13 +68,15 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept,
       // Do something if the type is not concept or resource. Or something.
     }
 
-    new Parse.Query('Map')
-        .equalTo('objectId', mapId)
-        .include(['resources'])
-        .first()
+    var userId;
+    if (Parse.User.current())
+        userId = Parse.User.current().id
+    else
+        userId = undefined;
+
+    getMap(mapId, userId)
     .then(function(map) {
         $scope.map = map;
-
         if (map.get('resources')) {
             var resources = map.get('resources')
             // Set the map's resources to be used in the scope, which allows it to be rendered.
@@ -42,11 +86,19 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getConcept,
             if ($scope.viewType === 'resource') {
                 // Retrieve the resource with the given ID parsed from the route, regardless of
                 // whether the resource is in the map or not.
-                new Parse.Query('Resource')
-                    .get(viewId)
-                .then(function(resource) {
-                    $scope.resource = resource;
+                var resource = resources.find(function(resource) {
+                    return resource.id === viewId;
                 });
+
+                if (resource === undefined)
+                    new Parse.Query('Resource')
+                        .include(['teaches', 'requires'])
+                        .get(viewId)
+                    .then(function(resource) {
+                        $scope.resource = resource;
+                    });
+                else
+                    $scope.resource = resource;
 
             } else if ($scope.viewType === 'concept')
                 // Retrieves the Concept object given with the ID, as well as all resources that

@@ -63,11 +63,40 @@ filter('urlize', function() {
             return string.replace(/ /g, '-');
     };
 }).
-
 filter('deurlize', function() {
     return function(string) {
         if (string)
             return string.replace(/-/g, ' ');
+    };
+}).
+filter('understandingClass', function() {
+    return function(u) {
+        if (u < 0) {
+            return 'palette-pomegranate';
+        } else if (u == 0) {
+            return 'palette-silver';
+        } else if (u > 0 && u < 0.5) {
+            return 'palette-peter-river';
+        } else if (u > 0.5 && u < 1) {
+            return 'palette-turquoise';
+        } else if (u == 1) {
+            return 'palette-emerald';
+        }
+    };
+}).
+filter('understandingLabel', function() {
+    return function(u) {
+        if (u < 0) {
+            return 'Confusing';
+        } else if (u == 0) {
+            return 'Unread';
+        } else if (u > 0 && u < 0.5) {
+            return 'Getting started';
+        } else if (u > 0.5 && u < 1) {
+            return 'Almost finished';
+        } else if (u == 1) {
+            return 'Understood';
+        }
     };
 }).
 
