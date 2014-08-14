@@ -125,6 +125,18 @@ directive('resource', function(getUnderstanding, toggleResource, makeURL) {
                     }) !== -1;
                 }
             });
+
+            // Update tags
+            scope.$watch('resource.tags', function(tags) {
+                if (tags === undefined)
+                    return;
+
+                if (scope.editMode)
+                    angular.forEach(tags, function(tags, tagType) {
+                        scope.resource.set(tags, tagType);
+                        scope.resource.attributes[tagType] = tags;
+                    });
+            }, true);
         },
     };
 });
