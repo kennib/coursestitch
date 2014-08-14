@@ -69,19 +69,24 @@ directive('resource', function(getUnderstanding, toggleResource, makeURL) {
             scope.editMode = false;
 
             // Get the tags for this resource
+            var addTags = function(resource) {
+                scope.tags.forEach(function(tagLabel) {
+                    var tags = resource.get(tagLabel);
+                    if (tags)
+                        resource.tags[tagLabel] = tags.map(function(concept) {
+                            return concept.get('title');
+                        });
+                });
+                return resource;
+            };
+
+            // Set up the tags for the resource
             scope.$watch('resource', function() {
                 if (scope.resource === undefined)
                     return;
 
                 scope.resource.tags = {};
-
-                scope.tags.forEach(function(tagLabel) {
-                    var tags = scope.resource.get(tagLabel);
-                    if (tags)
-                        scope.resource.tags[tagLabel] = tags.map(function(concept) {
-                            return concept.get('title');
-                        });
-                });
+                addTags(scope.resource);
             });
 
             // Get the user's understanding of this resource
@@ -139,26 +144,30 @@ directive('resource', function(getUnderstanding, toggleResource, makeURL) {
             // Function to fetch resource tag objects
             var fetchTags = function(resource) {
                 // Fetch the tags for the resource
-                scope.tags.forEach(function(tagType) {
+                var fetches = scope.tags.map(function(tagType) {
                     var tags = resource.get(tagType);
-                    tags.forEach(function(tag) {
-                        tag.fetch();
+                    return tags.map(function(tag) {
+                        return tag.fetch();
                     });
+                }).reduce(function(a, b) {
+                    return a.concat(b);
                 });
 
-                return resource;
+                return Parse.Promise.when([resource].concat(fetches));
             };
 
             // Save the resource
             scope.save = function() {
                 return scope.resource.save()
-                .then(fetchTags);
+                .then(fetchTags)
+                .then(addTags);
             };
 
             // Reset the resource
             scope.reset = function() {
                 return scope.resource.fetch()
-                .then(fetchTags);
+                .then(fetchTags)
+                .then(addTags);
             };
         },
     };
