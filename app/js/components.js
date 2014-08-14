@@ -1,4 +1,6 @@
-angular.module('coursestitch-components', []).
+angular.module('coursestitch-components', [
+    'decipher.tags', 'ui.bootstrap',
+]).
 
 directive('switch', function() {
     return {
