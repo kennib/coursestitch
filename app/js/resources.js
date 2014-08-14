@@ -62,8 +62,6 @@ directive('resource', function(getUnderstanding, toggleResource, makeURL) {
         scope: {
             map: '=',
             resource: '=',
-            save: '&',
-            reset: '&',
         },
         link: function(scope, elem, attrs) {
             scope.makeURL = makeURL;
@@ -137,6 +135,31 @@ directive('resource', function(getUnderstanding, toggleResource, makeURL) {
                         scope.resource.attributes[tagType] = tags;
                     });
             }, true);
+
+            // Function to fetch resource tag objects
+            var fetchTags = function(resource) {
+                // Fetch the tags for the resource
+                scope.tags.forEach(function(tagType) {
+                    var tags = resource.get(tagType);
+                    tags.forEach(function(tag) {
+                        tag.fetch();
+                    });
+                });
+
+                return resource;
+            };
+
+            // Save the resource
+            scope.save = function() {
+                return scope.resource.save()
+                .then(fetchTags);
+            };
+
+            // Reset the resource
+            scope.reset = function() {
+                return scope.resource.fetch()
+                .then(fetchTags);
+            };
         },
     };
 });
