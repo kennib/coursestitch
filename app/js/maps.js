@@ -3,7 +3,7 @@ angular.module('coursestitch-maps', [
     'coursestitch-resources', 'coursestitch-concepts'
 ]).
 
-service('getMap', function() {
+service('fetchMap', function() {
     Parse.Object.extend('Map', {
         understanding: function() {
             var resources = this.get('resources');
@@ -42,6 +42,19 @@ service('getMap', function() {
 
             return result.map;
         });
+    };
+}).
+
+service('getMap', function(fetchMap) {
+    var maps = {};
+
+    // Return cached versions of maps if they exist
+    // Otherwise fetch the map and cache it
+    return function(mapId, userId) {
+        if (maps[mapId+userId])
+            return maps[mapId+userId]
+        else
+            return maps[mapId+userId] = fetchMap(mapId, userId)
     };
 }).
 
