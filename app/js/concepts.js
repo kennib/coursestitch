@@ -25,6 +25,12 @@ directive('concept', function(makeURL) {
         },
         link: function(scope, elem, attrs) {
             scope.makeURL = makeURL;
+
+            // Watch to see if a concept has been loaded
+            scope.$watch('concept', function(concept) {
+                if(concept !== undefined)
+                    scope.status = 'loaded';
+            });
         },
     };
 });

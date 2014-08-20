@@ -89,6 +89,9 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getMap, get
 
     getMap(mapId, userId)
     .then(function(map) {
+        // The map has been loaded!
+        $scope.status = 'loaded';
+
         $scope.map = map;
         if (map.get('resources')) {
             var resources = map.get('resources')
