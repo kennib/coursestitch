@@ -7,16 +7,16 @@
             <ul class="list-inline"
                 ng-switch-when="view">
                 <li ng-repeat="concept in resource.attributes[tagLabel]">
-                    <a ng-href="{{ makeURL(map, concept) }}">
+                    <a ng-href="{{ concept.id ? makeURL(map, concept) : '' }}">
                         <span class="label label-default"
-                              ng-bind="concept.attributes.title"></span>
+                              ng-bind="concept.attributes.title || concept"></span>
                     </a>
                 </li>
             </ul>
 
             <div ng-switch-when="edit">
                 <tags 
-                      data-src="{value:kw, name: kw} as kw for kw in resource.attributes.keywords"
+                      data-src="{group:tagLabel, value: kw, name: kw} as kw for kw in resource.attributes.keywords"
                       data-model="resource.tags[tagLabel]"></tags>
             </div>
         </div>
