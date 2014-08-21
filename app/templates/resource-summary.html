@@ -1,10 +1,12 @@
-<div class="panel panel-success">
-    <div class="panel-heading">
+<div class="panel">
+    <div class="panel-heading {{ resource.understanding() | understandingClass }}">
         <a ng-href="{{ makeURL(map, resource) }}">
-            <img class="" ng-src="{{ resource.attributes.image }}" alt="{{ resource.attributes.title }}" width="60px">
-            <span class="label {{ resource.understanding() | understandingClass }}"
-                  ng-bind-template="{{ resource.understanding() | understandingLabel }}">
-            </span>
+            <div class="panel-image">
+                <img ng-src="{{ resource.attributes.image }}" alt="{{ resource.attributes.title }}" width="60px">
+                <span class="label"
+                      ng-bind-template="{{ resource.understanding() | understandingLabel }}">
+                </span>
+            </div>
             <h4>
                 {{ resource.attributes.title }}
                 <small ng-bind="resource.attributes.subtitle"></small>
