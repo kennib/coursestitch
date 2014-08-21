@@ -28,9 +28,21 @@ service('fetchMap', function() {
         },
     });
 
+    Parse.Object.extend('Concept', {
+        understanding: function() {
+            if (this.understandingObj)
+                return this.understandingObj.get('understands');
+            else
+                return undefined;
+        },
+    });
+
+    var ConceptUnderstanding = Parse.Object.extend('ConceptUnderstanding');
+
     return function(mapId, userId) {
         return Parse.Cloud.run('getUnderstandingMap', {mapId: mapId, userId: userId})
         .then(function(result) {
+            // Add understandings to resources
             result.understandings.forEach(function(u) {
                 var resource = result.map.get('resources').find(function(resource) {
                     return resource.id === u.get('resource').id;
@@ -38,6 +50,37 @@ service('fetchMap', function() {
 
                 resource.understandingObj = u;
                 u.get('resource').understandingObj = u;
+            });
+
+            // Get a list of concepts
+            var concepts = result.map.get('resources')
+                .map(function(resource) {
+                    return resource.get('teaches').concat(resource.get('requires'));
+                })
+                .reduce(function (a, b) {
+                        return a.concat(b);
+                }, [])
+                .filter(function(a) { return a; });
+
+            // Add understandings for each concept
+            concepts.forEach(function(concept) {
+                var understanding = result.conceptUnderstandings.find(function(u) {
+                    return concept.id === u.get('concept').id;
+                });
+
+                if (understanding) {
+                    concept.understandingObj = understanding;
+                } else {
+                    // Create a new concept understanding if one doesn't already exist
+                    new ConceptUnderstanding()
+                        .set('user', Parse.User.current())
+                        .set('concept', concept)
+                        .set('understands', 0)
+                    .save()
+                    .then(function(u) {
+                        concept.understandingObj = u;
+                    });
+                }
             });
 
             return result.map;
