@@ -81,6 +81,8 @@ filter('understandingClass', function() {
             return 'palette-turquoise';
         } else if (u == 1) {
             return 'palette-emerald';
+        } else {
+            return 'palette-asbestos';
         }
     };
 }).

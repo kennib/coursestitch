@@ -1,0 +1,20 @@
+/* Panel restructuring and styling */
+.panel-heading {
+    margin: none;
+}
+.panel-heading h4 {
+    color: white;
+}
+.panel-heading h4 small {
+    display: block;
+}
+.panel-heading .panel-image {
+    float: left;
+    min-width: 100px;
+    text-align: center;
+    margin-right: 10px;
+}
+.panel-heading .panel-image  img {
+    display: block;
+    margin: auto;
+}
