@@ -52,6 +52,7 @@ controller('MapsCtrl', function($scope) {
         $scope.maps = maps;
     });
 }).
+
 controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getMap, getConcept, newResource) {
     $scope.newResource = newResource;
 

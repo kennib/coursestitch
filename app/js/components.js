@@ -158,4 +158,62 @@ directive('understandingSlider', function($timeout) {
             });
         },
     };
+}).
+
+directive('knowledgeMap', function() {
+    return {
+        restrict: 'E',
+        template: '<div id="km"></div>',
+        replace: true,
+        scope: {
+            model: '=',
+            visible: '=',
+        },
+        link: function(scope, element, attrs) {
+            var km;
+
+            // Convert a concept from Parse format to Cartographer format.
+            var translateConcept = function(c) {
+                return {
+                    id: c.id,
+                    label: c.attributes.title,
+                };
+            };
+
+            // Convert a resource from Parse format to Cartographer format.
+            var translateResource = function(s) {
+                return {
+                    label: s.attributes.title,
+                    id: s.id,
+                    teaches: s.attributes.teaches ?
+                        s.attributes.teaches.map(translateConcept) : undefined,
+                    requires: s.attributes.requires ?
+                        s.attributes.requires.map(translateConcept) : undefined,
+                    needs: s.attributes.needs ?
+                        s.attributes.needs.map(translateConcept) : undefined
+                };
+            };
+
+            // Watch for changes in the data we are bound to. When we get some
+            // data (usually from AJAX), we'll create the knowledge map. Note
+            // that this only happens once; re-renders are not handled yet.
+            scope.$watch('model', function(){
+                if(!km && scope.model) {
+                    km = knowledgeMap.create({
+                        resources: scope.model.map(translateResource),
+                        inside: '#km',
+                        held: !scope.visible,
+                    });
+                }
+            });
+
+            // When the map becomes visible, re-render it, as it may not have
+            // rendered properly while it was off-screen.
+            scope.$watch('visible', function(value, old) {
+                if(value && !old && km) {
+                    km.unhold().render();
+                }
+            });
+        },
+    };
 });

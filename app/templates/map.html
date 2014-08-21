@@ -15,7 +15,8 @@
     </div>
     <div class="col-md-7">
         <ng-include src="'/templates/map-controls.html'"></ng-include>
-        <ng-include src="'/templates/resources.html'"></ng-include>
+        <ng-include src="'/templates/resources.html'" ng-hide="mapMode"></ng-include>
+        <ng-include src="'/templates/knowledge-map.html'" ng-show="mapMode"></ng-include>
     </div>
 </div>
 
