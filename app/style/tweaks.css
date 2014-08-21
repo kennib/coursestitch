@@ -2,3 +2,8 @@
     visibility: visible;
     opacity: 1;
 }
+
+.loading {
+    display: block;
+    margin: auto;
+}
