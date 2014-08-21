@@ -3,7 +3,12 @@ angular.module('coursestitch-maps', [
     'coursestitch-resources', 'coursestitch-concepts'
 ]).
 
-service('fetchMap', function() {
+// Caches
+value('maps', {}).
+value('understandings', {}).
+value('conceptUnderstandings', {}).
+
+service('fetchMap', function(understandings, conceptUnderstandings) {
     Parse.Object.extend('Map', {
         understanding: function() {
             var resources = this.get('resources');
@@ -20,84 +25,55 @@ service('fetchMap', function() {
     });
 
     Parse.Object.extend('Resource', {
+        understandingObj: function() {
+            var userId = Parse.User.current().id;
+            return understandings[this.id+userId];
+        },
         understanding: function() {
-            if (this.understandingObj)
-                return this.understandingObj.get('understands');
-            else
-                return undefined;
+            return this.understandingObj().get('understands');
         },
     });
 
     Parse.Object.extend('Concept', {
+        understandingObj: function() {
+            var userId = Parse.User.current().id;
+            return conceptUnderstandings[this.id+userId];
+        },
         understanding: function() {
-            if (this.understandingObj)
-                return this.understandingObj.get('understands');
-            else
-                return undefined;
+            return this.understandingObj().get('understands');
         },
     });
 
     var ConceptUnderstanding = Parse.Object.extend('ConceptUnderstanding');
 
     return function(mapId, userId) {
-        return Parse.Cloud.run('getUnderstandingMap', {mapId: mapId, userId: userId})
-        .then(function(result) {
-            // Add understandings to resources
-            result.understandings.forEach(function(u) {
-                var resource = result.map.get('resources').find(function(resource) {
-                    return resource.id === u.get('resource').id;
-                });
-
-                resource.understandingObj = u;
-                u.get('resource').understandingObj = u;
-            });
-
-            // Get a list of concepts
-            var concepts = result.map.get('resources')
-                .map(function(resource) {
-                    return resource.get('teaches').concat(resource.get('requires'));
-                })
-                .reduce(function (a, b) {
-                        return a.concat(b);
-                }, [])
-                .filter(function(a) { return a; });
-
-            // Add understandings for each concept
-            concepts.forEach(function(concept) {
-                var understanding = result.conceptUnderstandings.find(function(u) {
-                    return concept.id === u.get('concept').id;
-                });
-
-                if (understanding) {
-                    concept.understandingObj = understanding;
-                } else {
-                    // Create a new concept understanding if one doesn't already exist
-                    new ConceptUnderstanding()
-                        .set('user', Parse.User.current())
-                        .set('concept', concept)
-                        .set('understands', 0)
-                    .save()
-                    .then(function(u) {
-                        concept.understandingObj = u;
-                    });
-                }
-            });
-
-            return result.map;
-        });
+        return Parse.Cloud.run('getUnderstandingMap', {mapId: mapId, userId: userId});
     };
 }).
 
-service('getMap', function(fetchMap) {
-    var maps = {};
-
+service('getMap', function(maps, understandings, conceptUnderstandings, fetchMap) {
     // Return cached versions of maps if they exist
     // Otherwise fetch the map and cache it
     return function(mapId, userId) {
-        if (maps[mapId+userId])
-            return maps[mapId+userId]
-        else
-            return maps[mapId+userId] = fetchMap(mapId, userId)
+        if (maps[mapId+userId] === undefined) {
+            // Cache map
+            var map = fetchMap(mapId, userId);
+            maps[mapId+userId] = map.then(function(map) { return map.map });
+
+            // Cache understandings
+            map.then(function(map) {
+                // Cache resource understandings
+                map.understandings.forEach(function(u) {
+                    understandings[u.get('resource').id+userId] = u;
+                });
+                // Cache concept understandings
+                map.conceptUnderstandings.forEach(function(u) {
+                    conceptUnderstandings[u.get('concept').id+userId] = u;
+                });
+            });
+        }
+
+        return maps[mapId+userId];
     };
 }).
 

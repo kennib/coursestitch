@@ -98,8 +98,8 @@ directive('resource', function(getUnderstanding, toggleResource, makeURL) {
             // Get the user's understanding of this resource
             scope.$watch('resource', function() {
                 if (scope.resource) {
-                    if (scope.resource.understandingObj)
-                        scope.understanding = scope.resource.understandingObj;
+                    if (scope.resource.understandingObj())
+                        scope.understanding = scope.resource.understandingObj();
                     else
                         getUnderstanding(scope.resource)
                         .then(function(understanding) {
