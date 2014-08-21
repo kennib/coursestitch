@@ -77,7 +77,7 @@ filter('understandingClass', function() {
             return 'palette-silver';
         } else if (u > 0 && u < 0.5) {
             return 'palette-peter-river';
-        } else if (u > 0.5 && u < 1) {
+        } else if (u >= 0.5 && u < 1) {
             return 'palette-turquoise';
         } else if (u == 1) {
             return 'palette-emerald';
