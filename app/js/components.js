@@ -194,6 +194,34 @@ directive('knowledgeMap', function() {
                 };
             };
 
+            // Add rects to concept nodes to make them look like flat ui tags.
+            var conceptAppearancePlugin = function(km) {
+                // Add rect elements when new nodes are created.
+                km.renderNodes.onNew(function(nodes) {
+                    nodes.filter('.concept').insert('rect', 'text');
+                });
+
+                // Update rect properties during layout.
+                km.renderNodes.onUpdate(function(nodes) {
+                    nodes.filter('.concept').select('rect')
+                        // Offset rects so they're centred.
+                        .attr('x', function(d) { return -d.width/2 - 5; })
+                        .attr('y', function(d) { return -d.height/2 - 3; })
+                        // Add a bit of padding.
+                        .attr('width', function(d) { return d.width + 10; })
+                        .attr('height', function(d) { return d.height + 6; })
+                        // Round corners.
+                        .attr('rx', '0.25em').attr('ry', '0.25em');
+                }).onUpdate(km.calculateNodeSizes);
+            };
+
+            // Change the default layout parameters.
+            var layoutPlugin = function(km) {
+                km.onPreLayout(function(config) {
+                    config.rankSep(30);
+                });
+            };
+
             // Watch for changes in the data we are bound to. When we get some
             // data (usually from AJAX), we'll create the knowledge map. Note
             // that this only happens once; re-renders are not handled yet.
@@ -203,6 +231,7 @@ directive('knowledgeMap', function() {
                         resources: scope.model.map(translateResource),
                         inside: '#km',
                         held: !scope.visible,
+                        plugins: [conceptAppearancePlugin, layoutPlugin],
                     });
                 }
             });

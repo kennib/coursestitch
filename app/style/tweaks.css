@@ -2,3 +2,32 @@
     visibility: visible;
     opacity: 1;
 }
+
+#km .node:hover text {
+    fill: #1abc9c;
+}
+
+#km .node text {
+    fill: #16a085;
+    transition: 0.25s;
+}
+
+#km .edgePath path {
+    stroke: #ccc;
+}
+
+#km #arrowhead {
+    fill: #ccc !important;
+}
+
+#km .node.concept rect {
+    fill: #999;
+}
+
+#km .node.concept text {
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 1;
+    fill: #fff;
+}
