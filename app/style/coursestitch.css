@@ -1,4 +1,7 @@
 /* Panel restructuring and styling */
+.panel {
+    border: 1px dashed rgba(0,0,0, 0.2);
+}
 .panel-heading {
     margin: none;
 }
