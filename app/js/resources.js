@@ -69,6 +69,12 @@ directive('resource', function(getUnderstanding, toggleResource, makeURL) {
             scope.makeURL = makeURL;
             scope.tags = ["teaches", "requires"];
             scope.editMode = false;
+            
+            // Watch to see if a resource has been loaded
+            scope.$watch('resource', function(resource) {
+                if(resource !== undefined)
+                    scope.status = 'loaded';
+            });
 
             // Get the tags for this resource
             scope.$watch('resource', function() {

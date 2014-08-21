@@ -2,6 +2,22 @@ angular.module('coursestitch-components', [
     'decipher.tags', 'ui.bootstrap',
 ]).
 
+directive('loading', function() {
+    return {
+        restrict: 'E',
+        template: '<img src="images/loading.gif" class="loading" />',
+        scope: {
+           status: '=',
+        },
+        link: function(scope, elem, attrs) {
+            scope.$watch('status', function(status) {
+                if (status === 'loaded')
+                    elem.hide();
+            });
+        },
+    };
+}).
+
 directive('switch', function() {
     return {
         restrict: 'AE',

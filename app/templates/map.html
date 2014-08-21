@@ -1,23 +1,29 @@
 <ng-include src="'/templates/header.html'"></ng-include>
-<ng-include src="'/templates/map-header.html'"></ng-include>
 
-<div class="row">
-    <div class="col-md-5">
-        <article ng-switch on="viewType">
-            <div ng-switch-when="resource">
-                <resource map="map" resource="resource"
-                          save="resource.save(resource.attributes)"
-                          reset="resource.fetch()">
-                </resource>
-            </div>
-            <div ng-switch-when="concept">
-                <concept map="map" concept="concept"></concept>
-            </div>
-        </article>
-    </div>
-    <div class="col-md-7">
-        <ng-include src="'/templates/map-controls.html'"></ng-include>
-        <ng-include src="'/templates/resources.html'"></ng-include>
-    </div>
-</div>
+<article ng-switch="status">
+    <div ng-switch-when="loaded">
+        <ng-include src="'/templates/map-header.html'"></ng-include>
 
+        <div class="row">
+            <div class="col-md-5">
+                <article ng-switch="viewType">
+                    <div ng-switch-when="resource">
+                        <resource map="map" resource="resource"
+                                  save="resource.save(resource.attributes)"
+                                  reset="resource.fetch()">
+                        </resource>
+                    </div>
+                    <div ng-switch-when="concept">
+                        <concept map="map" concept="concept"></concept>
+                    </div>
+                </article>
+            </div>
+            <div class="col-md-7">
+                <ng-include src="'/templates/map-controls.html'"></ng-include>
+                <ng-include src="'/templates/resources.html'"></ng-include>
+            </div>
+        </div>
+    </div>
+
+    <loading status="status" ng-switch-default></loading>
+</article>
