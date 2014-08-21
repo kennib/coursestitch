@@ -8,7 +8,7 @@
                 ng-switch-when="view">
                 <li ng-repeat="concept in resource.attributes[tagLabel]">
                     <a ng-href="{{ makeURL(map, concept) }}">
-                        <span class="label label-default"
+                        <span class="label {{ concept.understanding() | understandingClass }}"
                               ng-bind="concept.attributes.title"></span>
                     </a>
                 </li>
