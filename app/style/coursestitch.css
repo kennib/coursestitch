@@ -5,7 +5,9 @@
 .panel-heading {
     margin: none;
 }
-.panel-heading h4 {
+.panel-heading h4,
+.panel-heading p,
+.panel-heading label {
     color: white;
 }
 .panel-heading h4 small {

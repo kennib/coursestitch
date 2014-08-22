@@ -1,10 +1,16 @@
 <article ng-switch="status">
     <div ng-switch-when="loaded">
         <ng-include src="'/templates/resource-controls.html'"></ng-include>
-        <ng-include src="'/templates/resource-heading.html'"></ng-include>
-        <ng-include src="'/templates/resource-understanding.html'"></ng-include>
-        <ng-include src="'/templates/resource-preview.html'"></ng-include>
-        <ng-include src="'/templates/resource-tags.html'"></ng-include>
+
+        <div class="panel resource">
+            <div class="panel-heading {{ resource.understanding() | understandingClass }}"
+                 ng-include src="'/templates/resource-heading.html'"></div>
+            <div class="panel-body">
+                <ng-include src="'/templates/resource-understanding.html'"></ng-include>
+                <ng-include src="'/templates/resource-preview.html'"></ng-include>
+                <ng-include src="'/templates/resource-tags.html'"></ng-include>
+            </div>
+        </div>
     </div>
     <loading status="status" ng-switch-default></loading>
 </article>
