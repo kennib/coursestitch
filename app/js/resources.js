@@ -1,36 +1,25 @@
 angular.module('coursestitch-resources', ['decipher.tags', 'ui.bootstrap.typeahead']).
 
+service('Resource', function(resourceUnderstandingCache) {
+    return Parse.Object.extend('Resource', {
+        understandingObj: function() {
+            var userId = Parse.User.current().id;
+            return resourceUnderstandingCache.get(this.id, userId);
+        },
+        understanding: function() {
+            var u = this.understandingObj();
+            return u ? u.get('understands') : undefined;
+        },
+    });
+}).
+service('resourceUnderstandingCache', function(objectCache) {
+    return objectCache('resource-understanding', function(resourceId, userId) {
+        return Parse.Cloud.run('getResourceUnderstanding', {resourceId: resourceId, userId: userId});
+    });
+}).
 service('newResource', function() {
     return function(resourceUrl, mapId) {
         return Parse.Cloud.run('summariseResource', {url: resourceUrl, mapId: mapId});
-    };
-}).
-service('Understanding', function() {
-    return Parse.Object.extend('Understanding');
-}).
-service('getUnderstanding', function(Understanding) {
-    return function(resource) {
-        // Get the understanding of the given resource
-        var understandingQuery = new Parse.Query('Understanding')
-            .equalTo('user', Parse.User.current())
-            .equalTo('resource', resource)
-            .first();
-
-        return understandingQuery
-        .then(function(understanding) {
-            // Create a new understanding if none exists
-            if (understanding === undefined) {
-                understanding = new Understanding();
-
-                understanding.set('user', Parse.User.current());
-                understanding.set('resource', resource);
-                understanding.set('understands', 0);
-
-                return understanding.save();
-            } else {
-                return understanding;
-            }
-        });
     };
 }).
 service('toggleResource', function() {
@@ -55,7 +44,7 @@ filter('join', function() {
     };
 }).
 
-directive('resource', function(getUnderstanding, toggleResource, makeURL) {
+directive('resource', function(toggleResource, makeURL) {
     return {
         restrict: 'E',
         templateUrl: '/templates/resource.html',
@@ -93,25 +82,6 @@ directive('resource', function(getUnderstanding, toggleResource, makeURL) {
 
                 scope.resource.tags = {};
                 addTags(scope.resource);
-            });
-
-            // Get the user's understanding of this resource
-            scope.$watch('resource', function() {
-                if (scope.resource) {
-                    if (scope.resource.understandingObj())
-                        scope.understanding = scope.resource.understandingObj();
-                    else
-                        getUnderstanding(scope.resource)
-                        .then(function(understanding) {
-                            scope.understanding = understanding;
-                        });
-
-                    scope.setUnderstanding = function(understands) {
-                        if (scope.understanding)
-                            scope.understanding.set('understands', understands);
-                            scope.understanding.save(scope.understanding.attributes);
-                    }
-                }
             });
 
             scope.$watch('editMode', function() {

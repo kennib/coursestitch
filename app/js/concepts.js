@@ -1,5 +1,22 @@
 angular.module('coursestitch-concepts', []).
 
+service('Concept', function(conceptUnderstandingCache) {
+    return Parse.Object.extend('Concept', {
+        understandingObj: function() {
+            var userId = Parse.User.current().id;
+            return conceptUnderstandingCache.get(this.id, userId);
+        },
+        understanding: function() {
+            var u = this.understandingObj();
+            return u ? u.get('understands') : undefined;
+        },
+    })
+}).
+service('conceptUnderstandingCache', function(objectCache) {
+    return objectCache('concept-understanding', function(conceptId, userId) {
+        return Parse.Cloud.run('getConceptUnderstanding', {conceptId: conceptId, userId: userId});
+    });
+}).
 service('getConcept', function() {
     return function(conceptId) {
         var conceptQuery = new Parse.Query('Concept')
