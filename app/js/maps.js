@@ -3,13 +3,8 @@ angular.module('coursestitch-maps', [
     'coursestitch-resources', 'coursestitch-concepts'
 ]).
 
-// Caches
-value('maps', {}).
-value('understandings', {}).
-value('conceptUnderstandings', {}).
-
-service('fetchMap', function(understandings, conceptUnderstandings) {
-    Parse.Object.extend('Map', {
+service('Map', function() {
+    return Parse.Object.extend('Map', {
         understanding: function() {
             var resources = this.get('resources');
 
@@ -23,57 +18,39 @@ service('fetchMap', function(understandings, conceptUnderstandings) {
             return us / resources.length;
         },
     });
-
-    Parse.Object.extend('Resource', {
-        understandingObj: function() {
-            var userId = Parse.User.current().id;
-            return understandings[this.id+userId];
-        },
-        understanding: function() {
-            return this.understandingObj().get('understands');
-        },
-    });
-
-    Parse.Object.extend('Concept', {
-        understandingObj: function() {
-            var userId = Parse.User.current().id;
-            return conceptUnderstandings[this.id+userId];
-        },
-        understanding: function() {
-            return this.understandingObj().get('understands');
-        },
-    });
-
-    var ConceptUnderstanding = Parse.Object.extend('ConceptUnderstanding');
-
+}).
+service('mapCache', function($cacheFactory) {
+    return $cacheFactory('map-cache');
+}).
+service('fetchMap', function() { 
     return function(mapId, userId) {
         return Parse.Cloud.run('getUnderstandingMap', {mapId: mapId, userId: userId});
     };
 }).
-
-service('getMap', function(maps, understandings, conceptUnderstandings, fetchMap) {
+service('getMap', function(Map, Resource, Concept, fetchMap,
+                           mapCache, resourceUnderstandingCache, conceptUnderstandingCache) {
     // Return cached versions of maps if they exist
     // Otherwise fetch the map and cache it
     return function(mapId, userId) {
-        if (maps[mapId+userId] === undefined) {
+        if (mapCache.get(mapId+userId) === undefined) {
             // Cache map
             var map = fetchMap(mapId, userId);
-            maps[mapId+userId] = map.then(function(map) { return map.map });
+            mapCache.put(mapId+userId, map.then(function(map) { return map.map }));
 
             // Cache understandings
             map.then(function(map) {
                 // Cache resource understandings
                 map.understandings.forEach(function(u) {
-                    understandings[u.get('resource').id+userId] = u;
+                    resourceUnderstandingCache.put(u.get('resource').id+userId, u);
                 });
                 // Cache concept understandings
                 map.conceptUnderstandings.forEach(function(u) {
-                    conceptUnderstandings[u.get('concept').id+userId] = u;
+                    conceptUnderstandingCache.put(u.get('concept').id+userId, u);
                 });
             });
         }
 
-        return maps[mapId+userId];
+        return mapCache.get(mapId+userId);
     };
 }).
 
