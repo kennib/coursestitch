@@ -1,18 +1,21 @@
 angular.module('coursestitch-resources', ['decipher.tags', 'ui.bootstrap.typeahead']).
 
-value('Resource', function(resourceUnderstandingCache) {
+service('Resource', function(resourceUnderstandingCache) {
     return Parse.Object.extend('Resource', {
         understandingObj: function() {
             var userId = Parse.User.current().id;
-            return resourceUnderstandingCache.get(this.id+userId);
+            return resourceUnderstandingCache.get(this.id, userId);
         },
         understanding: function() {
-            return this.understandingObj().get('understands');
+            var u = this.understandingObj();
+            return u ? u.get('understands') : undefined;
         },
-    })
+    });
 }).
-service('resourceUnderstandingCache', function($cacheFactory) {
-    return $cacheFactory('resource-understanding-cache');
+service('resourceUnderstandingCache', function(objectCache) {
+    return objectCache('resource-understanding', function(resourceId, userId) {
+        return Parse.Cloud.run('getResourceUnderstanding', {resourceId: resourceId, userId: userId});
+    });
 }).
 service('newResource', function() {
     return function(resourceUrl, mapId) {

@@ -35,6 +35,39 @@ config(function() {
     Parse.initialize(parseKeys.app, parseKeys.js);
 }).
 
+service('objectCache', function($cacheFactory) {
+    // Return an object which caches or fetches objects
+    return function(name, fetch) {
+        var cache = $cacheFactory(name+'-cache');
+        return {
+            fetch: fetch,
+            cache: cache,
+            put: function(id, obj) {
+                this.cache.put(id, obj);
+            },
+            get: function(id, userId) {
+                var self = this;
+                var objId = userId ? id+userId : id;
+
+                // If we have no cache, then fetch the object
+                if (this.cache.get(objId) === undefined) {
+                    // Temporary value placeholder
+                    this.put(objId, null);
+
+                    // Fetch the value
+                    this.fetch(id, userId)
+                    .then(function(obj) {
+                        self.put(objId, obj);
+                    });
+                }
+
+                // Return the object
+                return this.cache.get(objId);
+            },
+        };
+    };
+}).
+
 service('makeURL', function(urlizeFilter) {
     // Create a URL string from various attributes of a given map
     // and view object (which can be a resource or a concept).
