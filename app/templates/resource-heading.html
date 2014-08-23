@@ -1,10 +1,10 @@
 <div ng-switch="mode">
     <a ng-href="{{ resource.url }}"
        ng-switch-when="view">
-        <h2 class="media-heading"
-            ng-bind="resource.attributes.title"></h2>
-        <h3 class="media-heading"
-            ng-bind="resource.attributes.subtitle"></h3>
+        <h4>
+            <span ng-bind="resource.attributes.title"></span>
+            <small ng-bind="resource.attributes.subtitle"></small>
+        </h4>
     </a>
     <div ng-switch-when="edit">
         <form role="form">
