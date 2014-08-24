@@ -249,12 +249,12 @@ directive('knowledgeMap', function() {
                 km.renderNodes.onNew(function(nodes) {
                     nodes.select('text').each(function() {
                         var self = this;
-                        console.log(scope.makeURL);
+                        //console.log(scope.makeURL);
                         d3.select(this.parentNode)
                             .insert('a', 'text')
                             .attr('href', function(d) {
-                                console.log(scope.makeURL(d.content.source));
-                                return scope.makeURL(d.content.source);
+                                //console.log(scope.makeURL(d.content.source));
+                                return "";//scope.makeURL(d.content.source);
                             })
                             .append(function() { return self; });
                     });
