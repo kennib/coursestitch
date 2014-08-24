@@ -35,7 +35,11 @@ service('getMap', function(Map, Resource, Concept, fetchMap,
         if (mapCache.get(mapId+userId) === undefined) {
             // Cache map
             var map = fetchMap(mapId, userId);
-            mapCache.put(mapId+userId, map.then(function(map) { return map.map }));
+            mapCache.put(mapId+userId, map.then(function(map) {
+                map.map.concepts = map.concepts;
+                return map.map;
+            }));
+
 
             // Cache understandings
             map.then(function(map) {
@@ -96,10 +100,12 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter, 
 
         $scope.map = map;
         if (map.get('resources')) {
-            var resources = map.get('resources')
+            var resources = map.get('resources');
+            var concepts = map.concepts;
             // Set the map's resources to be used in the scope, which allows it to be rendered.
             // This could be empty if the map has no associated resources.
             $scope.resources = resources;
+            $scope.concepts = concepts;
 
             if ($scope.viewType === 'resource') {
                 // Retrieve the resource with the given ID parsed from the route, regardless of
