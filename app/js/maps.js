@@ -75,6 +75,11 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getMap, get
     else
         userId = undefined;
 
+    $scope.makeMapURL = function(id) {
+        console.log('========== here', $scope.map);
+        return $scope.makeURL($scope.map, id);
+    };
+
     getMap(mapId, userId)
     .then(function(map) {
         $scope.map = map;

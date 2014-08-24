@@ -168,29 +168,33 @@ directive('knowledgeMap', function() {
         scope: {
             model: '=',
             visible: '=',
+            makeURL: '=',
         },
         link: function(scope, element, attrs) {
             var km;
 
             // Convert a concept from Parse format to Cartographer format.
-            var translateConcept = function(c) {
+            var translateConcept = function(s) {
                 return {
-                    id: c.id,
-                    label: c.attributes.title,
+                    id: s.id,
+                    label: s.attributes.title,
+                    content: { source: s },
                 };
             };
 
             // Convert a resource from Parse format to Cartographer format.
             var translateResource = function(s) {
+                var attrs = s.attributes;
                 return {
-                    label: s.attributes.title,
+                    label: attrs.title,
                     id: s.id,
-                    teaches: s.attributes.teaches ?
-                        s.attributes.teaches.map(translateConcept) : undefined,
-                    requires: s.attributes.requires ?
-                        s.attributes.requires.map(translateConcept) : undefined,
-                    needs: s.attributes.needs ?
-                        s.attributes.needs.map(translateConcept) : undefined
+                    teaches: attrs.teaches ?
+                        attrs.teaches.map(translateConcept) : undefined,
+                    requires: attrs.requires ?
+                        attrs.requires.map(translateConcept) : undefined,
+                    needs: attrs.needs ?
+                        attrs.needs.map(translateConcept) : undefined,
+                    content: { source: s },
                 };
             };
 
@@ -222,6 +226,24 @@ directive('knowledgeMap', function() {
                 });
             };
 
+            // Make links to stuff.
+            var d3 = knowledgeMap.d3;
+            var linkPlugin = function(km) {
+                km.renderNodes.onNew(function(nodes) {
+                    nodes.select('text').each(function() {
+                        var self = this;
+                        console.log(scope.makeURL);
+                        d3.select(this.parentNode)
+                            .insert('a', 'text')
+                            .attr('href', function(d) {
+                                console.log(scope.makeURL(d.content.source));
+                                return scope.makeURL(d.content.source);
+                            })
+                            .append(function() { return self; });
+                    });
+                });
+            };
+
             // Watch for changes in the data we are bound to. When we get some
             // data (usually from AJAX), we'll create the knowledge map. Note
             // that this only happens once; re-renders are not handled yet.
@@ -231,7 +253,11 @@ directive('knowledgeMap', function() {
                         resources: scope.model.map(translateResource),
                         inside: '#km',
                         held: !scope.visible,
-                        plugins: [conceptAppearancePlugin, layoutPlugin],
+                        plugins: [
+                            conceptAppearancePlugin,
+                            layoutPlugin,
+                            linkPlugin
+                        ],
                     });
                 }
             });
