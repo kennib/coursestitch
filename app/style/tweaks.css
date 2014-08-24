@@ -9,6 +9,10 @@
     opacity: 1;
 }
 
+.input-group-btn .popover-content {
+    font-size: 14px;
+}
+
 .loading {
     display: block;
     margin: auto;
