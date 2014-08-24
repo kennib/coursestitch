@@ -3,7 +3,8 @@ angular.module('coursestitch-concepts', []).
 service('Concept', function(conceptUnderstandingCache) {
     return Parse.Object.extend('Concept', {
         understandingObj: function() {
-            var userId = Parse.User.current().id;
+            var user = Parse.User.current();
+            var userId = user ? user.id : undefined;
             return conceptUnderstandingCache.get(this.id, userId);
         },
         understanding: function() {
@@ -14,7 +15,10 @@ service('Concept', function(conceptUnderstandingCache) {
 }).
 service('conceptUnderstandingCache', function(objectCache) {
     return objectCache('concept-understanding', function(conceptId, userId) {
-        return Parse.Cloud.run('getConceptUnderstanding', {conceptId: conceptId, userId: userId});
+        if (userId)
+            return Parse.Cloud.run('getConceptUnderstanding', {conceptId: conceptId, userId: userId});
+        else
+            return Parse.Promise.as(undefined)
     });
 }).
 service('getConcept', function() {

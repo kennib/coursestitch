@@ -3,7 +3,8 @@ angular.module('coursestitch-resources', ['decipher.tags', 'ui.bootstrap.typeahe
 service('Resource', function(resourceUnderstandingCache) {
     return Parse.Object.extend('Resource', {
         understandingObj: function() {
-            var userId = Parse.User.current().id;
+            var user = Parse.User.current();
+            var userId = user ? user.id : undefined;
             return resourceUnderstandingCache.get(this.id, userId);
         },
         understanding: function() {
@@ -14,7 +15,10 @@ service('Resource', function(resourceUnderstandingCache) {
 }).
 service('resourceUnderstandingCache', function(objectCache) {
     return objectCache('resource-understanding', function(resourceId, userId) {
-        return Parse.Cloud.run('getResourceUnderstanding', {resourceId: resourceId, userId: userId});
+        if (userId)
+            return Parse.Cloud.run('getResourceUnderstanding', {resourceId: resourceId, userId: userId});
+        else
+            return Parse.Promise.as(undefined)
     });
 }).
 service('newResource', function() {
