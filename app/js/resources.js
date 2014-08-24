@@ -132,6 +132,21 @@ directive('resource', function(toggleResource, makeURL) {
                 return Parse.Promise.when([resource].concat(fetches));
             };
 
+            // Get the user's understanding of this resource
+            scope.$watch('resource', function() {
+                if (scope.resource) {
+                    if (scope.resource.understandingObj())
+                        scope.understanding = scope.resource.understandingObj();
+
+                    scope.setUnderstanding = function(understands) {
+                        if (scope.understanding) {
+                            scope.understanding.set('understands', understands);
+                            scope.understanding.save(scope.understanding.attributes);
+                        }
+                    }
+                }
+            });
+
             // Save the resource
             scope.save = function() {
                 return scope.resource.save()

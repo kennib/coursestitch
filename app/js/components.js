@@ -96,8 +96,9 @@ directive('actionButton', function($timeout) {
                     scope.status = 'error';
                     
                     // Show a helpful error message
-                    element.popover({
-                        content: error.message,
+                    element
+                    .attr('data-content', error.message)
+                    .popover({
                         placement: 'top',
                         animate: true,
                     })

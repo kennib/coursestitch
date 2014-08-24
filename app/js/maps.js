@@ -61,9 +61,7 @@ controller('MapsCtrl', function($scope) {
         $scope.maps = maps;
     });
 }).
-controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getMap, getConcept, newResource) {
-    $scope.newResource = newResource;
-
+controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter, getMap, mapCache, getConcept, newResource) {
     var mapId = $routeParams.mapId;
     var mapTitle = $routeParams.mapTitle;
     var viewType = $routeParams.viewType;
@@ -127,5 +125,18 @@ controller('MapCtrl', function($scope, $routeParams, deurlizeFilter, getMap, get
                 $scope.viewType = 'resource';
             }
         }
+
+        // Function to add new resources
+        $scope.newResource = function(resourceUrl, mapId) {
+            return newResource(resourceUrl, mapId)
+            .then(function(resource) {
+                // Reset map cache
+                mapCache.remove(mapId+userId);
+
+                // Reload page with the new resource
+                var url = $scope.makeURL(map, resource);
+                $location.path(url.slice(3));
+            });
+        };
     });
 });
