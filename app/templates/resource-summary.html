@@ -2,7 +2,7 @@
     <div class="panel-heading {{ resource.understanding() | understandingClass }}">
         <a ng-href="{{ makeURL(map, resource) }}">
             <div class="panel-image">
-                <img ng-src="{{ resource.attributes.image }}" alt="{{ resource.attributes.title }}" width="60px">
+                <img ng-src="{{ resource.attributes.image || 'lib/Flat-UI/images/icons/png/Book.png' }}" alt="{{ resource.attributes.title }}" width="60px">
                 <span class="label"
                       ng-bind-template="{{ resource.understanding() | understandingLabel }}">
                 </span>
