@@ -33,3 +33,13 @@
 .panel-body blockquote {
     margin-bottom: 5px;
 }
+
+/* Understanding Slider */
+understanding-slider .row {
+    margin-bottom: -15px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+understanding-slider label {
+    cursor: pointer;
+}
