@@ -240,6 +240,7 @@ directive('knowledgeMap', function() {
             var layoutPlugin = function(km) {
                 km.onPreLayout(function(config) {
                     config.rankSep(30);
+                    config.rankDir('LR');
                 });
             };
 
