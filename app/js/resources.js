@@ -55,6 +55,7 @@ directive('resource', function(toggleResource, makeURL) {
         scope: {
             map: '=',
             resource: '=',
+            concepts: '=',
         },
         link: function(scope, elem, attrs) {
             scope.makeURL = makeURL;
@@ -149,6 +150,17 @@ directive('resource', function(toggleResource, makeURL) {
                         }
                     }
                 }
+            });
+
+            // Add the names of concepts as keywords for tags
+            scope.$watchCollection('[resource, concepts]', function() {
+                if (scope.concepts)
+                    conceptNames = scope.concepts.map(function(c) { return c.get('title'); });
+                else
+                    conceptNames = [];
+
+                if (scope.resource)
+                    scope.resource.keywords = scope.resource.get('keywords').concat(conceptNames);
             });
 
             // Save the resource
