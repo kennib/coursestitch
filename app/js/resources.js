@@ -153,7 +153,7 @@ directive('resource', function(toggleResource, makeURL) {
 
             // Save the resource
             scope.save = function() {
-                return scope.resource.save()
+                return scope.resource.save(scope.resource.attributes)
                 .then(fetchTags)
                 .then(addTags);
             };
