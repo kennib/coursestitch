@@ -17,7 +17,8 @@
             <div ng-switch-when="edit">
                 <tags 
                       data-src="{group:tagLabel, value: kw, name: kw} as kw for kw in resource.attributes.keywords"
-                      data-model="resource.tags[tagLabel]"></tags>
+                      data-model="resource.tags[tagLabel]"
+                       options="{addable: true}"></tags>
             </div>
         </div>
     </div>
