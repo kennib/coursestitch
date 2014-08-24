@@ -133,7 +133,7 @@ directive('actionButton', function($timeout) {
     };
 }).
 
-directive('understandingSlider', function($timeout) {
+directive('understandingSlider', function($timeout, understandingClassFilter) {
     return {
         restrict: 'E',
         templateUrl: '/templates/understanding-slider.html',
@@ -172,6 +172,19 @@ directive('understandingSlider', function($timeout) {
                 // Call change event
                 if (scope.onChange)
                     scope.onChange(scope.ngModel);
+            });
+
+            // Add some coloring to the slider
+            var ranges = [[-1, 0], [0, 0], [0, 0.5], [0.5, 1.0], [1.0, 1.0]];
+            ranges.forEach(function(range) {
+                var percent = 100 * (range[1]-range[0])/2.0;
+                var middle = (range[0]+range[1])/2;
+
+                $('<div>')
+                    .addClass('progress-bar')
+                    .addClass(understandingClassFilter(middle))
+                    .css('width', percent+'%')
+                    .appendTo(slider);
             });
         },
     };
