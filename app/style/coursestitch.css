@@ -10,6 +10,11 @@
 .panel-heading label {
     color: white;
 }
+.panel-heading h4 {
+    min-height: 60px;
+    padding: 0px;
+    margin: 0px;
+}
 .panel-heading h4 small {
     display: block;
 }
@@ -22,4 +27,9 @@
 .panel-heading .panel-image  img {
     display: block;
     margin: auto;
+    height: 45px;
+    width: auto;
+}
+.panel-body blockquote {
+    margin-bottom: 5px;
 }
