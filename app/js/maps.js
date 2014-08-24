@@ -61,7 +61,10 @@ controller('MapsCtrl', function($scope) {
         $scope.maps = maps;
     });
 }).
+
 controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter, getMap, mapCache, getConcept, newResource) {
+    $scope.newResource = newResource;
+
     var mapId = $routeParams.mapId;
     var mapTitle = $routeParams.mapTitle;
     var viewType = $routeParams.viewType;
@@ -80,6 +83,11 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter, 
         userId = Parse.User.current().id
     else
         userId = undefined;
+
+    $scope.makeMapURL = function(id) {
+        console.log('========== here', $scope.map);
+        return $scope.makeURL($scope.map, id);
+    };
 
     getMap(mapId, userId)
     .then(function(map) {

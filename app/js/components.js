@@ -175,4 +175,117 @@ directive('understandingSlider', function($timeout) {
             });
         },
     };
+}).
+
+directive('knowledgeMap', function() {
+    return {
+        restrict: 'E',
+        template: '<div id="km"></div>',
+        replace: true,
+        scope: {
+            model: '=',
+            visible: '=',
+            makeURL: '=',
+        },
+        link: function(scope, element, attrs) {
+            var km;
+
+            // Convert a concept from Parse format to Cartographer format.
+            var translateConcept = function(s) {
+                return {
+                    id: s.id,
+                    label: s.attributes.title,
+                    content: { source: s },
+                };
+            };
+
+            // Convert a resource from Parse format to Cartographer format.
+            var translateResource = function(s) {
+                var attrs = s.attributes;
+                return {
+                    label: attrs.title,
+                    id: s.id,
+                    teaches: attrs.teaches ?
+                        attrs.teaches.map(translateConcept) : undefined,
+                    requires: attrs.requires ?
+                        attrs.requires.map(translateConcept) : undefined,
+                    needs: attrs.needs ?
+                        attrs.needs.map(translateConcept) : undefined,
+                    content: { source: s },
+                };
+            };
+
+            // Add rects to concept nodes to make them look like flat ui tags.
+            var conceptAppearancePlugin = function(km) {
+                // Add rect elements when new nodes are created.
+                km.renderNodes.onNew(function(nodes) {
+                    nodes.filter('.concept').insert('rect', 'text');
+                });
+
+                // Update rect properties during layout.
+                km.renderNodes.onUpdate(function(nodes) {
+                    nodes.filter('.concept').select('rect')
+                        // Offset rects so they're centred.
+                        .attr('x', function(d) { return -d.width/2 - 5; })
+                        .attr('y', function(d) { return -d.height/2 - 3; })
+                        // Add a bit of padding.
+                        .attr('width', function(d) { return d.width + 10; })
+                        .attr('height', function(d) { return d.height + 6; })
+                        // Round corners.
+                        .attr('rx', '0.25em').attr('ry', '0.25em');
+                }).onUpdate(km.calculateNodeSizes);
+            };
+
+            // Change the default layout parameters.
+            var layoutPlugin = function(km) {
+                km.onPreLayout(function(config) {
+                    config.rankSep(30);
+                });
+            };
+
+            // Make links to stuff.
+            var d3 = knowledgeMap.d3;
+            var linkPlugin = function(km) {
+                km.renderNodes.onNew(function(nodes) {
+                    nodes.select('text').each(function() {
+                        var self = this;
+                        console.log(scope.makeURL);
+                        d3.select(this.parentNode)
+                            .insert('a', 'text')
+                            .attr('href', function(d) {
+                                console.log(scope.makeURL(d.content.source));
+                                return scope.makeURL(d.content.source);
+                            })
+                            .append(function() { return self; });
+                    });
+                });
+            };
+
+            // Watch for changes in the data we are bound to. When we get some
+            // data (usually from AJAX), we'll create the knowledge map. Note
+            // that this only happens once; re-renders are not handled yet.
+            scope.$watch('model', function(){
+                if(!km && scope.model) {
+                    km = knowledgeMap.create({
+                        resources: scope.model.map(translateResource),
+                        inside: '#km',
+                        held: !scope.visible,
+                        plugins: [
+                            conceptAppearancePlugin,
+                            layoutPlugin,
+                            linkPlugin
+                        ],
+                    });
+                }
+            });
+
+            // When the map becomes visible, re-render it, as it may not have
+            // rendered properly while it was off-screen.
+            scope.$watch('visible', function(value, old) {
+                if(value && !old && km) {
+                    km.unhold().render();
+                }
+            });
+        },
+    };
 });
