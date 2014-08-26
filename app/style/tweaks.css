@@ -9,6 +9,16 @@
     opacity: 1;
 }
 
+.list-inline > li:first-child {
+    padding: 5px;
+}
+
+.navbar-inverse .navbar-form .input-group-btn .btn {
+    color: #ffffff;
+    background-color: #48c9b0;
+    border-color: #48c9b0;
+}
+
 .input-group-btn .popover-content {
     font-size: 14px;
 }

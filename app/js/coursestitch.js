@@ -138,6 +138,13 @@ filter('understandingLabel', function() {
 
 controller('RootCtrl', function($scope, makeURL) {
     $scope.makeURL = makeURL;
+
+    // Fix broken images
+    $(document).bind("DOMSubtreeModified", function() {
+        $('img').error(function() {
+            $(this).attr('src', 'lib/Flat-UI/images/icons/png/Book.png');
+        });
+    });
 }).
 
 controller('LoginCtrl', function($scope) {
