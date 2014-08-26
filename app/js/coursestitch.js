@@ -13,11 +13,11 @@ config(function($routeProvider, $locationProvider) {
         templateUrl: '/templates/maps.html',
         controller: 'MapsCtrl',
     })
-    .when('/map/:mapId/:mapTitle', {
+    .when('/map/:mapId/:mapTitle?', {
         templateUrl: '/templates/map.html',
         controller: 'MapCtrl',
     })
-    .when('/map/:mapId/:mapTitle/:viewType/:viewId/:viewTitle/:viewSubtitle?', {
+    .when('/map/:mapId/:mapTitle?/:viewType/:viewId/:viewTitle?/:viewSubtitle?', {
         templateUrl: '/templates/map.html',
         controller: 'MapCtrl',
     });
@@ -67,7 +67,28 @@ service('objectCache', function($cacheFactory) {
         };
     };
 }).
-
+service('getUserRoles', function() {
+    return function() {
+        if (Parse.User.current())
+            return new Parse.Query('_Role')
+                .equalTo('users', Parse.User.current())
+                .find();
+        else
+            return Parse.Promise.as([]);
+    };
+}).
+service('isEditor', function(getUserRoles) {
+    return function() {
+        return getUserRoles()
+        .then(function(roles) {
+            if (roles.find(function(role) { return role.get('name') == 'editor'; })) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+    };
+}).
 service('makeURL', function(urlizeFilter) {
     // Create a URL string from various attributes of a given map
     // and view object (which can be a resource or a concept).
@@ -136,8 +157,14 @@ filter('understandingLabel', function() {
 }).
 
 
-controller('RootCtrl', function($scope, makeURL) {
+controller('RootCtrl', function($scope, makeURL, isEditor) {
     $scope.makeURL = makeURL;
+
+    // Does the current user have editor permissions?
+    $scope.isEditor = false;
+    isEditor().then(function(editor) {
+        $scope.isEditor = editor;
+    });
 
     // Fix broken images
     $(document).bind("DOMSubtreeModified", function() {

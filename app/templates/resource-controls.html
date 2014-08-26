@@ -1,7 +1,9 @@
 <div class="navbar navbar-default">
-    <div class="navbar-brand navbar-header">
+    <div class="navbar-brand navbar-header"
+         ng-if="isEditor">
         <switch model="$parent.$parent.editMode" on-label="edit" off-label="view"></switch>
     </div>
+
     <div class="navbar-text navbar-right pull-right"
           ng-show="mode == 'edit'">
         <action-button action="reset()" label="reset"
