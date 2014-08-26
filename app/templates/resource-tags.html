@@ -13,6 +13,10 @@
                     </a>
                 </li>
             </ul>
+            <p ng-switch-when="view"
+               ng-hide="resource.attributes[tagLabel]">
+               "{{ resource.attributes.title }}" {{ tagLabel }} no concepts.
+            </p>
 
             <div ng-switch-when="edit">
                 <tags 
