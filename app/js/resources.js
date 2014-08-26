@@ -48,7 +48,7 @@ filter('join', function() {
     };
 }).
 
-directive('resource', function(toggleResource, makeURL) {
+directive('resource', function(toggleResource, makeURL, isEditor) {
     return {
         restrict: 'E',
         templateUrl: '/templates/resource.html',
@@ -61,6 +61,13 @@ directive('resource', function(toggleResource, makeURL) {
             scope.makeURL = makeURL;
             scope.tags = ["teaches", "requires"];
             scope.editMode = false;
+
+            // Check whether user can edit the resource
+            scope.isEditor = false;
+            isEditor()
+            .then(function(editor) {
+                scope.isEditor = editor;
+            });
             
             // Watch to see if a resource has been loaded
             scope.$watch('resource', function(resource) {
