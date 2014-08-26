@@ -101,6 +101,7 @@ directive('actionButton', function($timeout) {
                     .popover({
                         placement: 'top',
                         animate: true,
+                        trigger: 'manual',
                     })
                     .popover('show');
                 })
