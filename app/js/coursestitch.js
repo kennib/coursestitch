@@ -1,5 +1,5 @@
 angular.module('coursestitch', [
-    'ngRoute', 'parse-angular',
+    'ngRoute', 'ngAnimate', 'parse-angular',
     'coursestitch-maps', 'coursestitch-resources',
     'coursestitch-components'
 ]).
