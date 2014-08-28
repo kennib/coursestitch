@@ -38,7 +38,20 @@ service('Resource', function(resourceUnderstandingCache) {
             
             // Save map to the server
             map.save();
-        }
+
+            // Scroll to this resource in the resource list
+            // The timeout is to wait for angular to update the DOM
+            var self = this;
+            setTimeout(function(){
+                self.scrollTo();
+            }, 20);
+        },
+        scrollTo: function() {
+            // Scroll resource list to a given resource
+            var resources = $('.resources');
+            var resource = $('[data-id='+this.id+']');
+            resources.scrollTop(resources.scrollTop() + resource.position().top );
+        },
     });
 }).
 service('resourceUnderstandingCache', function(objectCache) {
