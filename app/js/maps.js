@@ -76,6 +76,8 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter, 
     var viewTitle = $routeParams.viewTitle;
     var viewSubtitle = $routeParams.viewSubtitle;
 
+    $scope.viewId = viewId;
+
     if (viewType == 'concept' || viewType == 'resource') {
       $scope.viewType = viewType;
     } else {
