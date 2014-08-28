@@ -60,3 +60,16 @@ understanding-slider label {
     line-height: 1;
     fill: #fff;
 }
+
+/* Vertical progress bars */
+.progress-vertical {
+    float: left;
+    position: relative;
+    width: 10px;
+    min-height: 750px;
+    margin: 0px;
+    margin-right: 20px;
+}
+.progress-vertical .progress-bar {
+    width: 10px;
+}
