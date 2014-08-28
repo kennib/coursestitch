@@ -44,6 +44,13 @@ understanding-slider label {
     cursor: pointer;
 }
 
+/* Resource list */
+.resources {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 750px;
+}
+
 /* Animations */
 .resource-summary.ng-move,
 .resource-summary.ng-enter,
