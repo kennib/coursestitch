@@ -198,6 +198,7 @@ directive('knowledgeMap', function() {
         replace: true,
         scope: {
             model: '=',
+            focus: '=',
             visible: '=',
             makeurl: '=',
         },
@@ -260,8 +261,8 @@ directive('knowledgeMap', function() {
             };
 
             // Make links to stuff.
-            var d3 = knowledgeMap.d3;
             var linkPlugin = function(km) {
+                var d3 = knowledgeMap.d3;
                 km.renderNodes.onNew(function(nodes) {
                     nodes.select('text').each(function() {
                         var self = this;
@@ -273,6 +274,28 @@ directive('knowledgeMap', function() {
                             .append(function() { return self; });
                     });
                 });
+            };
+
+            var panToPlugin = function(km) {
+                var d3 = knowledgeMap.d3;
+                km.panTo = function(id, duration) {
+                    if(km.graph.hasNode(id)) {
+                        var box = d3.select('#km').node().getBoundingClientRect();
+                        var scale = km.zoom.scale();
+                        var n = km.graph.node(id);
+                        var x = n.layout.x * scale - box.width/2;
+                        var y = n.layout.y * scale - box.height/2;
+                        console.log(x, y);
+                        if(!duration) {
+                            km.zoom.translate([-x, -y]);
+                            km.zoom.event(km.element);
+                        } else {
+                            km.element.transition()
+                                .duration(duration)
+                                .call(km.zoom.translate([-x, -y]).event);
+                        }
+                    }
+                };
             };
 
             // Watch for changes in the data we are bound to. When we get some
@@ -287,9 +310,16 @@ directive('knowledgeMap', function() {
                         plugins: [
                             conceptAppearancePlugin,
                             layoutPlugin,
+                            panToPlugin,
                             linkPlugin
                         ],
                     });
+                }
+            });
+
+            scope.$watch('focus', function() {
+                if(km && scope.focus) {
+                    km.panTo(scope.focus);
                 }
             });
 
@@ -298,6 +328,9 @@ directive('knowledgeMap', function() {
             scope.$watch('visible', function(value, old) {
                 if(value && !old && km) {
                     km.unhold().render();
+                    if(scope.focus) {
+                        km.panTo(scope.focus);
+                    }
                 }
             });
         },
