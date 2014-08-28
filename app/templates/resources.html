@@ -1,5 +1,5 @@
 <div class="">
-    <span
-        ng-repeat="resource in resources"
-        ng-include="'/templates/resource-summary.html'"></span>
+    <div class="resource-summary"
+         ng-repeat="resource in resources track by resource.id"
+         ng-include="'/templates/resource-summary.html'"></div>
 </div>
