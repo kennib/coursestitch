@@ -1,7 +1,11 @@
 <div class="navbar navbar-default">
     <div class="navbar-brand navbar-header"
          ng-if="isEditor">
-        <switch model="$parent.$parent.editMode" on-label="edit" off-label="view"></switch>
+        <switch 
+                model="editMode"
+                on-change="toggleEditMode"
+                on-label="edit"
+                off-label="view"></switch>
     </div>
 
     <div class="navbar-text navbar-right pull-right"
