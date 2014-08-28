@@ -1,0 +1,6 @@
+<div class="progress progress-vertical">
+    <div ng-repeat="resource in resources"
+         class="progress-bar {{ resource.understanding() | understandingClass }}"
+         style="height: {{ 100/resources.length }}%;">
+    </div>
+</div>
