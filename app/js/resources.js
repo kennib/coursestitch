@@ -68,6 +68,11 @@ directive('resource', function(toggleResource, makeURL, isEditor) {
             .then(function(editor) {
                 scope.isEditor = editor;
             });
+
+            // Toggle between edit and view modes
+            scope.toggleEditMode = function() {
+                scope.editMode = !scope.editMode;
+            };
             
             // Watch to see if a resource has been loaded
             scope.$watch('resource', function(resource) {
