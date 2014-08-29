@@ -5,7 +5,7 @@
 
     color: white;
 
-    background-image: url('/images/books_splash.jpg');
+    background-image: url('../images/books_splash.jpg');
     background-size: cover;
     background-position: bottom left;
 }
