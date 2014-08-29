@@ -9,6 +9,16 @@
     opacity: 1;
 }
 
+.panel-heading .img-circle {
+    overflow: hidden;
+    width: 85px;
+    text-align: center;
+}
+.panel-heading .img-circle img {
+    margin-left: -100%;
+    margin-right: -100%;
+}
+
 .list-inline > li:first-child {
     padding: 5px;
 }

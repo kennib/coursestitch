@@ -1,14 +1,16 @@
-<div class="media">
-    <a class="pull-left" href="/map">
-        <img class="media-object" src="lib/Flat-UI/images/icons/png/Gift-Box.png" alt="{{ map.attributes.title }}" width="60px">
-    </a>
-    <div class="media-body">
+<div class="panel">
+    <div class="panel-heading palette-peter-river">
         <a ng-href="{{ makeURL(map) }}">
-            <h3 class="media-heading"
-                ng-bind="map.attributes.title"></h3>
+            <div class="panel-image">
+                <div class="img-circle">
+                    <img ng-src="{{ map.attributes.icon || lib/Flat-UI/images/icons/Book.png }}" alt="{{ map.attributes.title }}">
+                </div>
+            </div>
+            <h4 class="media-heading"
+                ng-bind="map.attributes.title"></h4>
         </a>
-        <p>
-        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus. 
-        </p>
+    </div>
+    <div class="panel-body">
+        <p ng-bind="map.attributes.summary"></p>
     </div>
 </div>
