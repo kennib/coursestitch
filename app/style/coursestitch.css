@@ -1,3 +1,15 @@
+/* Home page */
+.jumbotron {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+
+    color: white;
+
+    background-image: url('/images/books_splash.jpg');
+    background-size: cover;
+    background-position: bottom left;
+}
+
 /* Panel restructuring and styling */
 .panel {
     border: 1px dashed rgba(0,0,0, 0.2);
