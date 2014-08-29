@@ -1,3 +1,18 @@
+/* Logo */
+.course-stitch {
+    font-family: 'Sacramento', cursive;
+    font-weight: normal;
+}
+.course-stitch .course {
+    color: #2980b9;
+}
+.course-stitch .stitch {
+    color: #1abc9c;
+}
+.navbar-brand.course-stitch {
+    font-size: 38px;
+}
+
 /* Home page */
 .jumbotron {
     padding-left: 20px !important;
