@@ -209,7 +209,7 @@ directive('knowledgeMap', function() {
             // Convert a concept from Parse format to Cartographer format.
             var translateConcept = function(s) {
                 return {
-                    id: s.id,
+                    id: 'n'+s.id,
                     label: s.attributes.title,
                     content: { source: s },
                 };
@@ -220,7 +220,7 @@ directive('knowledgeMap', function() {
                 var attrs = s.attributes;
                 return {
                     label: attrs.title,
-                    id: s.id,
+                    id: 'n'+s.id,
                     teaches: attrs.teaches ?
                         attrs.teaches.map(translateConcept) : undefined,
                     requires: attrs.requires ?
@@ -249,6 +249,8 @@ directive('knowledgeMap', function() {
                         .attr('height', function(d) { return d.height + 6; })
                         // Round corners.
                         .attr('rx', '0.25em').attr('ry', '0.25em');
+                // Recalculate node sizes after adding the rect, since it
+                // expands the shape dimensions.
                 }).onUpdate(km.calculateNodeSizes);
             };
 
@@ -264,12 +266,24 @@ directive('knowledgeMap', function() {
             var linkPlugin = function(km) {
                 var d3 = knowledgeMap.d3;
                 km.renderNodes.onNew(function(nodes) {
+                    // Wrap the existing text elements in anchors which we link
+                    // to the appropriate URLs to view a resource or concept.
                     nodes.select('text').each(function() {
                         var self = this;
                         d3.select(this.parentNode)
                             .insert('a', 'text')
-                            .attr('xlink:href', function(d) {
-                                return scope.makeurl(d.content.source);
+                            .attr('xlink:href', function(n) {
+                                return scope.makeurl(n.content.source);
+                            })
+                            // For now, overrive the default link-click behavior
+                            // to be able to navigate the graph nicely.
+                            .on('click', function(n) {
+                                if(d3.event.which === 1) {
+                                    d3.event.preventDefault();
+                                    scope.$apply(function() {
+                                        scope.focus = n.content.source.id;
+                                    });
+                                }
                             })
                             .append(function() { return self; });
                     });
@@ -285,7 +299,6 @@ directive('knowledgeMap', function() {
                         var n = km.graph.node(id);
                         var x = n.layout.x * scale - box.width/2;
                         var y = n.layout.y * scale - box.height/2;
-                        console.log(x, y);
                         if(!duration) {
                             km.zoom.translate([-x, -y]);
                             km.zoom.event(km.element);
@@ -294,6 +307,22 @@ directive('knowledgeMap', function() {
                                 .duration(duration)
                                 .call(km.zoom.translate([-x, -y]).event);
                         }
+                    }
+                };
+            };
+
+            var highlightPlugin = function(km) {
+                var d3 = knowledgeMap.d3;
+                km.highlightNone = function() {
+                    d3.selectAll('.active').classed('active', false);
+                };
+
+                km.highlightEdges = function(id) {
+                    km.highlightNone();
+                    if(km.graph.hasNode(id)) {
+                        km.graph.incidentEdges(id).forEach(function(edge) {
+                            d3.select('#'+edge).classed('active', true);
+                        });
                     }
                 };
             };
@@ -310,8 +339,9 @@ directive('knowledgeMap', function() {
                         plugins: [
                             conceptAppearancePlugin,
                             layoutPlugin,
+                            linkPlugin,
                             panToPlugin,
-                            linkPlugin
+                            highlightPlugin
                         ],
                     });
                 }
@@ -319,7 +349,8 @@ directive('knowledgeMap', function() {
 
             scope.$watch('focus', function() {
                 if(km && scope.focus) {
-                    km.panTo(scope.focus);
+                    km.panTo('n'+scope.focus, 500);
+                    km.highlightEdges('n'+scope.focus);
                 }
             });
 
@@ -329,7 +360,8 @@ directive('knowledgeMap', function() {
                 if(value && !old && km) {
                     km.unhold().render();
                     if(scope.focus) {
-                        km.panTo(scope.focus);
+                        km.panTo('n'+scope.focus);
+                        km.highlightEdges('n'+scope.focus);
                     }
                 }
             });
