@@ -12,10 +12,10 @@
         </span>
         <a ng-href="{{ makeURL(map, resource) }}">
             <div class="panel-image">
-                <img ng-src="{{ resource.attributes.image || 'lib/Flat-UI/images/icons/png/Book.png' }}" alt="{{ resource.attributes.title }}" width="60px">
-                <span class="label"
-                      ng-bind-template="{{ resource.understanding() | understandingLabel }}">
-                </span>
+                <p ng-bind-template="{{ resource.understanding() | understandingLabel }}"></p>
+                <div class="img-circle">
+                    <img ng-src="{{ resource.attributes.image || 'lib/Flat-UI/images/icons/png/Book.png' }}" alt="{{ resource.attributes.title }}" width="60px">
+                </div>
             </div>
             <h4>
                 {{ resource.attributes.title }}
