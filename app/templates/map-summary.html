@@ -2,7 +2,9 @@
     <div class="panel-heading palette-peter-river">
         <a ng-href="{{ makeURL(map) }}">
             <div class="panel-image">
-                <img ng-src="{{ map.attributes.icon || lib/Flat-UI/images/icons/Book.png }}" alt="{{ map.attributes.title }}" width="60px">
+                <div class="img-circle">
+                    <img ng-src="{{ map.attributes.icon || lib/Flat-UI/images/icons/Book.png }}" alt="{{ map.attributes.title }}">
+                </div>
             </div>
             <h4 class="media-heading"
                 ng-bind="map.attributes.title"></h4>
