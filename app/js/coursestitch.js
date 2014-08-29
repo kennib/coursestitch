@@ -175,6 +175,11 @@ controller('RootCtrl', function($scope, makeURL, isEditor) {
             $(this).attr('src', 'lib/Flat-UI/images/icons/png/Book.png');
         });
     });
+
+    // Temporary user
+    if (!Parse.User.current()) {
+        Parse.User.signUp('temp-'+Math.random().toString(36).substring(7), Math.random().toString(36).substring(7));
+    }
 }).
 
 controller('LoginCtrl', function($scope) {
