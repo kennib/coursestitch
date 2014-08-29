@@ -92,7 +92,7 @@ filter('join', function() {
 directive('resource', function(toggleResource, makeURL, isEditor) {
     return {
         restrict: 'E',
-        templateUrl: '/templates/resource.html',
+        templateUrl: 'templates/resource.html',
         scope: {
             map: '=',
             resource: '=',

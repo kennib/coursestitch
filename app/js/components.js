@@ -66,7 +66,7 @@ directive('switch', function() {
 directive('actionButton', function($timeout) {
     return {
         restrict: 'E',
-        templateUrl: '/templates/action-button.html',
+        templateUrl: 'templates/action-button.html',
         scope: {
             action: '&',
             label: '@',
@@ -137,7 +137,7 @@ directive('actionButton', function($timeout) {
 directive('understandingSlider', function($timeout, understandingClassFilter) {
     return {
         restrict: 'E',
-        templateUrl: '/templates/understanding-slider.html',
+        templateUrl: 'templates/understanding-slider.html',
         scope: {
             ngModel: '=?',
             onChange: '=',
