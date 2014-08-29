@@ -38,7 +38,7 @@ service('getConcept', function() {
 directive('concept', function(makeURL) {
     return {
         restrict: 'E',
-        templateUrl: '/templates/concept.html',
+        templateUrl: 'templates/concept.html',
         scope: {
             map: '=',
             concept: '=',

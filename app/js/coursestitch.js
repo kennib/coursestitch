@@ -7,21 +7,21 @@ angular.module('coursestitch', [
 config(function($routeProvider, $locationProvider) {
     $routeProvider
     .when('/', {
-        templateUrl: '/templates/home.html',
+        templateUrl: 'templates/home.html',
     })
     .when('/login', {
-        templateUrl: '/templates/signup.html',
+        templateUrl: 'templates/signup.html',
     })
     .when('/maps', {
-        templateUrl: '/templates/maps.html',
+        templateUrl: 'templates/maps.html',
         controller: 'MapsCtrl',
     })
     .when('/map/:mapId/:mapTitle?', {
-        templateUrl: '/templates/map.html',
+        templateUrl: 'templates/map.html',
         controller: 'MapCtrl',
     })
     .when('/map/:mapId/:mapTitle?/:viewType/:viewId/:viewTitle?/:viewSubtitle?', {
-        templateUrl: '/templates/map.html',
+        templateUrl: 'templates/map.html',
         controller: 'MapCtrl',
     });
 

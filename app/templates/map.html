@@ -1,8 +1,8 @@
-<ng-include src="'/templates/header.html'"></ng-include>
+<ng-include src="'templates/header.html'"></ng-include>
 
 <article ng-switch="status">
     <div ng-switch-when="loaded">
-        <ng-include src="'/templates/map-header.html'"></ng-include>
+        <ng-include src="'templates/map-header.html'"></ng-include>
 
         <div class="row">
             <div class="col-md-5">
@@ -17,10 +17,10 @@
                 </article>
             </div>
             <div class="col-md-7">
-                <ng-include src="'/templates/map-controls.html'"></ng-include>
-                <ng-include src="'/templates/map-progress.html'" ng-hide="mapMode"></ng-include>
-                <ng-include src="'/templates/resources.html'" ng-hide="mapMode"></ng-include>
-                <ng-include src="'/templates/knowledge-map.html'" ng-show="mapMode"></ng-include>
+                <ng-include src="'templates/map-controls.html'"></ng-include>
+                <ng-include src="'templates/map-progress.html'" ng-hide="mapMode"></ng-include>
+                <ng-include src="'templates/resources.html'" ng-hide="mapMode"></ng-include>
+                <ng-include src="'templates/knowledge-map.html'" ng-show="mapMode"></ng-include>
             </div>
         </div>
     </div>
