@@ -85,3 +85,34 @@ understanding-slider .row {
 understanding-slider label {
     cursor: pointer;
 }
+
+/* Resource list */
+.resources {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 740px;
+}
+
+/* Animations */
+.resource-summary.ng-move,
+.resource-summary.ng-enter,
+.resource-summary.ng-leave {
+    position: relative;
+    -webkit-transition: all linear 1.0s;
+    transition: all linear 1.0s;
+}
+
+.resource-summary.ng-leave.ng-leave-active,
+.resource-summary.ng-move,
+.resource-summary.ng-enter {
+    opacity: 0;
+    left: 100px;
+}
+
+
+.resource-summary.ng-leave,
+.resource-summary.ng-move.ng-move-active,
+.resource-summary.ng-enter.ng-enter-active {
+    opacity: 1;
+    left: 0px;
+}

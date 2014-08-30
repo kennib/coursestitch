@@ -1,5 +1,5 @@
 angular.module('coursestitch', [
-    'ngRoute', 'parse-angular',
+    'ngRoute', 'ngAnimate', 'parse-angular',
     'coursestitch-maps', 'coursestitch-resources',
     'coursestitch-components'
 ]).
@@ -129,15 +129,15 @@ filter('deurlize', function() {
 filter('understandingClass', function() {
     return function(u) {
         if (u < 0) {
-            return 'palette-pomegranate';
+            return 'palette-alizarin';
         } else if (u == 0) {
-            return 'palette-silver';
+            return 'palette-midnight-blue';
         } else if (u > 0 && u < 0.5) {
-            return 'palette-peter-river';
+            return 'palette-belize-hole';
         } else if (u >= 0.5 && u < 1) {
-            return 'palette-turquoise';
+            return 'palette-peter-river';
         } else if (u == 1) {
-            return 'palette-emerald';
+            return 'palette-turquoise';
         } else {
             return 'palette-asbestos';
         }

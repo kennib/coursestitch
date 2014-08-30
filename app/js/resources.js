@@ -11,6 +11,47 @@ service('Resource', function(resourceUnderstandingCache) {
             var u = this.understandingObj();
             return u ? u.get('understands') : undefined;
         },
+        inMap: function(map) {
+            // Find the index of the resource
+            var resource = this;
+            var resources = map.get('resources');
+            var index = resources.findIndex(function(r) {
+                return r.id === resource.id;
+            });
+
+            return index !== -1;
+        },
+        toggleMap: function(map) {
+            // Find the index of the resource
+            var resource = this;
+            var resources = map.get('resources');
+            var index = resources.findIndex(function(r) {
+                return r.id === resource.id;
+            });
+
+            // Add the resource if it was missing from the map
+            if (index === -1)
+                resources.push(this);
+            // Remove the resource if it was in the map
+            else
+                resources.splice(index, 1);
+            
+            // Save map to the server
+            map.save();
+
+            // Scroll to this resource in the resource list
+            // The timeout is to wait for angular to update the DOM
+            var self = this;
+            setTimeout(function(){
+                self.scrollTo();
+            }, 20);
+        },
+        scrollTo: function() {
+            // Scroll resource list to a given resource
+            var resources = $('.resources');
+            var resource = $('[data-id='+this.id+']');
+            resources.scrollTop(resources.scrollTop() + resource.position().top );
+        },
     });
 }).
 service('resourceUnderstandingCache', function(objectCache) {
