@@ -1,0 +1,45 @@
+{
+  "name": "knowledge-map",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/knowledge-map/cartographer.git"
+  },
+  "devDependencies": {
+    "browserify": "",
+    "watchify": "~0.6",
+    "beefy": "",
+    "less": "",
+    "catw": "",
+    "jshint": "",
+    "karma": "~0.10",
+    "karma-firefox-launcher": "~0.1",
+	 "dagre": "~0.4.5"
+  },
+  "dependencies": {
+    "d3": "~3.3.8",
+    "dagre-d3": "git://github.com/knowledge-map/dagre-d3.git#knowledge-map",
+    "PicoModal": "git://github.com/d3x7r0/PicoModal.git#master"
+  },
+  "scripts": {
+    "git-setup": "tools/gitsetup",
+    "vagrant-setup": "tools/vagrantsetup",
+    "build-js": "node tools/build.js",
+    "build-css": "cat src/css/* | lessc --include-path=src/css - dist/css/knowledge-map.css",
+    "build": "npm run build-js & npm run build-css",
+    "watch-js": "watchify src/knowledge-map.js -d -o dist/knowledge-map.js",
+    "watch-css": "catw -c 'lessc --include-path=src/css -' 'src/css/*.less' -o dist/css/knowledge-map.css -v",
+    "watch": "npm run watch-css & npm run watch-js",
+    "start": "beefy --live src/knowledge-map.js:dist/knowledge-map.js",
+    "test": "npm run build-js; jshint src/knowledge-map.js; karma start tests/karma.conf.js --single-run",
+    "test-watch": "npm run watch & karma start tests/karma.conf.js --auto-watch",
+    "deploy": "./tools/deploy"
+  },
+  "jshintConfig": {
+    "globals": {
+      "require": false,
+      "global": false,
+      "module": false
+    }
+  }
+}
