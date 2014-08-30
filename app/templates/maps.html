@@ -1,9 +1,13 @@
 <ng-include src="'/templates/header.html'"></ng-include>
 
-<div class="row">
-    <ul class="list-group">
-        <li class="list-group-item"
-            ng-repeat="map in maps"
-            ng-include="'/templates/map-summary.html'"></li>
-    </ul>
+<h1>What would you like to learn?</h1>
+<p>
+    Choose one of the goals below and get started learning!
+</p>
+
+<div class="maps row">
+    <div class="col-md-4"
+         ng-repeat="map in maps"
+         ng-include="'/templates/map-summary.html'"></div>
+    <loading ng-if="!maps"></loading>
 </div>
