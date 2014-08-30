@@ -60,3 +60,27 @@ understanding-slider label {
     line-height: 1;
     fill: #fff;
 }
+
+/* Vertical progress bars */
+.progress-vertical {
+    float: left;
+    overflow: visible;
+    position: relative;
+    width: 10px;
+    min-height: 740px;
+    margin: 0px;
+    margin-right: 20px;
+}
+.progress-vertical .progress-bar {
+    width: 10px;
+}
+/* A triangle indicating the current progress-bar segment */
+.progress-bar.current {
+    width: 30px;
+    margin-left: -20px;
+
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+
+    border-left: 10px solid white;
+}
