@@ -178,7 +178,18 @@ controller('RootCtrl', function($scope, makeURL, isEditor) {
 
     // Temporary user
     if (!Parse.User.current()) {
-        Parse.User.signUp('temp-'+Math.random().toString(36).substring(7), Math.random().toString(36).substring(7));
+        var username = 'temp-'+Math.random().toString(36).substring(7);
+        var password = Math.random().toString(36).substring(7);
+
+        Parse.User.signUp(username, password, {
+            name: 'User',
+        })
+        .then(function(user) {
+            $scope.user = user;
+        });
+    } else {
+        // Current user
+        $scope.user = Parse.User.current();
     }
 }).
 
@@ -194,7 +205,7 @@ controller('LoginCtrl', function($scope) {
         Parse.User.logIn($scope.email, $scope.password)
         .then(function(user) {
             $scope.loggedIn = true;
-            $scope.user = user.attributes;
+            $scope.user = user;
         })
         .fail(function(error) {
             $scope.loggedIn = false;
