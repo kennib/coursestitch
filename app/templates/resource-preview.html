@@ -4,14 +4,14 @@
     </a>
     <div class="media-body">
         <blockquote>
-            <div ng-switch="mode">
-                <span ng-bind="resource.attributes.summary"
-                      ng-switch-when="view"></span>
+            <span ng-if="!editMode"
+                  ng-bind="resource.attributes.summary">
+            </span>
+            <span ng-if="editMode">
                 <textarea class="form-control" rows="10"
-                          ng-model="resource.attributes.summary"
-                          ng-switch-when="edit"></textarea>
-            </div>
-
+                          ng-model="resource.attributes.summary">
+                </textarea>
+            </span>
             <a ng-href="{{ resource.attributes.url }}">
                 <small ng-bind="resource.attributes.url"></small>
             </a>

@@ -28,7 +28,7 @@ service('fetchMap', function() {
     };
 }).
 service('getMap', function(Map, Resource, Concept, fetchMap,
-                           mapCache, resourceUnderstandingCache, conceptUnderstandingCache) {
+                           mapCache, resourceCache, resourceUnderstandingCache, conceptUnderstandingCache) {
     // Return cached versions of maps if they exist
     // Otherwise fetch the map and cache it
     return function(mapId, userId) {
@@ -45,11 +45,20 @@ service('getMap', function(Map, Resource, Concept, fetchMap,
             map.then(function(map) {
                 // Cache resource understandings
                 map.understandings.forEach(function(u) {
-                    resourceUnderstandingCache.put(u.get('resource').id+userId, u);
+                    resourceUnderstandingCache.put(u.get('resource').id+userId, Parse.Promise.as(u));
                 });
                 // Cache concept understandings
                 map.conceptUnderstandings.forEach(function(u) {
-                    conceptUnderstandingCache.put(u.get('concept').id+userId, u);
+                    conceptUnderstandingCache.put(u.get('concept').id+userId, Parse.Promise.as(u));
+                });
+                // Cache resources
+                var resources = map.map.get('resources');
+                resources.forEach(function(resource, r) {
+                    // Use existing cache if necessary
+                    resourceCache.putGet(resource.id, Parse.Promise.as(resource))
+                    .then(function(resource) {
+                        resources[r] = resource;
+                    });
                 });
             });
         }

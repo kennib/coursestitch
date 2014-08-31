@@ -50,6 +50,7 @@ service('objectCache', function($cacheFactory) {
             cache: cache,
             put: function(id, obj) {
                 this.cache.put(id, obj);
+                return obj;
             },
             get: function(id, userId) {
                 var self = this;
@@ -65,6 +66,16 @@ service('objectCache', function($cacheFactory) {
                 // Return the object
                 return this.cache.get(objId);
             },
+            putGet: function(id, obj) {
+                var cache = this.cache.get(id);
+
+                // Return the cache if it exists
+                if (cache)
+                    return cache;
+                // Otherwise cache the given object
+                else
+                    return this.put(id, obj);
+            }
         };
     };
 }).
@@ -122,6 +133,15 @@ filter('deurlize', function() {
     return function(string) {
         if (string)
             return string.replace(/-/g, ' ');
+    };
+}).
+filter('result', function() {
+    // Return the result of a Parse promise
+    return function(promise) {
+        if (promise && promise._resolved)
+            return promise._result[0]
+        else
+            return undefined;
     };
 }).
 filter('understandingClass', function() {
