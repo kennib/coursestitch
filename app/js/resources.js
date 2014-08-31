@@ -54,6 +54,11 @@ service('Resource', function(resourceUnderstandingCache) {
         },
     });
 }).
+service('resourceCache', function(objectCache) {
+    return objectCache('resource', function(resourceId) {
+        return new Parse.Query("Resource").get(resourceId);
+    });
+}).
 service('resourceUnderstandingCache', function(objectCache) {
     return objectCache('resource-understanding', function(resourceId, userId) {
         if (userId)

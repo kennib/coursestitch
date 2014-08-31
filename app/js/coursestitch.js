@@ -57,14 +57,9 @@ service('objectCache', function($cacheFactory) {
 
                 // If we have no cache, then fetch the object
                 if (this.cache.get(objId) === undefined) {
-                    // Temporary value placeholder
-                    this.put(objId, null);
-
-                    // Fetch the value
-                    this.fetch(id, userId)
-                    .then(function(obj) {
-                        self.put(objId, obj);
-                    });
+                    // Promise to fetch the value
+                    var promise = this.fetch(id, userId); 
+                    self.put(objId, promise);
                 }
 
                 // Return the object
