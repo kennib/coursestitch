@@ -3,27 +3,23 @@
     <div class="col-xs-12">
         <h4 ng-bind="tagLabel"></h4>
 
-            <div ng-if="!editMode">
-                <ul class="list-inline">
-                    <li ng-repeat="concept in resource.attributes[tagLabel]">
-                        <a ng-href="{{ concept.id ? makeURL(map, concept) : '' }}">
-                            <span class="label {{ concept.understanding() | result | understandingClass }}"
-                                  ng-bind="concept.attributes.title || concept"></span>
-                        </a>
-                    </li>
-                </ul>
+        <div ng-if="!editMode">
+            <ul class="list-inline">
+                <li ng-repeat="concept in resource.attributes[tagLabel]">
+                    <a ng-href="{{ concept.id ? makeURL(map, concept) : '' }}">
+                        <span class="label {{ concept.understanding() | result | understandingClass }}"
+                              ng-bind="concept.attributes.title || concept.name"></span>
+                    </a>
+                </li>
+            </ul>
 
-                <p
-                   ng-hide="resource.attributes[tagLabel]">
-                   "{{ resource.attributes.title }}" {{ tagLabel }} no concepts.
-                </p>
-            </div>
+            <p ng-hide="resource.attributes[tagLabel]">
+               "{{ resource.attributes.title }}" {{ tagLabel }} no concepts.
+            </p>
+        </div>
 
-            <div ng-if="editMode">
-                <tags 
-                      data-src="{group:tagLabel, value: kw, name: kw} as kw for kw in resource.keywords"
-                      data-model="resource.tags[tagLabel]"
-                       options="{addable: true}"></tags>
-            </div>
+        <div ng-if="editMode">
+            <concept-tags concepts="concepts" ng-model="resource.attributes[tagLabel]"></concept-tags>
+        </div>
     </div>
 </div>

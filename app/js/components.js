@@ -191,6 +191,47 @@ directive('understandingSlider', function($timeout, understandingClassFilter) {
     };
 }).
 
+directive('conceptTags', function(Concept) {
+    return {
+        restrict: 'E',
+        template: '<tags data-src="{value: tag} as tag.attributes.title for tag in srcTags" data-model="tagModel" options="{addable: true}"></tags>',
+        scope: {
+           ngModel: '=',
+           concepts: '=',
+        },
+        link: function(scope, elem, attrs) {
+            // Convert concepts into tags
+            scope.$watch('concepts', function(concepts) {
+                scope.srcTags = concepts.map(function(concept) {
+                    return {name: concept.attributes.title, value: concept};
+                });
+            });
+
+            // When the tag input changes update the model
+            scope.$on('decipher.tags.added', function(e, result) {
+                var tag = result.tag;
+                var concept = tag.value ? tag.value : new Concept({title: tag.name});
+                scope.ngModel.push(concept);
+            });
+
+            scope.$on('decipher.tags.removed', function(e, removedTag) {
+                var index = scope.ngModel.findIndex(function(tag, t) {
+                    return tag.id === removedTag.value.id;
+                });
+                scope.ngModel.splice(index, 1);
+            });
+
+            // When the tag input is initialised use the model as the list of tags
+            scope.$watch('ngModel', function(tags) {
+                if (scope.tagModel === undefined)
+                    scope.tagModel = tags.map(function(tag) {
+                        return {value: tag, name: tag.attributes.title};
+                    });
+            });
+        },
+    };
+}).
+
 directive('knowledgeMap', function() {
     return {
         restrict: 'E',

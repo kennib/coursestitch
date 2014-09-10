@@ -123,6 +123,16 @@ directive('resource', function(toggleResource, makeURL, isEditor) {
             scope.toggleEditMode = function() {
                 scope.editMode = !scope.editMode;
             };
+
+            // Save the resource
+            scope.save = function() {
+                return scope.resource.save(scope.resource.attributes);
+            };
+
+            // Reset the resource
+            scope.reset = function() {
+                return scope.resource.fetch();
+            };
             
             scope.$watch('resource', function(resource) {
                 if (resource !== undefined) {
@@ -134,6 +144,9 @@ directive('resource', function(toggleResource, makeURL, isEditor) {
                     .then(function(understanding) {
                         scope.understanding = understanding;
                     });
+
+                    // Get list of concepts for autocompletion
+                    scope.concepts = scope.map.concepts;
                 }
             });
         },

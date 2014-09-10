@@ -9,7 +9,7 @@
     </div>
 
     <div class="navbar-text navbar-right pull-right"
-          ng-show="mode == 'edit'">
+         ng-if="editMode">
         <action-button action="reset()" label="reset"
                        idle-style="btn-inverse"
                        idle-icon="glyphicon glyphicon-refresh" pending-icon="fui-time">
