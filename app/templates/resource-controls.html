@@ -9,7 +9,7 @@
     </div>
 
     <div class="navbar-text navbar-right pull-right"
-          ng-show="mode == 'edit'">
+         ng-if="editMode">
         <action-button action="reset()" label="reset"
                        idle-style="btn-inverse"
                        idle-icon="glyphicon glyphicon-refresh" pending-icon="fui-time">
@@ -18,15 +18,5 @@
                        idle-style="btn-primary" success-style="btn-success"
                        idle-icon="glyphicon glyphicon-floppy-disk" pending-icon="fui-time" success-icon="fui-check" error-icon="fui-cross">
         </action-button>
-    </div>
-
-    <div class="navbar-brand navbar-header navbar-right pull-right"
-          ng-hide="mode == 'edit'">
-        <switch
-                model="inMap"
-                on-change="toggleResource"
-                on-icon="glyphicon glyphicon-plus"
-                off-icon="glyphicon glyphicon-minus">
-        </switch>
     </div>
 </div>

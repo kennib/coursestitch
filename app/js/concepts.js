@@ -8,8 +8,10 @@ service('Concept', function(conceptUnderstandingCache) {
             return conceptUnderstandingCache.get(this.id, userId);
         },
         understanding: function() {
-            var u = this.understandingObj();
-            return u ? u.get('understands') : undefined;
+            return this.understandingObj()
+            .then(function(u) {
+                return u ? u.get('understands') : undefined;
+            });
         },
     })
 }).

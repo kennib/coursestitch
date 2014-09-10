@@ -1,5 +1,5 @@
 <div class="panel">
-    <div class="panel-heading {{ resource.understanding() | understandingClass }}">
+    <div class="panel-heading {{ resource.understanding() | result | understandingClass }}">
         <span class="pull-right">
             <button class="btn" title="{{ resource.inMap(map) ? 'Remove from map' : 'Add to map' }}"
                     ng-class="{'btn-primary': !resource.inMap(map),
@@ -12,7 +12,7 @@
         </span>
         <a ng-href="{{ makeURL(map, resource) }}">
             <div class="panel-image">
-                <p ng-bind-template="{{ resource.understanding() | understandingLabel }}"></p>
+                <p ng-bind-template="{{ resource.understanding() | result | understandingLabel }}"></p>
                 <div class="img-circle">
                     <img ng-src="{{ resource.attributes.image || 'lib/Flat-UI/images/icons/png/Book.png' }}" alt="{{ resource.attributes.title }}" width="60px">
                 </div>

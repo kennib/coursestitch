@@ -8,8 +8,10 @@ service('Resource', function(resourceUnderstandingCache) {
             return resourceUnderstandingCache.get(this.id, userId);
         },
         understanding: function() {
-            var u = this.understandingObj();
-            return u ? u.get('understands') : undefined;
+            return this.understandingObj()
+            .then(function(u) {
+                return u ? u.get('understands') : undefined;
+            });
         },
         inMap: function(map) {
             // Find the index of the resource
@@ -54,6 +56,14 @@ service('Resource', function(resourceUnderstandingCache) {
         },
     });
 }).
+service('resourceCache', function(objectCache) {
+    return objectCache('resource', function(resourceId) {
+        return new Parse.Query("Resource")
+            .include('teaches')
+            .include('requires')
+            .get(resourceId);
+    });
+}).
 service('resourceUnderstandingCache', function(objectCache) {
     return objectCache('resource-understanding', function(resourceId, userId) {
         if (userId)
@@ -96,7 +106,6 @@ directive('resource', function(toggleResource, makeURL, isEditor) {
         scope: {
             map: '=',
             resource: '=',
-            concepts: '=',
         },
         link: function(scope, elem, attrs) {
             scope.makeURL = makeURL;
@@ -114,121 +123,32 @@ directive('resource', function(toggleResource, makeURL, isEditor) {
             scope.toggleEditMode = function() {
                 scope.editMode = !scope.editMode;
             };
-            
-            // Watch to see if a resource has been loaded
-            scope.$watch('resource', function(resource) {
-                if(resource !== undefined)
-                    scope.status = 'loaded';
-            });
-
-            // Get the tags for this resource
-            var addTags = function(resource) {
-                scope.tags.forEach(function(tagLabel) {
-                    var tags = resource.get(tagLabel);
-                    if (tags)
-                        resource.tags[tagLabel] = tags.map(function(concept) {
-                            return concept.get('title');
-                        });
-                });
-                return resource;
-            };
-
-            // Set up the tags for the resource
-            scope.$watch('resource', function() {
-                if (scope.resource === undefined)
-                    return;
-
-                scope.resource.tags = {};
-                addTags(scope.resource);
-            });
-
-            scope.$watch('editMode', function() {
-                if (scope.editMode)
-                    scope.mode = 'edit';
-                else
-                    scope.mode = 'view';
-            });
-
-            scope.toggleResource = function() {
-                toggleResource(scope.map, scope.resource);
-            };
-        
-            // Update whether the resource is part of the map or not
-            scope.$watch('resource', function() {
-                if (scope.map) {
-                    var resources = scope.map.get('resources');
-                    scope.inMap = resources.findIndex(function(r) {
-                        return r.id === scope.resource.id;
-                    }) !== -1;
-                }
-            });
-
-            // Update tags
-            scope.$watch('resource.tags', function(tags) {
-                if (tags === undefined)
-                    return;
-
-                if (scope.editMode)
-                    angular.forEach(tags, function(tags, tagType) {
-                        scope.resource.set(tags, tagType);
-                        scope.resource.attributes[tagType] = tags;
-                    });
-            }, true);
-
-            // Function to fetch resource tag objects
-            var fetchTags = function(resource) {
-                // Fetch the tags for the resource
-                var fetches = scope.tags.map(function(tagType) {
-                    var tags = resource.get(tagType);
-                    return tags.map(function(tag) {
-                        return tag.fetch();
-                    });
-                }).reduce(function(a, b) {
-                    return a.concat(b);
-                });
-
-                return Parse.Promise.when([resource].concat(fetches));
-            };
-
-            // Get the user's understanding of this resource
-            scope.$watch('resource', function() {
-                if (scope.resource) {
-                    if (scope.resource.understandingObj())
-                        scope.understanding = scope.resource.understandingObj();
-
-                    scope.setUnderstanding = function(understands) {
-                        if (scope.understanding) {
-                            scope.understanding.set('understands', understands);
-                            scope.understanding.save(scope.understanding.attributes);
-                        }
-                    }
-                }
-            });
-
-            // Add the names of concepts as keywords for tags
-            scope.$watchCollection('[resource, concepts]', function() {
-                if (scope.concepts)
-                    conceptNames = scope.concepts.map(function(c) { return c.get('title'); });
-                else
-                    conceptNames = [];
-
-                if (scope.resource)
-                    scope.resource.keywords = scope.resource.get('keywords').concat(conceptNames);
-            });
 
             // Save the resource
             scope.save = function() {
-                return scope.resource.save(scope.resource.attributes)
-                .then(fetchTags)
-                .then(addTags);
+                return scope.resource.save(scope.resource.attributes);
             };
 
             // Reset the resource
             scope.reset = function() {
-                return scope.resource.fetch()
-                .then(fetchTags)
-                .then(addTags);
+                return scope.resource.fetch();
             };
+            
+            scope.$watch('resource', function(resource) {
+                if (resource !== undefined) {
+                    // Resource has been loaded
+                    scope.status = 'loaded';
+
+                    // Get the understanding of this resource
+                    resource.understandingObj()
+                    .then(function(understanding) {
+                        scope.understanding = understanding;
+                    });
+
+                    // Get list of concepts for autocompletion
+                    scope.concepts = scope.map.concepts;
+                }
+            });
         },
     };
 });

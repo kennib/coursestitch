@@ -28,7 +28,7 @@ service('fetchMap', function() {
     };
 }).
 service('getMap', function(Map, Resource, Concept, fetchMap,
-                           mapCache, resourceUnderstandingCache, conceptUnderstandingCache) {
+                           mapCache, resourceCache, resourceUnderstandingCache, conceptUnderstandingCache) {
     // Return cached versions of maps if they exist
     // Otherwise fetch the map and cache it
     return function(mapId, userId) {
@@ -45,11 +45,20 @@ service('getMap', function(Map, Resource, Concept, fetchMap,
             map.then(function(map) {
                 // Cache resource understandings
                 map.understandings.forEach(function(u) {
-                    resourceUnderstandingCache.put(u.get('resource').id+userId, u);
+                    resourceUnderstandingCache.put(u.get('resource').id+userId, Parse.Promise.as(u));
                 });
                 // Cache concept understandings
                 map.conceptUnderstandings.forEach(function(u) {
-                    conceptUnderstandingCache.put(u.get('concept').id+userId, u);
+                    conceptUnderstandingCache.put(u.get('concept').id+userId, Parse.Promise.as(u));
+                });
+                // Cache resources
+                var resources = map.map.get('resources');
+                resources.forEach(function(resource, r) {
+                    // Use existing cache if necessary
+                    resourceCache.putGet(resource.id, Parse.Promise.as(resource))
+                    .then(function(resource) {
+                        resources[r] = resource;
+                    });
                 });
             });
         }
@@ -66,7 +75,9 @@ controller('MapsCtrl', function($scope) {
     });
 }).
 
-controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter, getMap, mapCache, getConcept, newResource) {
+controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
+                               getMap, mapCache,
+                               resourceCache, newResource, getConcept) {
     $scope.newResource = newResource;
 
     var mapId = $routeParams.mapId;
@@ -96,47 +107,31 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter, 
     .then(function(map) {
         // The map has been loaded!
         $scope.status = 'loaded';
-
         $scope.map = map;
-        if (map.get('resources')) {
-            var resources = map.get('resources');
-            var concepts = map.concepts;
-            // Set the map's resources to be used in the scope, which allows it to be rendered.
-            // This could be empty if the map has no associated resources.
-            $scope.resources = resources;
-            $scope.concepts = concepts;
 
-            if ($scope.viewType === 'resource') {
-                // Retrieve the resource with the given ID parsed from the route, regardless of
-                // whether the resource is in the map or not.
-                var resource = resources.find(function(resource) {
-                    return resource.id === viewId;
-                });
+        // Get the resources and concepts of this map
+        var resources = map.get('resources');
+        var concepts = map.concepts;
 
-                if (resource === undefined)
-                    new Parse.Query('Resource')
-                        .include(['teaches', 'requires'])
-                        .get(viewId)
-                    .then(function(resource) {
-                        $scope.resource = resource;
-                    });
-                else
-                    $scope.resource = resource;
+        $scope.resources = resources;
+        $scope.concepts = concepts;
 
-            } else if ($scope.viewType === 'concept')
-                // Retrieves the Concept object given with the ID, as well as all resources that
-                // teach the concept.
-                getConcept(viewId)
-                .then(function(concept, resources) {
-                    if (concept) {
-                        $scope.concept = concept;
-                        $scope.concept.resources = resources;
-                    }
-                });
-            else {
-                $scope.resource = resources[0];
-                $scope.viewType = 'resource';
-            }
+        if ($scope.viewType === 'resource') {
+            resourceCache.get(viewId)
+            .then(function(resource) {;
+                $scope.resource = resource;
+            });
+        } else if ($scope.viewType === 'concept') {
+            getConcept(viewId)
+            .then(function(concept, resources) {
+                if (concept) {
+                    $scope.concept = concept;
+                    $scope.concept.resources = resources;
+                }
+            });
+        } else if ($scope.resources) {
+            $scope.resource = resources[0];
+            $scope.viewType = 'resource';
         }
 
         // Function to add new resources
