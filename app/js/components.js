@@ -372,7 +372,7 @@ directive('knowledgeMap', function() {
             var highlightPlugin = function(km) {
                 var d3 = knowledgeMap.d3;
                 km.highlightNone = function() {
-                    d3.selectAll('.active').classed('active', false);
+                    km.element.selectAll('.active').classed('active', false);
                 };
 
                 km.highlightEdges = function(id) {
