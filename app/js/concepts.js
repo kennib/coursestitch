@@ -8,8 +8,10 @@ service('Concept', function(conceptUnderstandingCache) {
             return conceptUnderstandingCache.get(this.id, userId);
         },
         understanding: function() {
-            var u = this.understandingObj();
-            return u ? u.get('understands') : undefined;
+            return this.understandingObj()
+            .then(function(u) {
+                return u ? u.get('understands') : undefined;
+            });
         },
     })
 }).
@@ -38,11 +40,12 @@ service('getConcept', function() {
 directive('concept', function(makeURL) {
     return {
         restrict: 'E',
-        templateUrl: '/templates/concept.html',
+        templateUrl: 'templates/concept.html',
         scope: {
             map: '=',
             concept: '=',
             mode: '@',
+            setView: '=',
         },
         link: function(scope, elem, attrs) {
             scope.makeURL = makeURL;

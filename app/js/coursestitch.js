@@ -1,5 +1,5 @@
 angular.module('coursestitch', [
-    'ngRoute', 'parse-angular',
+    'ngRoute', 'ngAnimate', 'parse-angular',
     'coursestitch-maps', 'coursestitch-resources',
     'coursestitch-components'
 ]).
@@ -7,18 +7,24 @@ angular.module('coursestitch', [
 config(function($routeProvider, $locationProvider) {
     $routeProvider
     .when('/', {
-        templateUrl: '/templates/home.html',
+        templateUrl: 'templates/home.html',
+    })
+    .when('/login', {
+        templateUrl: 'templates/signup.html',
+    })
+    .when('/profile', {
+        templateUrl: 'templates/profile.html',
     })
     .when('/maps', {
-        templateUrl: '/templates/maps.html',
+        templateUrl: 'templates/maps.html',
         controller: 'MapsCtrl',
     })
     .when('/map/:mapId/:mapTitle?', {
-        templateUrl: '/templates/map.html',
+        templateUrl: 'templates/map.html',
         controller: 'MapCtrl',
     })
     .when('/map/:mapId/:mapTitle?/:viewType/:viewId/:viewTitle?/:viewSubtitle?', {
-        templateUrl: '/templates/map.html',
+        templateUrl: 'templates/map.html',
         controller: 'MapCtrl',
     });
 
@@ -35,6 +41,20 @@ config(function() {
     Parse.initialize(parseKeys.app, parseKeys.js);
 }).
 
+run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
+    var original = $location.path;
+    $location.path = function (path, reload) {
+        if (reload === false) {
+            var lastRoute = $route.current;
+            var un = $rootScope.$on('$locationChangeSuccess', function () {
+                $route.current = lastRoute;
+                un();
+            });
+        }
+        return original.apply($location, [path]);
+    };
+}]).
+
 service('objectCache', function($cacheFactory) {
     // Return an object which caches or fetches objects
     return function(name, fetch) {
@@ -44,6 +64,7 @@ service('objectCache', function($cacheFactory) {
             cache: cache,
             put: function(id, obj) {
                 this.cache.put(id, obj);
+                return obj;
             },
             get: function(id, userId) {
                 var self = this;
@@ -51,19 +72,24 @@ service('objectCache', function($cacheFactory) {
 
                 // If we have no cache, then fetch the object
                 if (this.cache.get(objId) === undefined) {
-                    // Temporary value placeholder
-                    this.put(objId, null);
-
-                    // Fetch the value
-                    this.fetch(id, userId)
-                    .then(function(obj) {
-                        self.put(objId, obj);
-                    });
+                    // Promise to fetch the value
+                    var promise = this.fetch(id, userId); 
+                    self.put(objId, promise);
                 }
 
                 // Return the object
                 return this.cache.get(objId);
             },
+            putGet: function(id, obj) {
+                var cache = this.cache.get(id);
+
+                // Return the cache if it exists
+                if (cache)
+                    return cache;
+                // Otherwise cache the given object
+                else
+                    return this.put(id, obj);
+            }
         };
     };
 }).
@@ -123,18 +149,27 @@ filter('deurlize', function() {
             return string.replace(/-/g, ' ');
     };
 }).
+filter('result', function() {
+    // Return the result of a Parse promise
+    return function(promise) {
+        if (promise && promise._resolved)
+            return promise._result[0]
+        else
+            return undefined;
+    };
+}).
 filter('understandingClass', function() {
     return function(u) {
         if (u < 0) {
-            return 'palette-pomegranate';
+            return 'palette-alizarin';
         } else if (u == 0) {
-            return 'palette-silver';
+            return 'palette-midnight-blue';
         } else if (u > 0 && u < 0.5) {
-            return 'palette-peter-river';
+            return 'palette-belize-hole';
         } else if (u >= 0.5 && u < 1) {
-            return 'palette-turquoise';
+            return 'palette-peter-river';
         } else if (u == 1) {
-            return 'palette-emerald';
+            return 'palette-turquoise';
         } else {
             return 'palette-asbestos';
         }
@@ -172,6 +207,22 @@ controller('RootCtrl', function($scope, makeURL, isEditor) {
             $(this).attr('src', 'lib/Flat-UI/images/icons/png/Book.png');
         });
     });
+
+    // Temporary user
+    if (!Parse.User.current()) {
+        var username = 'temp-'+Math.random().toString(36).substring(7);
+        var password = Math.random().toString(36).substring(7);
+
+        Parse.User.signUp(username, password, {
+            name: 'User',
+        })
+        .then(function(user) {
+            $scope.user = user;
+        });
+    } else {
+        // Current user
+        $scope.user = Parse.User.current();
+    }
 }).
 
 controller('LoginCtrl', function($scope) {
@@ -186,7 +237,7 @@ controller('LoginCtrl', function($scope) {
         Parse.User.logIn($scope.email, $scope.password)
         .then(function(user) {
             $scope.loggedIn = true;
-            $scope.user = user.attributes;
+            $scope.user = user;
         })
         .fail(function(error) {
             $scope.loggedIn = false;

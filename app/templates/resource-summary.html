@@ -1,11 +1,21 @@
 <div class="panel">
-    <div class="panel-heading {{ resource.understanding() | understandingClass }}">
-        <a ng-href="{{ makeURL(map, resource) }}">
+    <div class="panel-heading {{ resource.understanding() | result | understandingClass }}">
+        <span class="pull-right">
+            <button class="btn" title="{{ resource.inMap(map) ? 'Remove from map' : 'Add to map' }}"
+                    ng-class="{'btn-primary': !resource.inMap(map),
+                               'btn-danger':   resource.inMap(map)}"
+                    ng-click="resource.toggleMap(map)">
+                <i ng-class="{'glyphicon': true,
+                              'glyphicon-plus': !resource.inMap(map),
+                              'glyphicon-minus': resource.inMap(map)}"></i>
+            </button>
+        </span>
+        <a href ng-click="setView(resource)">
             <div class="panel-image">
-                <img ng-src="{{ resource.attributes.image || 'lib/Flat-UI/images/icons/png/Book.png' }}" alt="{{ resource.attributes.title }}" width="60px">
-                <span class="label"
-                      ng-bind-template="{{ resource.understanding() | understandingLabel }}">
-                </span>
+                <p ng-bind-template="{{ resource.understanding() | result | understandingLabel }}"></p>
+                <div class="img-circle">
+                    <img ng-src="{{ resource.attributes.image || 'lib/Flat-UI/images/icons/png/Book.png' }}" alt="{{ resource.attributes.title }}" width="60px">
+                </div>
             </div>
             <h4>
                 {{ resource.attributes.title }}

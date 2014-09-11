@@ -1,13 +1,45 @@
+/* Logo */
+.course-stitch {
+    font-family: 'Sacramento', cursive;
+    font-weight: normal;
+}
+.course-stitch .course {
+    color: #2980b9;
+}
+.course-stitch .stitch {
+    color: #1abc9c;
+}
+.navbar-brand.course-stitch {
+    font-size: 38px;
+}
+
+/* Home page */
+.jumbotron {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+
+    color: white;
+
+    background-image: url('../images/books_splash.jpg');
+    background-size: cover;
+    background-position: bottom left;
+}
+
+/* Map page */
+.maps .panel {
+    height: 380px;
+}
+
 /* Panel restructuring and styling */
 .panel {
     border: 1px dashed rgba(0,0,0, 0.2);
 }
 .panel-heading {
     margin: none;
+    padding: 10px;
 }
 .panel-heading h4,
-.panel-heading p,
-.panel-heading label {
+.panel-heading p {
     color: white;
 }
 .panel-heading h4 {
@@ -20,15 +52,25 @@
 }
 .panel-heading .panel-image {
     float: left;
-    min-width: 100px;
+    position: relative;
+    top: 20px;
+
     text-align: center;
     margin-right: 10px;
+    margin-bottom: 20px;
 }
-.panel-heading .panel-image  img {
-    display: block;
-    margin: auto;
-    height: 45px;
+.panel-heading .panel-image img {
+    height: 85px;
     width: auto;
+}
+.panel-heading .panel-image p {
+    width: 85px;
+
+    margin-top: -20px;
+    margin-bottom: 5px;
+
+    font-size: 15px;
+    line-height: 1.2;
 }
 .panel-body blockquote {
     margin-bottom: 5px;
@@ -42,4 +84,35 @@ understanding-slider .row {
 }
 understanding-slider label {
     cursor: pointer;
+}
+
+/* Resource list */
+.resources {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 740px;
+}
+
+/* Animations */
+.resource-summary.ng-move,
+.resource-summary.ng-enter,
+.resource-summary.ng-leave {
+    position: relative;
+    -webkit-transition: all linear 1.0s;
+    transition: all linear 1.0s;
+}
+
+.resource-summary.ng-leave.ng-leave-active,
+.resource-summary.ng-move,
+.resource-summary.ng-enter {
+    opacity: 0;
+    left: 100px;
+}
+
+
+.resource-summary.ng-leave,
+.resource-summary.ng-move.ng-move-active,
+.resource-summary.ng-enter.ng-enter-active {
+    opacity: 1;
+    left: 0px;
 }

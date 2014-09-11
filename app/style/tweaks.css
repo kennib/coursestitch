@@ -4,9 +4,19 @@
     padding: 0px;
 }
 
-.dropdown-menu {
+.decipher-tags .dropdown-menu {
     visibility: visible;
     opacity: 1;
+}
+
+.panel-heading .img-circle {
+    overflow: hidden;
+    width: 85px;
+    text-align: center;
+}
+.panel-heading .img-circle img {
+    margin-left: -100%;
+    margin-right: -100%;
 }
 
 .list-inline > li:first-child {
@@ -64,4 +74,28 @@ understanding-slider label {
     font-weight: bold;
     line-height: 1;
     fill: #fff;
+}
+
+/* Vertical progress bars */
+.progress-vertical {
+    float: left;
+    overflow: visible;
+    position: relative;
+    width: 10px;
+    min-height: 740px;
+    margin: 0px;
+    margin-right: 20px;
+}
+.progress-vertical .progress-bar {
+    width: 10px;
+}
+/* A triangle indicating the current progress-bar segment */
+.progress-bar.current {
+    width: 30px;
+    margin-left: -20px;
+
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+
+    border-left: 10px solid white;
 }
