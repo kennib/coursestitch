@@ -5,7 +5,8 @@
         <ng-include src="'templates/map-header.html'"></ng-include>
 
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-5"
+                 ng-if="viewType && viewId">
                 <article ng-switch="viewType">
                     <div ng-switch-when="resource">
                         <resource map="map" resource="resource" concepts="concepts" set-view="setView">
@@ -16,7 +17,7 @@
                     </div>
                 </article>
             </div>
-            <div class="col-md-7">
+            <div ng-class="{'col-md-7': viewType && viewId, 'col-xs-12': !(viewType && viewId)}">
                 <ng-include src="'templates/map-controls.html'"></ng-include>
                 <ng-include src="'templates/map-progress.html'" ng-hide="mapMode"></ng-include>
                 <ng-include src="'templates/resources.html'" ng-hide="mapMode"></ng-include>

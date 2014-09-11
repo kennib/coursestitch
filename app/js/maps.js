@@ -138,9 +138,6 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                         $scope.concept.resources = resources;
                     }
                 });
-            } else if ($scope.resources) {
-                $scope.resource = resources[0];
-                $scope.viewType = 'resource';
             }
         });
 
