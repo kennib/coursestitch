@@ -41,6 +41,20 @@ config(function() {
     Parse.initialize(parseKeys.app, parseKeys.js);
 }).
 
+run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
+    var original = $location.path;
+    $location.path = function (path, reload) {
+        if (reload === false) {
+            var lastRoute = $route.current;
+            var un = $rootScope.$on('$locationChangeSuccess', function () {
+                $route.current = lastRoute;
+                un();
+            });
+        }
+        return original.apply($location, [path]);
+    };
+}]).
+
 service('objectCache', function($cacheFactory) {
     // Return an object which caches or fetches objects
     return function(name, fetch) {

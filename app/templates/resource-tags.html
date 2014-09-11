@@ -6,12 +6,16 @@
         <div ng-if="!editMode">
             <ul class="list-inline">
                 <li ng-repeat="concept in resource.attributes[tagLabel]">
-                    <a ng-href="{{ concept.id ? makeURL(map, concept) : '' }}">
+                    <a href ng-click="setView(concept)">
                         <span class="label {{ concept.understanding() | result | understandingClass }}"
                               ng-bind="concept.attributes.title || concept.name"></span>
                     </a>
                 </li>
             </ul>
+            <p ng-switch-when="view"
+               ng-hide="resource.attributes[tagLabel]">
+               "{{ resource.attributes.title }}" {{ tagLabel }} no concepts.
+            </p>
 
             <p ng-hide="resource.attributes[tagLabel]">
                "{{ resource.attributes.title }}" {{ tagLabel }} no concepts.

@@ -106,6 +106,7 @@ directive('resource', function(toggleResource, makeURL, isEditor) {
         scope: {
             map: '=',
             resource: '=',
+            setView: '=',
         },
         link: function(scope, elem, attrs) {
             scope.makeURL = makeURL;
@@ -133,7 +134,7 @@ directive('resource', function(toggleResource, makeURL, isEditor) {
             scope.reset = function() {
                 return scope.resource.fetch();
             };
-            
+
             scope.$watch('resource', function(resource) {
                 if (resource !== undefined) {
                     // Resource has been loaded

@@ -52,11 +52,16 @@ understanding-slider label {
 }
 
 #km .edgePath path {
-    stroke: #ccc;
+    stroke: #eee;
+    transition: 0.25s;
+}
+
+#km .edgePath.active path {
+    stroke: #aaa;
 }
 
 #km #arrowhead {
-    fill: #ccc !important;
+    fill: #eee !important;
 }
 
 #km .node.concept rect {

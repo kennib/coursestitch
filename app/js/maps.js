@@ -89,6 +89,7 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
 
     if (viewType == 'concept' || viewType == 'resource') {
       $scope.viewType = viewType;
+      $scope.viewId = viewId;
     } else {
       // Do something if the type is not concept or resource. Or something.
     }
@@ -116,23 +117,37 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
         $scope.resources = resources;
         $scope.concepts = concepts;
 
-        if ($scope.viewType === 'resource') {
-            resourceCache.get(viewId)
-            .then(function(resource) {;
-                $scope.resource = resource;
-            });
-        } else if ($scope.viewType === 'concept') {
-            getConcept(viewId)
-            .then(function(concept, resources) {
-                if (concept) {
-                    $scope.concept = concept;
-                    $scope.concept.resources = resources;
-                }
-            });
-        } else if ($scope.resources) {
-            $scope.resource = resources[0];
-            $scope.viewType = 'resource';
-        }
+        // Update the view
+        $scope.$watchCollection('[viewType, viewId]', function() {
+            if ($scope.viewType === 'resource') {
+                resourceCache.get($scope.viewId)
+                .then(function(resource) {;
+                    $scope.resource = resource;
+                });
+            } else if ($scope.viewType === 'concept') {
+                getConcept($scope.viewId)
+                .then(function(concept, resources) {
+                    if (concept) {
+                        $scope.concept = concept;
+                        $scope.concept.resources = resources;
+                    }
+                });
+            } else if ($scope.resources) {
+                $scope.resource = resources[0];
+                $scope.viewType = 'resource';
+            }
+        });
+
+        // Function to change map view
+        $scope.setView = function(viewObject) {
+            // Update view
+            $scope.viewType = viewObject.className.toLowerCase();
+            $scope.viewId = viewObject.id;
+            
+            // Update URL
+            var url = $scope.makeURL($scope.map, viewObject).slice(2);
+            $location.path(url, false);
+        };
 
         // Function to add new resources
         $scope.newResource = function(resourceUrl, mapId) {
