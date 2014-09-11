@@ -86,6 +86,11 @@ understanding-slider label {
     cursor: pointer;
 }
 
+/* Understanding progress */
+.understanding.progress-vertical .progress-bar {
+    border-bottom: 3px solid white;
+}
+
 /* Resource list */
 .resources {
     overflow-x: hidden;

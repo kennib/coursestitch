@@ -121,8 +121,8 @@ directive('resource', function(toggleResource, makeURL, isEditor) {
             });
 
             // Toggle between edit and view modes
-            scope.toggleEditMode = function() {
-                scope.editMode = !scope.editMode;
+            scope.setEditMode = function(mode) {
+                scope.editMode = mode;
             };
 
             // Save the resource

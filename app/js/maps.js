@@ -104,6 +104,12 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
         return $scope.makeURL($scope.map, id);
     };
 
+    // Map or list mode
+    $scope.mapMode = true;
+    $scope.setMapMode = function(mode) {
+        $scope.mapMode = mode;
+    };
+
     getMap(mapId, userId)
     .then(function(map) {
         // The map has been loaded!
@@ -132,9 +138,6 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                         $scope.concept.resources = resources;
                     }
                 });
-            } else if ($scope.resources) {
-                $scope.resource = resources[0];
-                $scope.viewType = 'resource';
             }
         });
 
