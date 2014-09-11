@@ -304,6 +304,26 @@ directive('knowledgeMap', function() {
                 });
             };
 
+            var tredPlugin = function(km) {
+                km.onPreLayout(function(c, g) {
+                    var remove = [];
+                    g.eachEdge(function(e, u, v) {
+                        // Save edge data.
+                        var s = g.source(e);
+                        var t = g.target(e);
+                        var d = g.edge(e);
+                        // Remove edge temporarily.
+                        g.delEdge(e);
+                        // Check reachability without edge.
+                        var dists = knowledgeMap.graphlib.alg.dijkstra(g, u);
+                        if(dists[v].distance === Number.POSITIVE_INFINITY) {
+                            // Re-add edge.
+                            g.addEdge(e, s, t, d);
+                        }
+                    });
+                });
+            };
+
             // Make links to stuff.
             var linkPlugin = function(km) {
                 var d3 = knowledgeMap.d3;
@@ -397,6 +417,7 @@ directive('knowledgeMap', function() {
                         plugins: [
                             conceptAppearancePlugin,
                             layoutPlugin,
+                            tredPlugin,
                             linkPlugin,
                             panToPlugin,
                             highlightPlugin
