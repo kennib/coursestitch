@@ -2,6 +2,7 @@
 .course-stitch {
     font-family: 'Sacramento', cursive;
     font-weight: normal;
+    margin-top: -6px;
 }
 .course-stitch .course {
     color: #2980b9;
