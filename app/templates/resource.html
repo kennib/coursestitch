@@ -1,7 +1,7 @@
 <article ng-switch="status">
-    <div ng-switch-when="loaded">
-        <ng-include src="'templates/resource-controls.html'"></ng-include>
+    <ng-include src="'templates/resource-controls.html'"></ng-include>
 
+    <div ng-switch-when="loaded">
         <div class="panel resource">
             <div class="panel-heading {{ resource.understanding() | result | understandingClass }}"
                  ng-include src="'templates/resource-heading.html'"></div>
