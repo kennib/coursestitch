@@ -87,8 +87,6 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
     var viewTitle = $routeParams.viewTitle;
     var viewSubtitle = $routeParams.viewSubtitle;
 
-    $scope.viewId = viewId;
-
     if (viewType == 'concept' || viewType == 'resource') {
       $scope.viewType = viewType;
       $scope.viewId = viewId;
@@ -142,7 +140,6 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
 
         // Function to change map view
         $scope.setView = function(viewObject) {
-            console.log(viewObject);
             // Update view
             $scope.viewType = viewObject.className.toLowerCase();
             $scope.viewId = viewObject.id;

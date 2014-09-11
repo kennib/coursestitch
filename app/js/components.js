@@ -241,7 +241,8 @@ directive('knowledgeMap', function() {
             model: '=',
             focus: '=',
             visible: '=',
-            makeurl: '=',
+            makeUrl: '=',
+            setView: '=',
         },
 
         link: function(scope, element, attrs) {
@@ -309,27 +310,43 @@ directive('knowledgeMap', function() {
                 km.renderNodes.onNew(function(nodes) {
                     // Wrap the existing text elements in anchors which we link
                     // to the appropriate URLs to view a resource or concept.
+                    // These anchors' click events are prevented so that we
+                    // don't just follow the links and refresh the page.
                     nodes.select('text').each(function() {
                         var self = this;
                         d3.select(this.parentNode)
                             .insert('a', 'text')
                             .attr('xlink:href', function(n) {
-                                return scope.makeurl(n.content.source);
+                                return scope.makeUrl(n.content.source);
                             })
-                            // For now, overrive the default link-click behavior
-                            // to be able to navigate the graph nicely.
                             .on('click', function(n) {
                                 if(d3.event.which === 1) {
                                     d3.event.preventDefault();
-                                    scope.$apply(function() {
-                                        scope.focus = n.content.source.id;
-                                    });
                                 }
                             })
                             .append(function() { return self; });
                     });
+
+                    // When clicking anywhere on a node, call setView to focus
+                    // the entire UI on the particular node.
+                    nodes.on('click', function(n) {
+                        scope.$apply(function() {
+                            // This should change the target of scope.focus so
+                            // that the map then pans to the node.
+                            scope.setView(n.content.source);
+                        });
+                    });
                 });
             };
+
+            // Watch the target of 'focus', which includes changes from the UI
+            // like clicking on links elsewhere on the page.
+            scope.$watch('focus', function() {
+                if(km && scope.focus) {
+                    km.panTo('n'+scope.focus, 500);
+                    km.highlightEdges('n'+scope.focus);
+                }
+            });
 
             var panToPlugin = function(km) {
                 var d3 = knowledgeMap.d3;
@@ -385,13 +402,6 @@ directive('knowledgeMap', function() {
                             highlightPlugin
                         ],
                     });
-                }
-            });
-
-            scope.$watch('focus', function() {
-                if(km && scope.focus) {
-                    km.panTo('n'+scope.focus, 500);
-                    km.highlightEdges('n'+scope.focus);
                 }
             });
 
