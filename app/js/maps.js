@@ -103,6 +103,12 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
         return $scope.makeURL($scope.map, id);
     };
 
+    // Map or list mode
+    $scope.mapMode = true;
+    $scope.setMapMode = function(mode) {
+        $scope.mapMode = mode;
+    };
+
     getMap(mapId, userId)
     .then(function(map) {
         // The map has been loaded!
