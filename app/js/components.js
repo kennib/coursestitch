@@ -299,7 +299,8 @@ directive('knowledgeMap', function() {
             // Change the default layout parameters.
             var layoutPlugin = function(km) {
                 km.onPreLayout(function(config) {
-                    config.rankSep(30);
+                    config.rankSep(20);
+                    config.nodeSep(20);
                     config.rankDir('LR');
                 });
             };
