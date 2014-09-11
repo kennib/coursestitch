@@ -26,6 +26,15 @@
     background-position: bottom left;
 }
 
+/* Footer */
+.footer {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-top: 20px;
+    padding-bottom: 0px;
+    border-radius: 6px;
+}
+
 /* Map page */
 .maps .panel {
     height: 380px;
