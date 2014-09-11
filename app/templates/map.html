@@ -8,11 +8,11 @@
             <div class="col-md-5">
                 <article ng-switch="viewType">
                     <div ng-switch-when="resource">
-                        <resource map="map" resource="resource" concepts="concepts">
+                        <resource map="map" resource="resource" concepts="concepts" set-view="setView">
                     </resource>
                     </div>
                     <div ng-switch-when="concept">
-                        <concept map="map" concept="concept"></concept>
+                        <concept map="map" concept="concept" set-view="setView"></concept>
                     </div>
                 </article>
             </div>

@@ -45,6 +45,7 @@ directive('concept', function(makeURL) {
             map: '=',
             concept: '=',
             mode: '@',
+            setView: '=',
         },
         link: function(scope, elem, attrs) {
             scope.makeURL = makeURL;
