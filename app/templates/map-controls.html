@@ -6,24 +6,3 @@
         <a href ng-click="setMapMode(false)">List</a>
     </li>
 </ul>
-
-<div class="navbar navbar-inverse"
-     ng-if="isEditor && !mapMode">
-    <div class="collapse navbar-collapse">
-        <form class="navbar-form navbar-right">
-            <div class="form-group">
-                <div class="input-group">
-                    <input type="text" class="form-control"
-                           placeholder="Paste in a resource url"
-                           ng-model="newResourceUrl">
-                    <span class="input-group-btn">
-                        <action-button action="newResource(newResourceUrl, map.id)" label=""
-                                       idle-style="btn-primary" success-style="btn-success"
-                                       idle-icon="fui-plus" pending-icon="fui-time" success-icon="fui-check" error-icon="fui-cross">
-                        </action-button>
-                    </span>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
