@@ -10,7 +10,7 @@
                               'glyphicon-minus': resource.inMap(map)}"></i>
             </button>
         </span>
-        <a ng-href="{{ makeURL(map, resource) }}">
+        <a href ng-click="setView(resource)">
             <div class="panel-image">
                 <p ng-bind-template="{{ resource.understanding() | result | understandingLabel }}"></p>
                 <div class="img-circle">
