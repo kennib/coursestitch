@@ -69,6 +69,7 @@ service('getMap', function(Map, Resource, Concept, fetchMap,
 
 controller('MapsCtrl', function($scope) {
     new Parse.Query('Map')
+        .equalTo('owner', undefined)
         .find()
     .then(function(maps) {
         $scope.maps = maps;
