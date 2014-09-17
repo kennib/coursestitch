@@ -1,4 +1,4 @@
-<div class="well" ng-hide="mode == 'edit'">
+<div class="well" ng-if="!editMode">
     <understanding-slider
         ng-model="understanding.attributes.understands"
         on-change="setUnderstanding">

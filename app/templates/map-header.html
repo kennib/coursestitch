@@ -1,3 +1,31 @@
 <div class="page-header">
-    <h1 ng-bind="map.attributes.title"></h1>
+    <a ng-href="{{makeURL(map)}}">
+        <h1 ng-bind="map.attributes.title"></h1>
+    </a>
+    <button class="btn" ng-class="{'btn-primary': editMode, 'btn-default': !editMode}"
+            ng-click="editMode = !editMode"
+            ng-show="isEditor">
+        <i class="glyphicon glyphicon-edit"></i>
+    </button>
+</div>
+
+<div class="navbar navbar-inverse"
+     ng-if="isEditor && editMode">
+    <div class="collapse navbar-collapse">
+        <form class="navbar-form navbar-right">
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" class="form-control"
+                           placeholder="Paste in a resource url"
+                           ng-model="newResourceUrl">
+                    <span class="input-group-btn">
+                        <action-button action="newResource(newResourceUrl, map.id)" label=""
+                                       idle-style="btn-primary" success-style="btn-success"
+                                       idle-icon="fui-plus" pending-icon="fui-time" success-icon="fui-check" error-icon="fui-cross">
+                        </action-button>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>

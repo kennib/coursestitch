@@ -2,6 +2,7 @@
 .course-stitch {
     font-family: 'Sacramento', cursive;
     font-weight: normal;
+    margin-top: -6px;
 }
 .course-stitch .course {
     color: #2980b9;
@@ -23,6 +24,15 @@
     background-image: url('../images/books_splash.jpg');
     background-size: cover;
     background-position: bottom left;
+}
+
+/* Footer */
+.footer {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-top: 20px;
+    padding-bottom: 0px;
+    border-radius: 6px;
 }
 
 /* Map page */
@@ -84,6 +94,11 @@ understanding-slider .row {
 }
 understanding-slider label {
     cursor: pointer;
+}
+
+/* Understanding progress */
+.understanding.progress-vertical .progress-bar {
+    border-bottom: 3px solid white;
 }
 
 /* Resource list */

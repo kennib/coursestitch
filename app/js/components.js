@@ -191,6 +191,47 @@ directive('understandingSlider', function($timeout, understandingClassFilter) {
     };
 }).
 
+directive('conceptTags', function(Concept) {
+    return {
+        restrict: 'E',
+        template: '<tags data-src="{value: tag} as tag.attributes.title for tag in srcTags" data-model="tagModel" options="{addable: true}"></tags>',
+        scope: {
+           ngModel: '=',
+           concepts: '=',
+        },
+        link: function(scope, elem, attrs) {
+            // Convert concepts into tags
+            scope.$watch('concepts', function(concepts) {
+                scope.srcTags = concepts.map(function(concept) {
+                    return {name: concept.attributes.title, value: concept};
+                });
+            });
+
+            // When the tag input changes update the model
+            scope.$on('decipher.tags.added', function(e, result) {
+                var tag = result.tag;
+                var concept = tag.value ? tag.value : new Concept({title: tag.name});
+                scope.ngModel.push(concept);
+            });
+
+            scope.$on('decipher.tags.removed', function(e, removedTag) {
+                var index = scope.ngModel.findIndex(function(tag, t) {
+                    return tag.id === removedTag.value.id;
+                });
+                scope.ngModel.splice(index, 1);
+            });
+
+            // When the tag input is initialised use the model as the list of tags
+            scope.$watch('ngModel', function(tags) {
+                if (scope.tagModel === undefined)
+                    scope.tagModel = tags.map(function(tag) {
+                        return {value: tag, name: tag.attributes.title};
+                    });
+            });
+        },
+    };
+}).
+
 directive('knowledgeMap', function() {
     return {
         restrict: 'E',
@@ -198,8 +239,10 @@ directive('knowledgeMap', function() {
         replace: true,
         scope: {
             model: '=',
+            focus: '=',
             visible: '=',
-            makeurl: '=',
+            makeUrl: '=',
+            setView: '=',
         },
 
         link: function(scope, element, attrs) {
@@ -208,7 +251,7 @@ directive('knowledgeMap', function() {
             // Convert a concept from Parse format to Cartographer format.
             var translateConcept = function(s) {
                 return {
-                    id: s.id,
+                    id: 'n'+s.id,
                     label: s.attributes.title,
                     content: { source: s },
                 };
@@ -219,7 +262,7 @@ directive('knowledgeMap', function() {
                 var attrs = s.attributes;
                 return {
                     label: attrs.title,
-                    id: s.id,
+                    id: 'n'+s.id,
                     teaches: attrs.teaches ?
                         attrs.teaches.map(translateConcept) : undefined,
                     requires: attrs.requires ?
@@ -248,31 +291,119 @@ directive('knowledgeMap', function() {
                         .attr('height', function(d) { return d.height + 6; })
                         // Round corners.
                         .attr('rx', '0.25em').attr('ry', '0.25em');
+                // Recalculate node sizes after adding the rect, since it
+                // expands the shape dimensions.
                 }).onUpdate(km.calculateNodeSizes);
             };
 
             // Change the default layout parameters.
             var layoutPlugin = function(km) {
                 km.onPreLayout(function(config) {
-                    config.rankSep(30);
+                    config.rankSep(20);
+                    config.nodeSep(20);
                     config.rankDir('LR');
                 });
             };
 
+            var tredPlugin = function(km) {
+                km.onPreLayout(function(c, g) {
+                    var remove = [];
+                    g.eachEdge(function(e, u, v) {
+                        // Save edge data.
+                        var s = g.source(e);
+                        var t = g.target(e);
+                        var d = g.edge(e);
+                        // Remove edge temporarily.
+                        g.delEdge(e);
+                        // Check reachability without edge.
+                        var dists = knowledgeMap.graphlib.alg.dijkstra(g, u);
+                        if(dists[v].distance === Number.POSITIVE_INFINITY) {
+                            // Re-add edge.
+                            g.addEdge(e, s, t, d);
+                        }
+                    });
+                });
+            };
+
             // Make links to stuff.
-            var d3 = knowledgeMap.d3;
             var linkPlugin = function(km) {
+                var d3 = knowledgeMap.d3;
                 km.renderNodes.onNew(function(nodes) {
+                    // Wrap the existing text elements in anchors which we link
+                    // to the appropriate URLs to view a resource or concept.
+                    // These anchors' click events are prevented so that we
+                    // don't just follow the links and refresh the page.
                     nodes.select('text').each(function() {
                         var self = this;
                         d3.select(this.parentNode)
                             .insert('a', 'text')
-                            .attr('xlink:href', function(d) {
-                                return scope.makeurl(d.content.source);
+                            .attr('xlink:href', function(n) {
+                                return scope.makeUrl(n.content.source);
+                            })
+                            .on('click', function(n) {
+                                if(d3.event.which === 1) {
+                                    d3.event.preventDefault();
+                                }
                             })
                             .append(function() { return self; });
                     });
+
+                    // When clicking anywhere on a node, call setView to focus
+                    // the entire UI on the particular node.
+                    nodes.on('click', function(n) {
+                        scope.$apply(function() {
+                            // This should change the target of scope.focus so
+                            // that the map then pans to the node.
+                            scope.setView(n.content.source);
+                        });
+                    });
                 });
+            };
+
+            // Watch the target of 'focus', which includes changes from the UI
+            // like clicking on links elsewhere on the page.
+            scope.$watch('focus', function() {
+                if(km && scope.focus) {
+                    km.panTo('n'+scope.focus, 500);
+                    km.highlightEdges('n'+scope.focus);
+                }
+            });
+
+            var panToPlugin = function(km) {
+                var d3 = knowledgeMap.d3;
+                km.panTo = function(id, duration) {
+                    if(km.graph.hasNode(id)) {
+                        var box = d3.select('#km').node().getBoundingClientRect();
+                        var scale = km.zoom.scale();
+                        var n = km.graph.node(id);
+                        var x = n.layout.x * scale - box.width/2;
+                        var y = n.layout.y * scale - box.height/2;
+                        if(!duration) {
+                            km.zoom.translate([-x, -y]);
+                            km.zoom.event(km.element);
+                        } else {
+                            km.element.transition()
+                                .duration(duration)
+                                .call(km.zoom.translate([-x, -y]).event);
+                        }
+                    }
+                };
+            };
+
+            var highlightPlugin = function(km) {
+                var d3 = knowledgeMap.d3;
+                km.highlightNone = function() {
+                    km.element.selectAll('.active').classed('active', false);
+                };
+
+                km.highlightEdges = function(id) {
+                    km.highlightNone();
+                    if(km.graph.hasNode(id)) {
+                        km.graph.incidentEdges(id).forEach(function(edge) {
+                            d3.select('#'+edge).classed('active', true);
+                        });
+                    }
+                };
             };
 
             // Watch for changes in the data we are bound to. When we get some
@@ -287,7 +418,10 @@ directive('knowledgeMap', function() {
                         plugins: [
                             conceptAppearancePlugin,
                             layoutPlugin,
-                            linkPlugin
+                            tredPlugin,
+                            linkPlugin,
+                            panToPlugin,
+                            highlightPlugin
                         ],
                     });
                 }
@@ -298,6 +432,10 @@ directive('knowledgeMap', function() {
             scope.$watch('visible', function(value, old) {
                 if(value && !old && km) {
                     km.unhold().render();
+                    if(scope.focus) {
+                        km.panTo('n'+scope.focus);
+                        km.highlightEdges('n'+scope.focus);
+                    }
                 }
             });
         },

@@ -41,6 +41,20 @@ config(function() {
     Parse.initialize(parseKeys.app, parseKeys.js);
 }).
 
+run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
+    var original = $location.path;
+    $location.path = function (path, reload) {
+        if (reload === false) {
+            var lastRoute = $route.current;
+            var un = $rootScope.$on('$locationChangeSuccess', function () {
+                $route.current = lastRoute;
+                un();
+            });
+        }
+        return original.apply($location, [path]);
+    };
+}]).
+
 service('objectCache', function($cacheFactory) {
     // Return an object which caches or fetches objects
     return function(name, fetch) {
@@ -50,6 +64,7 @@ service('objectCache', function($cacheFactory) {
             cache: cache,
             put: function(id, obj) {
                 this.cache.put(id, obj);
+                return obj;
             },
             get: function(id, userId) {
                 var self = this;
@@ -57,19 +72,24 @@ service('objectCache', function($cacheFactory) {
 
                 // If we have no cache, then fetch the object
                 if (this.cache.get(objId) === undefined) {
-                    // Temporary value placeholder
-                    this.put(objId, null);
-
-                    // Fetch the value
-                    this.fetch(id, userId)
-                    .then(function(obj) {
-                        self.put(objId, obj);
-                    });
+                    // Promise to fetch the value
+                    var promise = this.fetch(id, userId); 
+                    self.put(objId, promise);
                 }
 
                 // Return the object
                 return this.cache.get(objId);
             },
+            putGet: function(id, obj) {
+                var cache = this.cache.get(id);
+
+                // Return the cache if it exists
+                if (cache)
+                    return cache;
+                // Otherwise cache the given object
+                else
+                    return this.put(id, obj);
+            }
         };
     };
 }).
@@ -127,6 +147,15 @@ filter('deurlize', function() {
     return function(string) {
         if (string)
             return string.replace(/-/g, ' ');
+    };
+}).
+filter('result', function() {
+    // Return the result of a Parse promise
+    return function(promise) {
+        if (promise && promise._resolved)
+            return promise._result[0]
+        else
+            return undefined;
     };
 }).
 filter('understandingClass', function() {
