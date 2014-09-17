@@ -194,7 +194,7 @@ directive('understandingSlider', function($timeout, understandingClassFilter) {
 directive('conceptTags', function(Concept) {
     return {
         restrict: 'E',
-        template: '<tags data-src="{value: tag} as tag.attributes.title for tag in srcTags" data-model="tagModel" options="{addable: true}"></tags>',
+        template: '<tags ng-init="srcTags=[]" data-src="tag as tag.name for tag in srcTags" data-model="tagModel" options="{addable: true}"></tags>',
         scope: {
            ngModel: '=',
            concepts: '=',
@@ -214,9 +214,9 @@ directive('conceptTags', function(Concept) {
                 scope.ngModel.push(concept);
             });
 
-            scope.$on('decipher.tags.removed', function(e, removedTag) {
+            scope.$on('decipher.tags.removed', function(e, removed) {
                 var index = scope.ngModel.findIndex(function(tag, t) {
-                    return tag.id === removedTag.value.id;
+                    return tag.id === removed.tag.value.id;
                 });
                 scope.ngModel.splice(index, 1);
             });
