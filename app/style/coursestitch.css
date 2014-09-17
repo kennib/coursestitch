@@ -35,6 +35,19 @@
     border-radius: 6px;
 }
 
+/* Tabs styling */
+.nav-tabs > li > a:hover,
+.nav-tabs.nav-justified > li > a {
+    border-bottom: 1px dashed rgba(0,0,0, 0.2);
+}
+
+.nav-tabs.nav-justified > .active > a:hover,
+.nav-tabs.nav-justified > .active > a {
+    border-style: dashed;
+    border-color: rgba(0,0,0, 0.2);
+    border-bottom: none;
+}
+
 /* Map page */
 .maps .panel {
     height: 380px;
@@ -43,6 +56,7 @@
 /* Panel restructuring and styling */
 .panel {
     border: 1px dashed rgba(0,0,0, 0.2);
+    border-top: none;
 }
 .panel-heading {
     margin: none;
@@ -84,6 +98,12 @@
 }
 .panel-body blockquote {
     margin-bottom: 5px;
+}
+
+/* Map Styling */
+#km {
+    border: 1px dashed rgba(0,0,0, 0.2);
+    border-top: none;
 }
 
 /* Understanding Slider */
