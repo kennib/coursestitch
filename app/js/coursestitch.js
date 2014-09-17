@@ -34,8 +34,8 @@ config(function($routeProvider, $locationProvider) {
 }).
 config(function() {
     var parseKeys = {
-        app: 'QrE6nn4lKuwE9Mon6CcxH7nLQa6eScKwBgqh5oTH',
-        js: 'NO1PZLeyugXkKDfDPuL8wAINf0356iTWiCVaTfGJ',
+        app: 'kfeJLYVFGd1xinqF4FfZxtytkP5ax4DrXXhPSWnB',
+        js: 'wl46IOIxpCRJckkXdhK1zVGdtcxGJ9yLw19Ywkl3',
     };
 
     Parse.initialize(parseKeys.app, parseKeys.js);
