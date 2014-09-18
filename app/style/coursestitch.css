@@ -155,27 +155,15 @@ understanding-slider label {
 
 /* View Animations */
 .view {
-    overflow: hidden;
+    position: fixed;
+    -webkit-transition: all linear 0.6s;
+    transition: all linear 0.6s;
 }
 
+/* Explorer Animations */
 .explorer { 
-    background-color: white;
-}
-
-.resource.view.ng-move,
-.resource.view.ng-enter {
-    position: relative;
-    -webkit-transition: all linear 0.5s;
-    transition: all linear 0.5s;
-}
-
-.resource.view.ng-move,
-.resource.view.ng-enter {
-    left: 500px;
-}
-
-.resource.view.ng-leave,
-.resource.view.ng-move.ng-move-active,
-.resource.view.ng-enter.ng-enter-active {
-    left: 0px;
+    float: right;
+    -webkit-transition: all ease-in 0.6s;
+    transition: all ease-in 0.6s;
+    background: white;
 }
