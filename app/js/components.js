@@ -200,11 +200,35 @@ directive('conceptTags', function(Concept) {
            concepts: '=',
         },
         link: function(scope, elem, attrs) {
+            // Method to get unique tags
+            var seen = {},
+                unique = [];
+            var uniqueItems = function(array, f) {
+                array.forEach(function(item) {
+                    if (f === undefined) {
+                        if (seen[item] === undefined) {
+                            seen[item] = true;
+                            unique.push(item);
+                        }
+                    } else {
+                        if (seen[f(item)] === undefined) {
+                            seen[f(item)] = true;
+                            unique.push(item);
+                        }
+                    }
+                });
+
+                return unique;
+            }; 
+
             // Convert concepts into tags
             scope.$watch('concepts', function(concepts) {
-                scope.srcTags = concepts.map(function(concept) {
+                var tags = concepts
+                .map(function(concept) {
                     return {name: concept.attributes.title, value: concept};
                 });
+
+                scope.srcTags = uniqueItems(tags, function(tag) { return tag.name; });
             });
 
             // When the tag input changes update the model
