@@ -308,16 +308,17 @@ directive('knowledgeMap', function() {
                 km.renderNodes.onUpdate(function(nodes) {
                     nodes.filter('.concept').select('rect')
                         // Offset rects so they're centred.
-                        .attr('x', function(d) { return -d.width/2 - 5; })
-                        .attr('y', function(d) { return -d.height/2 - 3; })
+                        .attr('x', function(d) { return -d.baseWidth/2 - 5; })
+                        .attr('y', function(d) { return -d.baseHeight/2 - 3; })
                         // Add a bit of padding.
-                        .attr('width', function(d) { return d.width + 10; })
-                        .attr('height', function(d) { return d.height + 6; })
+                        .attr('width', function(d) { return d.baseWidth + 10; })
+                        .attr('height', function(d) { return d.baseHeight + 6; })
                         // Round corners.
                         .attr('rx', '0.25em').attr('ry', '0.25em');
+                })
                 // Recalculate node sizes after adding the rect, since it
                 // expands the shape dimensions.
-                }).onUpdate(km.calculateNodeSizes);
+                .onUpdate(km.calculateNodeSizes);
             };
 
             // Change the default layout parameters.
@@ -329,6 +330,8 @@ directive('knowledgeMap', function() {
                 });
             };
 
+            // Perform a poor man's version of 'transitive reduction' to remove
+            // edges that don't affect the graph's connectivity.
             var tredPlugin = function(km) {
                 km.onPreLayout(function(c, g) {
                     var remove = [];
@@ -387,9 +390,13 @@ directive('knowledgeMap', function() {
             // Watch the target of 'focus', which includes changes from the UI
             // like clicking on links elsewhere on the page.
             scope.$watch('focus', function() {
-                if(km && scope.focus) {
-                    km.panTo('n'+scope.focus, 500);
-                    km.highlightEdges('n'+scope.focus);
+                if(km) {
+                    if(scope.focus) {
+                        km.panTo('n'+scope.focus, 500);
+                        km.highlightEdges('n'+scope.focus);
+                    } else {
+                        km.highlightNone();
+                    }
                 }
             });
 
@@ -455,10 +462,11 @@ directive('knowledgeMap', function() {
             // rendered properly while it was off-screen.
             scope.$watch('visible', function(value, old) {
                 if(value && !old && km) {
-                    km.unhold().render();
                     if(scope.focus) {
                         km.panTo('n'+scope.focus);
                         km.highlightEdges('n'+scope.focus);
+                    } else {
+                        km.highlightNone();
                     }
                 }
             });
