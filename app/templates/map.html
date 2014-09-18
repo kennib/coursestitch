@@ -5,8 +5,9 @@
         <ng-include src="'templates/map-header.html'"></ng-include>
 
         <div class="row">
-            <div class="col-md-5"
-                 ng-if="viewType && viewId">
+            <div class="col-md-5 view"
+                 ng-if="viewType && viewId"
+                 ng-class="{resource: viewType == 'resource', concept: viewType == 'concept'}">
                 <article ng-switch="viewType">
                     <div ng-switch-when="resource">
                         <resource map="map" resource="resource" concepts="concepts" set-view="setView">
