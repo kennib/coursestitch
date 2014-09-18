@@ -155,9 +155,14 @@ understanding-slider label {
 
 /* View Animations */
 .view {
-    position: fixed;
     -webkit-transition: all linear 0.6s;
     transition: all linear 0.6s;
+}
+
+.view.ng-move,
+.view.ng-enter,
+.view.ng-leave {
+    position: fixed;
 }
 
 /* Explorer Animations */
