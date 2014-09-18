@@ -1,13 +1,14 @@
 {
   "name": "cartographer",
   "homepage": "https://github.com/knowledge-map/cartographer",
-  "_release": "9b8d3a700e",
+  "version": "0.1.0",
+  "_release": "0.1.0",
   "_resolution": {
-    "type": "branch",
-    "branch": "redesign-api",
-    "commit": "9b8d3a700ef4355a63160d7c04d88c48228fa6fd"
+    "type": "version",
+    "tag": "v0.1.0",
+    "commit": "fde0da1ef100f51ebb95150b72e414058d3b0497"
   },
   "_source": "git://github.com/knowledge-map/cartographer.git",
-  "_target": "redesign-api",
+  "_target": "v0.1.0",
   "_originalSource": "knowledge-map/cartographer"
 }
