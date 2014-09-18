@@ -403,20 +403,31 @@ directive('knowledgeMap', function() {
             var panToPlugin = function(km) {
                 var d3 = knowledgeMap.d3;
                 km.panTo = function(id, duration) {
-                    if(km.graph.hasNode(id)) {
-                        var box = d3.select('#km').node().getBoundingClientRect();
-                        var scale = km.zoom.scale();
+                    var x, y, scale;
+                    if(typeof(id) == 'object') {
+                        x = id.x;
+                        y = id.y;
+                        scale = id.scale;
+                    } else if(km.graph.hasNode(id)) {
                         var n = km.graph.node(id);
-                        var x = n.layout.x * scale - box.width/2;
-                        var y = n.layout.y * scale - box.height/2;
-                        if(!duration) {
-                            km.zoom.translate([-x, -y]);
-                            km.zoom.event(km.element);
-                        } else {
-                            km.element.transition()
-                                .duration(duration)
-                                .call(km.zoom.translate([-x, -y]).event);
-                        }
+                        x = n.layout.x;
+                        y = n.layout.y;
+                        scale = 1;
+                    }
+
+                    var box = d3.select('#km').node().getBoundingClientRect();
+                    x = x * scale - box.width/2;
+                    y = y * scale - box.height/2;
+
+                    if(!duration) {
+                        km.zoom.translate([-x, -y]);
+                        km.zoom.scale(scale);
+                        km.zoom.event(km.element);
+                    } else {
+                        km.element.transition()
+                            .duration(duration)
+                            .call(km.zoom.scale(scale).event)
+                            .call(km.zoom.translate([-x, -y]).event);
                     }
                 };
             };
@@ -455,18 +466,26 @@ directive('knowledgeMap', function() {
                             highlightPlugin
                         ],
                     });
-                }
-            });
 
-            // When the map becomes visible, re-render it, as it may not have
-            // rendered properly while it was off-screen.
-            scope.$watch('visible', function(value, old) {
-                if(value && !old && km) {
-                    if(scope.focus) {
+                    // Calculate the maximum zoom factor based on the width of
+                    // the element and the graph.
+                    var d3 = knowledgeMap.d3;
+                    var svgWidth = d3.select('#km').node().getBoundingClientRect().width;
+                    var bb = km.element.node().getBBox()
+                    var minZoom = svgWidth / (bb.width + 100);
+                    km.zoom.scaleExtent([minZoom, 1]);
+
+                    // Either show the whole graph, or pan right to the node
+                    // we're focusing on.
+                    if(!scope.focus) {
+                        km.panTo({
+                            x: bb.width/2,
+                            y: bb.height/2,
+                            scale: minZoom
+                        });
+                    } else {
                         km.panTo('n'+scope.focus);
                         km.highlightEdges('n'+scope.focus);
-                    } else {
-                        km.highlightNone();
                     }
                 }
             });
