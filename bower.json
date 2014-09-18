@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "cartographer": "knowledge-map/cartographer#redesign-api",
+    "cartographer": "knowledge-map/cartographer#v0.1.0",
     "angular": "1.2.x",
     "angular-route": "1.2.x",
     "Flat-UI": "~2.1.3",
