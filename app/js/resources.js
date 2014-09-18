@@ -150,6 +150,11 @@ directive('resource', function(toggleResource, makeURL, isEditor) {
                     scope.concepts = scope.map.concepts;
                 }
             });
+
+            // Update the understanding as necessary
+            scope.$watch('understanding.attributes.understands', function() {
+                scope.understanding.save(scope.understanding.attributes);
+            });
         },
     };
 });

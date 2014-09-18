@@ -5,7 +5,7 @@
         <ng-include src="'templates/map-header.html'"></ng-include>
 
         <div class="row">
-            <div class="col-md-5 view"
+            <div class="view col-md-5"
                  ng-if="viewType && viewId"
                  ng-class="{resource: viewType == 'resource', concept: viewType == 'concept'}">
                 <article ng-switch="viewType">
