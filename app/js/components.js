@@ -462,7 +462,6 @@ directive('knowledgeMap', function() {
             // rendered properly while it was off-screen.
             scope.$watch('visible', function(value, old) {
                 if(value && !old && km) {
-                    km.unhold().render();
                     if(scope.focus) {
                         km.panTo('n'+scope.focus);
                         km.highlightEdges('n'+scope.focus);
