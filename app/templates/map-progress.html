@@ -1,8 +1,8 @@
 <div class="understanding progress progress-vertical">
     <a ng-repeat="resource in resources"
-       ng-href="{{ makeURL(map, resource) }}"
+       ng-click="setView()"
        class="progress-bar {{ resource.understanding() | result | understandingClass }}"
        ng-class="{current: resource.id == $parent.resource.id}"
-       style="height: {{ 100/resources.length }}%;">
+       style="cursor: pointer; height: {{ 100/resources.length }}%;">
     </a>
 </div>

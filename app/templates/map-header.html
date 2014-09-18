@@ -1,5 +1,5 @@
 <div class="page-header">
-    <a ng-href="{{makeURL(map)}}">
+    <a ng-click="setView()" style="cursor: pointer;">
         <h1 ng-bind="map.attributes.title"></h1>
     </a>
     <button class="btn" ng-class="{'btn-primary': editMode, 'btn-default': !editMode}"
