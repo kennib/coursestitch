@@ -308,11 +308,11 @@ directive('knowledgeMap', function() {
                 km.renderNodes.onUpdate(function(nodes) {
                     nodes.filter('.concept').select('rect')
                         // Offset rects so they're centred.
-                        .attr('x', function(d) { return -d.width/2 - 5; })
-                        .attr('y', function(d) { return -d.height/2 - 3; })
+                        .attr('x', function(d) { return -d.baseWidth/2 - 5; })
+                        .attr('y', function(d) { return -d.baseHeight/2 - 3; })
                         // Add a bit of padding.
-                        .attr('width', function(d) { return d.width + 10; })
-                        .attr('height', function(d) { return d.height + 6; })
+                        .attr('width', function(d) { return d.baseWidth + 10; })
+                        .attr('height', function(d) { return d.baseHeight + 6; })
                         // Round corners.
                         .attr('rx', '0.25em').attr('ry', '0.25em');
                 })
