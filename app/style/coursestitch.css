@@ -102,6 +102,7 @@
 
 /* Map Styling */
 #km {
+    margin-top: -1px;
     border: 1px dashed rgba(0,0,0, 0.2);
     border-top: none;
 }
@@ -149,5 +150,32 @@ understanding-slider label {
 .resource-summary.ng-move.ng-move-active,
 .resource-summary.ng-enter.ng-enter-active {
     opacity: 1;
+    left: 0px;
+}
+
+/* View Animations */
+.view {
+    overflow: hidden;
+}
+
+svg { 
+    background-color: white;
+}
+
+.resource.view.ng-move,
+.resource.view.ng-enter {
+    position: relative;
+    -webkit-transition: all linear 0.5s;
+    transition: all linear 0.5s;
+}
+
+.resource.view.ng-move,
+.resource.view.ng-enter {
+    left: 500px;
+}
+
+.resource.view.ng-leave,
+.resource.view.ng-move.ng-move-active,
+.resource.view.ng-enter.ng-enter-active {
     left: 0px;
 }
