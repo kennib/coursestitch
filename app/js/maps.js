@@ -145,8 +145,8 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
         // Function to change map view
         $scope.setView = function(viewObject) {
             // Update view
-            $scope.viewType = viewObject.className.toLowerCase();
-            $scope.viewId = viewObject.id;
+            $scope.viewType = viewObject ? viewObject.className.toLowerCase() : '';
+            $scope.viewId = viewObject ? viewObject.id : '';
             
             // Update URL
             var url = $scope.makeURL($scope.map, viewObject).slice(2);

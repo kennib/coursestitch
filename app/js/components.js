@@ -315,9 +315,10 @@ directive('knowledgeMap', function() {
                         .attr('height', function(d) { return d.height + 6; })
                         // Round corners.
                         .attr('rx', '0.25em').attr('ry', '0.25em');
+                })
                 // Recalculate node sizes after adding the rect, since it
                 // expands the shape dimensions.
-                }).onUpdate(km.calculateNodeSizes);
+                .onUpdate(km.calculateNodeSizes);
             };
 
             // Change the default layout parameters.
@@ -329,6 +330,8 @@ directive('knowledgeMap', function() {
                 });
             };
 
+            // Perform a poor man's version of 'transitive reduction' to remove
+            // edges that don't affect the graph's connectivity.
             var tredPlugin = function(km) {
                 km.onPreLayout(function(c, g) {
                     var remove = [];
@@ -387,9 +390,13 @@ directive('knowledgeMap', function() {
             // Watch the target of 'focus', which includes changes from the UI
             // like clicking on links elsewhere on the page.
             scope.$watch('focus', function() {
-                if(km && scope.focus) {
-                    km.panTo('n'+scope.focus, 500);
-                    km.highlightEdges('n'+scope.focus);
+                if(km) {
+                    if(scope.focus) {
+                        km.panTo('n'+scope.focus, 500);
+                        km.highlightEdges('n'+scope.focus);
+                    } else {
+                        km.highlightNone();
+                    }
                 }
             });
 
@@ -459,6 +466,8 @@ directive('knowledgeMap', function() {
                     if(scope.focus) {
                         km.panTo('n'+scope.focus);
                         km.highlightEdges('n'+scope.focus);
+                    } else {
+                        km.highlightNone();
                     }
                 }
             });
