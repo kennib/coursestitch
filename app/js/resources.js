@@ -52,7 +52,7 @@ service('Resource', function(resourceUnderstandingCache) {
             // Scroll resource list to a given resource
             var resources = $('.resources');
             var resource = $('[data-id='+this.id+']');
-            resources.scrollTop(resources.scrollTop() + resource.position().top );
+            resources.animate({scrollTop: resources.scrollTop() + resource.position().top - 50}, 500, 'swing');
         },
     });
 }).

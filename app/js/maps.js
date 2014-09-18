@@ -151,6 +151,10 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
             // Update URL
             var url = $scope.makeURL($scope.map, viewObject).slice(2);
             $location.path(url, false);
+
+            // Scrolling
+            if ($scope.viewType === 'resource')
+                viewObject.scrollTo();
         };
 
         // Function to add new resources
