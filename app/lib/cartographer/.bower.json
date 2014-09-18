@@ -1,14 +1,14 @@
 {
   "name": "cartographer",
   "homepage": "https://github.com/knowledge-map/cartographer",
-  "version": "0.1.0",
-  "_release": "0.1.0",
+  "version": "0.1.1",
+  "_release": "0.1.1",
   "_resolution": {
     "type": "version",
-    "tag": "v0.1.0",
-    "commit": "fde0da1ef100f51ebb95150b72e414058d3b0497"
+    "tag": "v0.1.1",
+    "commit": "a6d34eb6ce5fb8be386d1f4bd94bfda89778e3d2"
   },
   "_source": "git://github.com/knowledge-map/cartographer.git",
-  "_target": "v0.1.0",
+  "_target": "v0.1.1",
   "_originalSource": "knowledge-map/cartographer"
 }
