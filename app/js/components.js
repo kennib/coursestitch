@@ -173,6 +173,10 @@ directive('understandingSlider', function($timeout, understandingClassFilter) {
                 // Call change event
                 if (scope.onChange)
                     scope.onChange(scope.ngModel);
+
+                if(window._changeUnderstanding){
+                    window._changeUnderstanding();
+                }
             });
 
             // Add some coloring to the slider
@@ -256,7 +260,7 @@ directive('conceptTags', function(Concept) {
     };
 }).
 
-directive('knowledgeMap', function() {
+directive('knowledgeMap', function($filter) {
     return {
         restrict: 'E',
         template: '<div id="km"></div>',
@@ -301,7 +305,10 @@ directive('knowledgeMap', function() {
             var conceptAppearancePlugin = function(km) {
                 // Add rect elements when new nodes are created.
                 km.renderNodes.onNew(function(nodes) {
-                    nodes.filter('.concept').insert('rect', 'text');
+                    nodes.filter('.concept').insert('rect', 'text')
+                        .attr('stroke-dasharray', '3, 3')
+                        // Round corners.
+                        .attr('rx', '4px').attr('ry', '4px');
                 });
 
                 // Update rect properties during layout.
@@ -312,9 +319,45 @@ directive('knowledgeMap', function() {
                         .attr('y', function(d) { return -d.baseHeight/2 - 3; })
                         // Add a bit of padding.
                         .attr('width', function(d) { return d.baseWidth + 10; })
-                        .attr('height', function(d) { return d.baseHeight + 6; })
-                        // Round corners.
+                        .attr('height', function(d) { return d.baseHeight + 6; });
+                });
+                // Do not recalculate node sizes here; trust
+                // resourceAppearancePlugin to do it!
+            };
+
+            // Add rects to concept nodes to make them look like flat ui tags.
+            var resourceAppearancePlugin = function(km) {
+                // Add rect elements when new nodes are created.
+                km.renderNodes.onNew(function(nodes) {
+                    nodes.filter('.resource').insert('rect', 'text')
                         .attr('rx', '0.25em').attr('ry', '0.25em');
+                });
+
+                var d3 = knowledgeMap.d3;
+                var understandingClass = $filter('understandingClass');
+                // Update rect properties during layout.
+                km.renderNodes.onUpdate(function(nodes) {
+                    nodes.filter('.resource').select('rect')
+                        // Offset rects so they're centred.
+                        .attr('x', function(d) { return -d.baseWidth/2 - 5; })
+                        .attr('y', function(d) { return -d.baseHeight/2 - 3; })
+                        // Add a bit of padding.
+                        .attr('width', function(d) { return d.baseWidth + 10; })
+                        .attr('height', function(d) { return d.baseHeight + 6; })
+                        .each(function(d) {
+                            var self = d3.select(this);
+                            d.content.source.understanding().then(function(u) {
+                                if(d.content._understandingClass) {
+                                    self.classed(d.content._understandingClass, false);
+                                }
+                                d.content._understandingClass = understandingClass(u);
+
+                                self.classed(d.content._understandingClass, true)
+                                    .style('fill', function() {
+                                        return self.style('background-color');
+                                    });
+                            });
+                        })
                 })
                 // Recalculate node sizes after adding the rect, since it
                 // expands the shape dimensions.
@@ -395,6 +438,7 @@ directive('knowledgeMap', function() {
                         km.panTo('n'+scope.focus, 500);
                         km.highlightEdges('n'+scope.focus);
                     } else {
+                        km.panOut(500);
                         km.highlightNone();
                     }
                 }
@@ -402,6 +446,7 @@ directive('knowledgeMap', function() {
 
             var panToPlugin = function(km) {
                 var d3 = knowledgeMap.d3;
+
                 km.panTo = function(id, duration) {
                     var x, y, scale;
                     if(typeof(id) == 'object') {
@@ -415,7 +460,7 @@ directive('knowledgeMap', function() {
                         scale = 1;
                     }
 
-                    var box = d3.select('#km').node().getBoundingClientRect();
+                    var box = km.container.node().getBoundingClientRect();
                     x = x * scale - box.width/2;
                     y = y * scale - box.height/2;
 
@@ -429,6 +474,24 @@ directive('knowledgeMap', function() {
                             .call(km.zoom.scale(scale).event)
                             .call(km.zoom.translate([-x, -y]).event);
                     }
+                };
+
+                var bb, minZoom;
+                km.onPostRender(function() {
+                    // Calculate the maximum zoom factor based on the width of
+                    // the element and the graph.
+                    var svgWidth = km.container.node().getBoundingClientRect().width;
+                    bb = km.element.node().getBBox()
+                    minZoom = svgWidth / (bb.width + 100);
+                    km.zoom.scaleExtent([minZoom, 1]);
+                });
+
+                km.panOut = function(duration) {
+                    km.panTo({
+                        x: bb.width/2,
+                        y: bb.height/2,
+                        scale: minZoom
+                    }, duration);
                 };
             };
 
@@ -448,44 +511,41 @@ directive('knowledgeMap', function() {
                 };
             };
 
+            // HACK D:
+            window._changeUnderstanding = function() {
+                km.refresh();
+            };
+
             // Watch for changes in the data we are bound to. When we get some
             // data (usually from AJAX), we'll create the knowledge map. Note
             // that this only happens once; re-renders are not handled yet.
-            scope.$watch('model', function(){
-                if(!km && scope.model) {
-                    km = knowledgeMap.create({
-                        resources: scope.model.map(translateResource),
-                        inside: '#km',
-                        held: !scope.visible,
-                        plugins: [
-                            conceptAppearancePlugin,
-                            layoutPlugin,
-                            tredPlugin,
-                            linkPlugin,
-                            panToPlugin,
-                            highlightPlugin
-                        ],
-                    });
-
-                    // Calculate the maximum zoom factor based on the width of
-                    // the element and the graph.
-                    var d3 = knowledgeMap.d3;
-                    var svgWidth = d3.select('#km').node().getBoundingClientRect().width;
-                    var bb = km.element.node().getBBox()
-                    var minZoom = svgWidth / (bb.width + 100);
-                    km.zoom.scaleExtent([minZoom, 1]);
-
-                    // Either show the whole graph, or pan right to the node
-                    // we're focusing on.
-                    if(!scope.focus) {
-                        km.panTo({
-                            x: bb.width/2,
-                            y: bb.height/2,
-                            scale: minZoom
-                        });
+            scope.$watchCollection('model', function() {
+                if(scope.model) {
+                    if(km) {
+                        km.render();
                     } else {
-                        km.panTo('n'+scope.focus);
-                        km.highlightEdges('n'+scope.focus);
+                        km = knowledgeMap.create({
+                            resources: scope.model.map(translateResource),
+                            inside: '#km',
+                            held: !scope.visible,
+                            plugins: [
+                                conceptAppearancePlugin,
+                                resourceAppearancePlugin,
+                                layoutPlugin,
+                                tredPlugin,
+                                linkPlugin,
+                                panToPlugin,
+                                highlightPlugin
+                            ],
+                        });
+
+                        if(scope.focus) {
+                            km.panTo('n'+scope.focus);
+                            km.highlightEdges('n'+scope.focus);
+                        } else {
+                            km.panOut();
+                            km.highlightNone();
+                        }
                     }
                 }
             });
