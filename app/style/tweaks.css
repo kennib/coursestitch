@@ -75,15 +75,18 @@ understanding-slider label {
 }
 
 #km .node.concept rect {
-    fill: #999;
+    stroke: #16a085;
+}
+
+#km .node.resource text {
+    padding: .2em .6em .3em;
+    line-height: 1;
+    font-weight: bold;
+    fill: #fff;
 }
 
 #km .node.concept text {
-    padding: .2em .6em .3em;
     font-size: 75%;
-    font-weight: bold;
-    line-height: 1;
-    fill: #fff;
 }
 
 /* Vertical progress bars */
