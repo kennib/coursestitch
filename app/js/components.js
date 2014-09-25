@@ -173,6 +173,10 @@ directive('understandingSlider', function($timeout, understandingClassFilter) {
                 // Call change event
                 if (scope.onChange)
                     scope.onChange(scope.ngModel);
+
+                if(window._changeUnderstanding){
+                    window._changeUnderstanding();
+                }
             });
 
             // Add some coloring to the slider
@@ -505,6 +509,11 @@ directive('knowledgeMap', function($filter) {
                         });
                     }
                 };
+            };
+
+            // HACK D:
+            window._changeUnderstanding = function() {
+                km.refresh();
             };
 
             // Watch for changes in the data we are bound to. When we get some
