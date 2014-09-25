@@ -232,7 +232,7 @@ controller('RootCtrl', function($scope, $auth, makeURL, isEditor) {
             $auth.login({
                 email: username,
                 password: password,
-                sessionToken: user.id, // for satellizer
+                sessionToken: user.getSessionToken(),
             });
         });
         
@@ -262,10 +262,10 @@ controller('LoginCtrl', function($scope) {
         });
     };
 }).
-controller('SignupCtrl', function($scope, $auth) {
+controller('SignupCtrl', function($scope, $auth, $window) {
     $scope.authenticate = function(provider) {
         $auth.authenticate(provider).then(function(res) {
-            Parse.User.current().fetch();
+            Parse.User.become(res.data.token);
         });
     };
 });
