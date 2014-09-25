@@ -511,6 +511,17 @@ directive('knowledgeMap', function($filter) {
                 };
             };
 
+            scope.$watch('visible', function(current, old) {
+                if(km && current && !old) {
+                    km.refresh();
+                    if(scope.focus) {
+                        km.panTo('n' + scope.focus);
+                    } else {
+                        km.panOut();
+                    }
+                }
+            });
+
             // HACK D:
             window._changeUnderstanding = function() {
                 km.refresh();
