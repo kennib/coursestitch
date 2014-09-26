@@ -134,7 +134,7 @@ directive('actionButton', function($timeout) {
     };
 }).
 
-directive('understandingSlider', function($timeout, understandingClassFilter) {
+directive('understandingSlider', function($timeout, understandingClassFilter, knowledgeMap) {
     return {
         restrict: 'E',
         templateUrl: 'templates/understanding-slider.html',
@@ -162,6 +162,7 @@ directive('understandingSlider', function($timeout, understandingClassFilter) {
                 $timeout(function() {
                     scope.ngModel = ui.value;
                     scope.$apply();
+                    knowledgeMap.refresh();
                 }, animateTime);
             });
 
@@ -173,10 +174,6 @@ directive('understandingSlider', function($timeout, understandingClassFilter) {
                 // Call change event
                 if (scope.onChange)
                     scope.onChange(scope.ngModel);
-
-                if(window._changeUnderstanding){
-                    window._changeUnderstanding();
-                }
             });
 
             // Add some coloring to the slider
@@ -195,7 +192,7 @@ directive('understandingSlider', function($timeout, understandingClassFilter) {
     };
 }).
 
-directive('conceptTags', function(Concept) {
+directive('conceptTags', function(Concept, knowledgeMap) {
     return {
         restrict: 'E',
         template: '<tags ng-init="srcTags=[]" data-src="tag as tag.name for tag in srcTags" data-model="tagModel" options="{addable: true}"></tags>',
@@ -240,6 +237,7 @@ directive('conceptTags', function(Concept) {
                 var tag = result.tag;
                 var concept = tag.value ? tag.value : new Concept({title: tag.name});
                 scope.ngModel.push(concept);
+                knowledgeMap.updateFocus();
             });
 
             scope.$on('decipher.tags.removed', function(e, removed) {
@@ -247,6 +245,7 @@ directive('conceptTags', function(Concept) {
                     return tag.id === removed.tag.value.id;
                 });
                 scope.ngModel.splice(index, 1);
+                knowledgeMap.updateFocus();
             });
 
             // When the tag input is initialised use the model as the list of tags
@@ -260,7 +259,75 @@ directive('conceptTags', function(Concept) {
     };
 }).
 
-directive('knowledgeMap', function($filter) {
+service('knowledgeMap', function() {
+    // Convert a concept from Parse format to Cartographer format.
+    var translateConcept = function(s) {
+        return {
+            id: 'n'+s.id,
+            label: s.attributes.title,
+            content: { source: s },
+        };
+    };
+
+    // Convert a resource from Parse format to Cartographer format.
+    var translateResource = function(s) {
+        var attrs = s.attributes;
+        return {
+            label: attrs.title,
+            id: 'n'+s.id,
+            teaches: attrs.teaches ?
+                attrs.teaches.map(translateConcept) : undefined,
+            requires: attrs.requires ?
+                attrs.requires.map(translateConcept) : undefined,
+            needs: attrs.needs ?
+                attrs.needs.map(translateConcept) : undefined,
+            content: { source: s },
+        };
+    };
+
+    this.d3 = knowledgeMap.d3;
+    this.graphlib = knowledgeMap.graphlib;
+
+    this.map = undefined;
+    this.create = function(config) {
+        // Enforce singleton behavior.
+        if(this.map) {
+            return this.map;
+        }
+        config.resources = config.resources.map(translateResource);
+        return this.map = knowledgeMap.create(config);
+    };
+
+    this.focus = undefined;
+    this.setFocus = function(obj) {
+        this.focus = obj;
+        return this;
+    };
+
+    this.updateFocus = function() {
+        if(this.map && this.focus) {
+            this.map
+                .hold()
+                .addResource(translateResource(this.focus));
+                // :(
+            this.map
+                .unhold()
+                .render()
+                .panTo('n'+this.focus.id, 500)
+                .highlightEdges('n'+this.focus.id);
+        }
+        return this;
+    };
+
+    this.refresh = function() {
+        if(this.map) {
+            this.map.refresh();
+        }
+        return this;
+    };
+}).
+
+directive('knowledgeMap', function(knowledgeMap, $filter) {
     return {
         restrict: 'E',
         template: '<div id="km"></div>',
@@ -275,31 +342,6 @@ directive('knowledgeMap', function($filter) {
 
         link: function(scope, element, attrs) {
             var km;
-
-            // Convert a concept from Parse format to Cartographer format.
-            var translateConcept = function(s) {
-                return {
-                    id: 'n'+s.id,
-                    label: s.attributes.title,
-                    content: { source: s },
-                };
-            };
-
-            // Convert a resource from Parse format to Cartographer format.
-            var translateResource = function(s) {
-                var attrs = s.attributes;
-                return {
-                    label: attrs.title,
-                    id: 'n'+s.id,
-                    teaches: attrs.teaches ?
-                        attrs.teaches.map(translateConcept) : undefined,
-                    requires: attrs.requires ?
-                        attrs.requires.map(translateConcept) : undefined,
-                    needs: attrs.needs ?
-                        attrs.needs.map(translateConcept) : undefined,
-                    content: { source: s },
-                };
-            };
 
             // Add rects to concept nodes to make them look like flat ui tags.
             var conceptAppearancePlugin = function(km) {
@@ -453,27 +495,28 @@ directive('knowledgeMap', function($filter) {
                         x = id.x;
                         y = id.y;
                         scale = id.scale;
-                    } else if(km.graph.hasNode(id)) {
-                        var n = km.graph.node(id);
+                    } else if(this.graph.hasNode(id)) {
+                        var n = this.graph.node(id);
                         x = n.layout.x;
                         y = n.layout.y;
                         scale = 1;
                     }
 
-                    var box = km.container.node().getBoundingClientRect();
+                    var box = this.container.node().getBoundingClientRect();
                     x = x * scale - box.width/2;
                     y = y * scale - box.height/2;
 
                     if(!duration) {
-                        km.zoom.translate([-x, -y]);
-                        km.zoom.scale(scale);
-                        km.zoom.event(km.element);
+                        this.zoom.translate([-x, -y]);
+                        this.zoom.scale(scale);
+                        this.zoom.event(this.element);
                     } else {
-                        km.element.transition()
+                        this.element.transition()
                             .duration(duration)
-                            .call(km.zoom.scale(scale).event)
-                            .call(km.zoom.translate([-x, -y]).event);
+                            .call(this.zoom.scale(scale).event)
+                            .call(this.zoom.translate([-x, -y]).event);
                     }
+                    return this;
                 };
 
                 var bb, minZoom;
@@ -487,32 +530,33 @@ directive('knowledgeMap', function($filter) {
                 });
 
                 km.panOut = function(duration) {
-                    km.panTo({
+                    this.panTo({
                         x: bb.width/2,
                         y: bb.height/2,
                         scale: minZoom
                     }, duration);
+                    return this;
                 };
             };
 
             var highlightPlugin = function(km) {
                 var d3 = knowledgeMap.d3;
                 km.highlightNone = function() {
-                    km.element.selectAll('.active').classed('active', false);
+                    this.element.selectAll('.active').classed('active', false);
                 };
 
                 km.highlightEdges = function(id) {
-                    km.highlightNone();
-                    if(km.graph.hasNode(id)) {
-                        km.graph.incidentEdges(id).forEach(function(edge) {
+                    this.highlightNone();
+                    if(this.graph.hasNode(id)) {
+                        this.graph.incidentEdges(id).forEach(function(edge) {
                             d3.select('#'+edge).classed('active', true);
                         });
                     }
                 };
             };
 
-            scope.$watch('visible', function(current, old) {
-                if(km && current && !old) {
+            scope.$watch('visible', function(currently, previously) {
+                if(km && currently && !previously) {
                     km.refresh();
                     if(scope.focus) {
                         km.panTo('n' + scope.focus);
@@ -522,44 +566,35 @@ directive('knowledgeMap', function($filter) {
                 }
             });
 
-            // HACK D:
-            window._changeUnderstanding = function() {
-                km.refresh();
-            };
+            // Watch for the first assignment of the model. This will represent
+            // the first data coming in from the server. Later changes are all
+            // caused by UI actions and so are handled by events elsewhere.
+            scope.$watch('model', function(model, prev) {
+                if(model && !km) {
+                    km = knowledgeMap.create({
+                        resources: scope.model,
+                        inside: '#km',
+                        held: !scope.visible,
+                        plugins: [
+                            conceptAppearancePlugin,
+                            resourceAppearancePlugin,
+                            layoutPlugin,
+                            tredPlugin,
+                            linkPlugin,
+                            panToPlugin,
+                            highlightPlugin
+                        ],
+                    });
 
-            // Watch for changes in the data we are bound to. When we get some
-            // data (usually from AJAX), we'll create the knowledge map. Note
-            // that this only happens once; re-renders are not handled yet.
-            scope.$watchCollection('model', function() {
-                if(scope.model) {
-                    if(km) {
-                        km.render();
+                    if(scope.focus) {
+                        km.panTo('n'+scope.focus);
+                        km.highlightEdges('n'+scope.focus);
                     } else {
-                        km = knowledgeMap.create({
-                            resources: scope.model.map(translateResource),
-                            inside: '#km',
-                            held: !scope.visible,
-                            plugins: [
-                                conceptAppearancePlugin,
-                                resourceAppearancePlugin,
-                                layoutPlugin,
-                                tredPlugin,
-                                linkPlugin,
-                                panToPlugin,
-                                highlightPlugin
-                            ],
-                        });
-
-                        if(scope.focus) {
-                            km.panTo('n'+scope.focus);
-                            km.highlightEdges('n'+scope.focus);
-                        } else {
-                            km.panOut();
-                            km.highlightNone();
-                        }
+                        km.panOut();
+                        km.highlightNone();
                     }
                 }
-            });
+            } /* no deep watch */);
         },
     };
 });
