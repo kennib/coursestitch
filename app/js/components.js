@@ -319,6 +319,21 @@ service('knowledgeMap', function() {
         return this;
     };
 
+    this.addResource = function(res) {
+        if(this.map && res) {
+            this.map.hold().addResource(translateResource(res));
+            this.map.unhold().render();
+        }
+        return this;
+    };
+
+    this.removeResource = function(res) {
+        if(this.map && res) {
+            this.map.removeResource('n' + res.id);
+        }
+        return this;
+    };
+
     this.refresh = function() {
         if(this.map) {
             this.map.refresh();
