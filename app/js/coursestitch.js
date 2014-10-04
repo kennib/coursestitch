@@ -206,6 +206,11 @@ filter('understandingLabel', function() {
 controller('RootCtrl', function($scope, $auth, makeURL, isEditor) {
     $scope.makeURL = makeURL;
 
+    var setUser = function(user) {
+        $scope.user = user;
+    };
+    $scope.setUser = setUser;
+
     // Does the current user have editor permissions?
     $scope.isEditor = false;
     isEditor().then(function(editor) {
@@ -225,7 +230,8 @@ controller('RootCtrl', function($scope, $auth, makeURL, isEditor) {
         var password = Math.random().toString(36).substring(7);
 
         Parse.User.signUp(username, password, {
-            name: 'User',
+            name: 'Temporary User',
+            temporary: true,
         })
         .then(function(user) {
             $scope.user = user;
@@ -262,10 +268,16 @@ controller('LoginCtrl', function($scope) {
         });
     };
 }).
-controller('SignupCtrl', function($scope, $auth, $window) {
+controller('SignupCtrl', function($scope, $auth) {
     $scope.authenticate = function(provider) {
         $auth.authenticate(provider).then(function(res) {
-            Parse.User.become(res.data.token);
+            return Parse.User.become(res.data.token);
+        })
+        .then(function(user) {
+            return user.fetch();
+        })
+        .then(function(user) {
+            $scope.setUser(user);
         });
     };
 });

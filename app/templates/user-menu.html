@@ -4,7 +4,7 @@
 </a>
 <ul class="dropdown-menu" role="menu">
     <li><a href="#!/profile">Profile</a></li>
-    <li><a href="#!/signup">Sign Up</a></li>
+    <li ng-if="user.attributes.temporary"><a href="#!/signup">Sign Up</a></li>
     <li class="divider"></li>
     <li><a href="#!/logout">Logout</a></li>
 </ul>
