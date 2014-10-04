@@ -203,8 +203,16 @@ filter('understandingLabel', function() {
 }).
 
 
-controller('RootCtrl', function($scope, $auth, makeURL, isEditor) {
+controller('RootCtrl', function($scope, $auth, $window, makeURL, isEditor) {
     $scope.makeURL = makeURL;
+
+    var logout = function() {
+        $scope.user = null;
+        Parse.User.logOut();
+        $auth.logout(); // log out of satellizer
+        $window.location.href = '/';
+    };
+    $scope.logout = logout;
 
     var setUser = function(user) {
         $scope.user = user;
