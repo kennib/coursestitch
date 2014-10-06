@@ -22,6 +22,19 @@ service('Map', function() {
 service('mapCache', function($cacheFactory) {
     return $cacheFactory('map-cache');
 }).
+service('createMap', function(mapCache) {
+    return function(userId) {
+        var map = Parse.Cloud.run('createMap', {userId: userId});
+
+        return map.then(function(response) {
+            mapCache.put(response.map.id+userId, map.then(function(response) {
+                return response.map;
+            }));
+
+            return response.map;
+        });
+    };
+}).
 service('fetchMap', function() { 
     return function(mapId, userId) {
         return Parse.Cloud.run('getUnderstandingMap', {mapId: mapId, userId: userId});

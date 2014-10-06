@@ -192,8 +192,17 @@ filter('understandingLabel', function() {
 }).
 
 
-controller('RootCtrl', function($scope, makeURL, isEditor) {
+controller('RootCtrl', function($scope, $location, makeURL, isEditor, createMap) {
     $scope.makeURL = makeURL;
+    // Creates a new map and the goes to its URL
+    $scope.createMap = function(user) {
+        createMap(user)
+        .then(function(map) {
+            // Update URL
+            var url = $scope.makeURL(map).slice(2);
+            $location.path(url, true);
+        });
+    };
 
     // Does the current user have editor permissions?
     $scope.isEditor = false;
