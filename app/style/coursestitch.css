@@ -13,6 +13,11 @@
 .navbar-brand.course-stitch {
     font-size: 38px;
 }
+.navbar-brand.beta {
+    margin-left: -15px;
+    padding-left: 0px;
+    padding-top: 10px;
+}
 
 /* Home page */
 .jumbotron {
