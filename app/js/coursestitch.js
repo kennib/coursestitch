@@ -1,7 +1,7 @@
 angular.module('coursestitch', [
     'ngRoute', 'ngAnimate', 'parse-angular',
     'coursestitch-maps', 'coursestitch-resources',
-    'coursestitch-components'
+    'coursestitch-components', 'satellizer'
 ]).
 
 config(function($routeProvider, $locationProvider) {
@@ -10,7 +10,11 @@ config(function($routeProvider, $locationProvider) {
         templateUrl: 'templates/home.html',
     })
     .when('/login', {
+        templateUrl: 'templates/login.html',
+    })
+    .when('/signup', {
         templateUrl: 'templates/signup.html',
+        controller: 'SignupCtrl',
     })
     .when('/profile', {
         templateUrl: 'templates/profile.html',
@@ -39,6 +43,13 @@ config(function() {
     };
 
     Parse.initialize(parseKeys.app, parseKeys.js);
+}).
+config(function($authProvider) {
+    $authProvider.github({
+        clientId: '06ab2e10e5bb81f8841e',
+        scope: ['user:email'],
+        optionalUrlParams: ['scope'],
+    });
 }).
 
 run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
@@ -192,7 +203,7 @@ filter('understandingLabel', function() {
 }).
 
 
-controller('RootCtrl', function($scope, $location, makeURL, isEditor, createMap) {
+controller('RootCtrl', function($scope, $auth, $window, makeURL, isEditor, createMap) {
     $scope.makeURL = makeURL;
     // Creates a new map and the goes to its URL
     $scope.createMap = function(user) {
@@ -203,6 +214,19 @@ controller('RootCtrl', function($scope, $location, makeURL, isEditor, createMap)
             $location.path(url, true);
         });
     };
+
+    var logout = function() {
+        $scope.user = null;
+        Parse.User.logOut();
+        $auth.logout(); // log out of satellizer
+        $window.location.href = '/';
+    };
+    $scope.logout = logout;
+
+    var setUser = function(user) {
+        $scope.user = user;
+    };
+    $scope.setUser = setUser;
 
     // Does the current user have editor permissions?
     $scope.isEditor = false;
@@ -223,11 +247,18 @@ controller('RootCtrl', function($scope, $location, makeURL, isEditor, createMap)
         var password = Math.random().toString(36).substring(7);
 
         Parse.User.signUp(username, password, {
-            name: 'User',
+            name: 'Temporary User',
+            temporary: true,
         })
         .then(function(user) {
             $scope.user = user;
+            $auth.login({
+                email: username,
+                password: password,
+                sessionToken: user.getSessionToken(),
+            });
         });
+        
     } else {
         // Current user
         $scope.user = Parse.User.current();
@@ -251,6 +282,19 @@ controller('LoginCtrl', function($scope) {
         .fail(function(error) {
             $scope.loggedIn = false;
             $scope.error = error;
+        });
+    };
+}).
+controller('SignupCtrl', function($scope, $auth) {
+    $scope.authenticate = function(provider) {
+        $auth.authenticate(provider).then(function(res) {
+            return Parse.User.become(res.data.token);
+        })
+        .then(function(user) {
+            return user.fetch();
+        })
+        .then(function(user) {
+            $scope.setUser(user);
         });
     };
 });
