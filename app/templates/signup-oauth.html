@@ -1,15 +1,17 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h3>Sign up or login with an external account</h3>
+            <h1>Sign up or login with an external account</h1>
             <p>At the moment we only support one external provider per course stitch account. However,
             in the future we will support email signup as well as the ability to link all of your
             external accounts, and we intend to add quite a few more providers. Stay tuned!</p>
         </div> <!-- .col-md-12 -->
     </div> <!-- .row -->
     <div class="row">
-        <button class="btn btn-primary" ng-click="authenticate('github')">Sign up with Github</button>
-        <button class="btn btn-primary" ng-click="authenticate('facebook')">Sign up with Facebook</button>
-        <button class="btn btn-primary" ng-click="authenticate('google')">Sign up with Google</button>
+        <div class="col-md-12">
+            <button class="btn btn-primary" ng-click="authenticate('github')">Sign up with Github</button>
+            <button class="btn btn-primary" ng-click="authenticate('facebook')">Sign up with Facebook</button>
+            <button class="btn btn-primary" ng-click="authenticate('google')">Sign up with Google</button>
+        </div>
     </div>
 </div> <!-- .container -->
