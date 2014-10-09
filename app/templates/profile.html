@@ -1,5 +1,29 @@
 <ng-include src="'templates/header.html'"></ng-include>
-<h1 ng-bind="user.attributes.name"></h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Hi, {{ user.attributes.name }}!</h1>
+        </div>
+    </div> <!-- .row -->
+    <div class="row" ng-if="user.attributes.temporary">
+        <div class="col-md-12">
+            <p>Warning: You're currently using a temporary account. Make the most of your experience
+            by <a href="#!/signup">signing up</a>.</p> 
+            <p>Already have an account? <a href="#!/signup">Login here</a>.</p>
+        </div>
+    </div> <!-- .row -->
+    <div class="row">
+        <div class="col-md-12">
+            <h2>User info</h2>
+            <p>Username: {{ user.attributes.username }}</p>
+            <p>Email: {{ user.attributes.email || "none provided" }}</p>
+            <p>Name: {{ user.attributes.name }}</p>
+            <p>Linked external account ID: {{ user.attributes.github || user.attributes.facebook || user.attributes.google || "no external account linked" }}</p>
+        </div>
+    </div>
+</div> <!-- .container -->
+
 <hr />
 
 <ng-include src="'templates/footer.html'"></ng-include>
