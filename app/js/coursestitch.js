@@ -19,6 +19,9 @@ config(function($routeProvider, $locationProvider) {
     .when('/profile', {
         templateUrl: 'templates/profile.html',
     })
+    .when('/contact', {
+        templateUrl: 'templates/contact-us.html',
+    })
     .when('/maps', {
         templateUrl: 'templates/maps.html',
         controller: 'MapsCtrl',
