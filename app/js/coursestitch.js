@@ -19,6 +19,9 @@ config(function($routeProvider, $locationProvider) {
     .when('/profile', {
         templateUrl: 'templates/profile.html',
     })
+    .when('/contact', {
+        templateUrl: 'templates/contact-us.html',
+    })
     .when('/maps', {
         templateUrl: 'templates/maps.html',
         controller: 'MapsCtrl',
@@ -49,6 +52,15 @@ config(function($authProvider) {
         clientId: '06ab2e10e5bb81f8841e',
         scope: ['user:email'],
         optionalUrlParams: ['scope'],
+    });
+    $authProvider.facebook({
+        clientId: '645904488858229',
+        // override satellizer's default redirect URI to make it work
+        // properly with our site
+        redirectUri: window.location.origin + '/#!/',
+    });
+    $authProvider.google({
+        clientId: '580207549424-oss6pia8ldpj7rps65afh18johr1vp2q.apps.googleusercontent.com',
     });
 }).
 
@@ -203,7 +215,7 @@ filter('understandingLabel', function() {
 }).
 
 
-controller('RootCtrl', function($scope, $auth, $window, makeURL, isEditor, createMap) {
+controller('RootCtrl', function($scope, $auth, $location, $window, makeURL, isEditor, createMap) {
     $scope.makeURL = makeURL;
     // Creates a new map and the goes to its URL
     $scope.createMap = function(user) {
