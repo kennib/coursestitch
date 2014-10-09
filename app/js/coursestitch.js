@@ -50,6 +50,12 @@ config(function($authProvider) {
         scope: ['user:email'],
         optionalUrlParams: ['scope'],
     });
+    $authProvider.facebook({
+        clientId: '645904488858229',
+        // override satellizer's default redirect URI to make it work
+        // properly with our site
+        redirectUri: window.location.origin + '/#!/',
+    });
 }).
 
 run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
@@ -203,7 +209,7 @@ filter('understandingLabel', function() {
 }).
 
 
-controller('RootCtrl', function($scope, $auth, $window, makeURL, isEditor, createMap) {
+controller('RootCtrl', function($scope, $auth, $location, $window, makeURL, isEditor, createMap) {
     $scope.makeURL = makeURL;
     // Creates a new map and the goes to its URL
     $scope.createMap = function(user) {
