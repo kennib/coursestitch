@@ -56,6 +56,9 @@ config(function($authProvider) {
         // properly with our site
         redirectUri: window.location.origin + '/#!/',
     });
+    $authProvider.google({
+        clientId: '580207549424-oss6pia8ldpj7rps65afh18johr1vp2q.apps.googleusercontent.com',
+    });
 }).
 
 run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
