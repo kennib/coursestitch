@@ -1,0 +1,54 @@
+<div class="row"
+     ng-controller="LoginCtrl">
+    <div class="col-md-6"
+         ng-if="!loggedIn">
+    </div>
+    <div class="col-md-6">
+        <form class="form-horizontal" role="form"
+              ng-submit="login()"
+              ng-if="!loggedIn">
+            <div class="form-group">
+                <label for="email" class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="email" placeholder="Email"
+                           ng-model="$parent.email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="col-sm-2 control-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="password" placeholder="Password"
+                           ng-model="$parent.password">
+                </div>
+             </div>
+             <div class="form-group">
+                 <div class="col-sm-offset-2 col-sm-10">
+                     <label class="checkbox" for="checkbox">
+                         <input type="checkbox" data-toggle="checkbox">
+                             Remember Me
+                         </input>
+                     </label>
+                </div>
+            </div>
+            <div class="form-group alert alert-danger"
+                 ng-if="error"
+                 ng-bind="error.message">
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">Sign in</button>
+                </div>
+            </div>
+
+            <script>
+                 $(':checkbox').checkbox();
+            </script>
+        </form>
+
+    </div>
+
+    <div class="col-md-12"
+         ng-if="loggedIn">
+        <h2>Welcome <span ng-bind="user.attributes.name"></span></h2>
+    </div>
+</div>
