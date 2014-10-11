@@ -1,6 +1,6 @@
 angular.module('coursestitch-resources', ['decipher.tags', 'ui.bootstrap.typeahead']).
 
-service('Resource', function(resourceUnderstandingCache) {
+service('Resource', function(resourceUnderstandingCache, knowledgeMap) {
     return Parse.Object.extend('Resource', {
         understandingObj: function() {
             var user = Parse.User.current();
@@ -32,11 +32,15 @@ service('Resource', function(resourceUnderstandingCache) {
             });
 
             // Add the resource if it was missing from the map
-            if (index === -1)
+            if (index === -1) {
                 resources.push(this);
+                knowledgeMap.addResource(this);
+            }
             // Remove the resource if it was in the map
-            else
+            else {
                 resources.splice(index, 1);
+                knowledgeMap.removeResource(this);
+            }
             
             // Save map to the server
             map.save();

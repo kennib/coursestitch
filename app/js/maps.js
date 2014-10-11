@@ -91,7 +91,8 @@ controller('MapsCtrl', function($scope) {
 
 controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                                getMap, mapCache,
-                               resourceCache, newResource, getConcept) {
+                               resourceCache, newResource, getConcept,
+                               knowledgeMap) {
     $scope.newResource = newResource;
 
     var mapId = $routeParams.mapId;
@@ -143,6 +144,7 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                 resourceCache.get($scope.viewId)
                 .then(function(resource) {;
                     $scope.resource = resource;
+                    knowledgeMap.setFocus(resource);
                 });
             } else if ($scope.viewType === 'concept') {
                 getConcept($scope.viewId)
@@ -151,6 +153,7 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                         $scope.concept = concept;
                         $scope.concept.resources = resources;
                     }
+                    knowledgeMap.setFocus(concept);
                 });
             }
         });
