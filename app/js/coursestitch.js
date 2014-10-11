@@ -19,6 +19,9 @@ config(function($routeProvider, $locationProvider) {
     .when('/profile', {
         templateUrl: 'templates/profile.html',
     })
+    .when('/about', {
+        templateUrl: 'templates/about-us.html',
+    })
     .when('/contact', {
         templateUrl: 'templates/contact-us.html',
     })
