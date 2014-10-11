@@ -9,7 +9,14 @@
                           'glyphicon-minus': resource.inMap(map)}"></i>
         </button>
     </span>
-    <a ng-href="{{ resource.url }}">
+    <div class="panel-image">
+        <div class="img-circle">
+            <a ng-href="{{ resource.attributes.url }}">
+                <img ng-src="{{ resource.attributes.image || 'lib/Flat-UI/images/icons/png/Book.png' }}" alt="{{ resource.attributes.title }}" width="60px">
+            </a>
+        </div>
+    </div>
+    <a ng-href="{{ resource.attributes.url }}">
         <h4>
             <span ng-bind="resource.attributes.title"></span>
             <small ng-bind="resource.attributes.subtitle"></small>

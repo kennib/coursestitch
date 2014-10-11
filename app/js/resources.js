@@ -159,6 +159,12 @@ directive('resource', function(toggleResource, makeURL, isEditor) {
             scope.$watch('understanding.attributes.understands', function() {
                 scope.understanding.save(scope.understanding.attributes);
             });
+
+            // Function to use ng-click as a link
+            // This is useful for linking block tags which can't be wrapped in anchor tags
+            scope.goTo = function(url) {
+                window.location = url;
+            };
         },
     };
 });

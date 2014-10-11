@@ -135,6 +135,14 @@ understanding-slider label {
     height: 740px;
 }
 
+/* External resources */
+.media.well[ng-click] {
+    cursor: pointer;
+}
+.media.well[ng-click]:hover {
+    background: #fefefe;
+}
+
 /* Animations */
 .resource-summary.ng-move,
 .resource-summary.ng-enter,

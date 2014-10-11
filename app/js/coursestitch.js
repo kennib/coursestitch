@@ -256,6 +256,12 @@ controller('RootCtrl', function($scope, $auth, $location, $window, makeURL, isEd
         });
     });
 
+    // Function to use ng-click as a link
+    // This is useful for linking block tags which can't be wrapped in anchor tags
+    $scope.goTo = function(url) {
+        window.location = url;
+    };
+
     // Temporary user
     if (!Parse.User.current()) {
         var username = 'temp-'+Math.random().toString(36).substring(7);
