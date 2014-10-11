@@ -33,6 +33,7 @@
     padding: 5px;
 }
 
+.navbar .navbar-form .input-group-btn .btn,
 .navbar-inverse .navbar-form .input-group-btn .btn {
     color: #ffffff;
     background-color: #48c9b0;
