@@ -499,7 +499,7 @@ directive('knowledgeMap', function(knowledgeMap, $filter) {
                         km.highlightEdges('n'+scope.focus, 'focused');
                     } else {
                         km.panOut(500);
-                        km.highlightNone('focused');
+                        km.removeHighlight('focused');
                     }
                 }
             });
@@ -624,7 +624,7 @@ directive('knowledgeMap', function(knowledgeMap, $filter) {
                         km.highlightEdges('n'+scope.focus, 'focused');
                     } else {
                         km.panOut();
-                        km.highlightNone('focused');
+                        km.removeHighlight('focused');
                     }
                 }
             } /* no deep watch */);
