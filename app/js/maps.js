@@ -143,9 +143,19 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
     };
 
     // Save just the name of the map.
-    $scope.saveMapName = function() {
+    $scope.saveMapMeta = function() {
         return $scope.map.save({
-            title: $scope.map.attributes.title
+            title:   $scope.map.attributes.title,
+            summary: $scope.map.attributes.summary,
+        });
+    };
+
+    // Fetch the map from the server.
+    $scope.resetMapMeta = function() {
+        mapCache.remove(mapId+userId);
+        return getMap(mapId, userId)
+        .then(function(map) {
+            $scope.map = map;
         });
     };
 

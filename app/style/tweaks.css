@@ -44,6 +44,10 @@
     font-size: 14px;
 }
 
+textarea.form-control {
+    margin-top: 19px;
+}
+
 .loading {
     display: block;
     margin: auto;
