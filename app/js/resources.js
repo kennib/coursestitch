@@ -96,6 +96,18 @@ service('toggleResource', function() {
         map.save();
     };
 }).
+service('requires', function() {
+	return function(resource, requirement) {
+		var dependencies = resource.get('requires');
+		var teachings = requirement.get('teaches');
+
+		for (var d in dependencies)
+			if (teachings.find(function(concept) { return dependencies[d].id == concept.id }))
+				return true;
+		
+		return false;
+	};
+}).
 
 filter('join', function() {
     return function(list, string) {
