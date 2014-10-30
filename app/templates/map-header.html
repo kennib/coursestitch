@@ -12,17 +12,9 @@
      ng-if="editMode">
     <div class="row">
         <div class="col-md-4">
-            <div class="input-group">
-                <input type="text" class="form-control"
-                        placeholder="Name your map..."
-                        ng-model="map.attributes.title">
-                <span class="input-group-btn">
-                    <action-button action="saveMapName()" label="save"
-                                idle-style="btn-primary" success-style="btn-success"
-                                idle-icon="glyphicon glyphicon-floppy-disk" pending-icon="fui-time" success-icon="fui-check" error-icon="fui-cross">
-                    </action-button>
-                </span>
-            </div>
+            <input type="text" class="form-control"
+                    placeholder="Name your map..."
+                    ng-model="map.attributes.title">
         </div>
 
         <div class="col-md-8">
@@ -37,6 +29,29 @@
                     </action-button>
                 </span>
             </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <textarea class="form-control"
+                placeholder="Paste in a resource url"
+                rows="3"
+                ng-model="map.attributes.summary">
+            </textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="navbar-text navbar-right">
+            <action-button action="resetMapMeta()" label="reset"
+                        idle-style="btn-inverse"
+                        idle-icon="glyphicon glyphicon-refresh" pending-icon="fui-time">
+            </action-button>
+            <action-button action="saveMapMeta()" label="save"
+                        idle-style="btn-primary" success-style="btn-success"
+                        idle-icon="glyphicon glyphicon-floppy-disk" pending-icon="fui-time" success-icon="fui-check" error-icon="fui-cross">
+            </action-button>
         </div>
     </div>
 </div>
