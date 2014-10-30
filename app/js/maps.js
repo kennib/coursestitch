@@ -112,8 +112,6 @@ controller('MapsCtrl', function($scope) {
         .then(function(maps) {
             $scope.myMaps = maps;
         });
-    } else {
-        $scope.myMaps = undefined;
     }
 }).
 
