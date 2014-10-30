@@ -144,7 +144,7 @@ directive('understandingSlider', function($timeout, understandingClassFilter, kn
         },
         link: function(scope, element, attrs) {
             // Number of milliseconds an animation takes
-            var animateTime = 1000;
+            var animateTime = 500;
 
             var slider = $(element).children(".ui-slider");
             slider.slider({
@@ -162,7 +162,6 @@ directive('understandingSlider', function($timeout, understandingClassFilter, kn
                 $timeout(function() {
                     scope.ngModel = ui.value;
                     scope.$apply();
-                    knowledgeMap.refresh();
                 }, animateTime);
             });
 
@@ -174,6 +173,8 @@ directive('understandingSlider', function($timeout, understandingClassFilter, kn
                 // Call change event
                 if (scope.onChange)
                     scope.onChange(scope.ngModel);
+
+                knowledgeMap.refresh();
             });
 
             // Add some coloring to the slider
