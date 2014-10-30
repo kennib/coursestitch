@@ -144,7 +144,7 @@ directive('understandingSlider', function($timeout, understandingClassFilter, kn
         },
         link: function(scope, element, attrs) {
             // Number of milliseconds an animation takes
-            var animateTime = 1000;
+            var animateTime = 500;
 
             var slider = $(element).children(".ui-slider");
             slider.slider({
@@ -162,7 +162,6 @@ directive('understandingSlider', function($timeout, understandingClassFilter, kn
                 $timeout(function() {
                     scope.ngModel = ui.value;
                     scope.$apply();
-                    knowledgeMap.refresh();
                 }, animateTime);
             });
 
@@ -174,6 +173,8 @@ directive('understandingSlider', function($timeout, understandingClassFilter, kn
                 // Call change event
                 if (scope.onChange)
                     scope.onChange(scope.ngModel);
+
+                knowledgeMap.refresh();
             });
 
             // Add some coloring to the slider
@@ -337,6 +338,13 @@ service('knowledgeMap', function() {
     this.refresh = function() {
         if(this.map) {
             this.map.refresh();
+        }
+        return this;
+    };
+
+    this.render = function() {
+        if(this.map) {
+            this.map.render();
         }
         return this;
     };
@@ -515,6 +523,8 @@ directive('knowledgeMap', function(knowledgeMap, $filter) {
                         x = n.layout.x;
                         y = n.layout.y;
                         scale = 1;
+                    } else {
+                        return;
                     }
 
                     var box = this.container.node().getBoundingClientRect();
@@ -572,7 +582,7 @@ directive('knowledgeMap', function(knowledgeMap, $filter) {
 
             scope.$watch('visible', function(currently, previously) {
                 if(km && currently && !previously) {
-                    km.refresh();
+                    km.render();
                     if(scope.focus) {
                         km.panTo('n' + scope.focus);
                     } else {
