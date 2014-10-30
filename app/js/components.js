@@ -251,10 +251,9 @@ directive('conceptTags', function(Concept, knowledgeMap) {
 
             // When the tag input is initialised use the model as the list of tags
             scope.$watch('ngModel', function(tags) {
-                if (scope.tagModel === undefined)
-                    scope.tagModel = tags.map(function(tag) {
-                        return {value: tag, name: tag.attributes.title};
-                    });
+				scope.tagModel = tags.map(function(tag) {
+					return {value: tag, name: tag.attributes.title};
+				});
             });
         },
     };
