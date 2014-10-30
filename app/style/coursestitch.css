@@ -102,6 +102,9 @@
     font-size: 15px;
     line-height: 1.2;
 }
+.panel-heading label {
+    color: white;
+}
 .panel-body blockquote {
     margin-bottom: 5px;
 }
