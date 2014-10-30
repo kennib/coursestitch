@@ -80,6 +80,23 @@ service('getMap', function(Map, Resource, Concept, fetchMap,
     };
 }).
 
+filter('topologicalSort', function(requires) {
+	return function(resources) {
+		var sortedResources = [];
+		
+		resources.forEach(function(resource) {
+			var index = 0;
+			sortedResources.forEach(function(sortedResource, i) {
+				if (requires(resource, sortedResource))
+					index = i;
+			});
+			sortedResources.splice(index, 0, resource);
+		});
+
+		return sortedResources;
+	}
+}).
+
 controller('MapsCtrl', function($scope) {
     new Parse.Query('Map')
         .equalTo('owner', undefined)
