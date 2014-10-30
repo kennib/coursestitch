@@ -340,6 +340,13 @@ service('knowledgeMap', function() {
         }
         return this;
     };
+
+    this.render = function() {
+        if(this.map) {
+            this.map.render();
+        }
+        return this;
+    };
 }).
 
 directive('knowledgeMap', function(knowledgeMap, $filter) {
@@ -515,6 +522,8 @@ directive('knowledgeMap', function(knowledgeMap, $filter) {
                         x = n.layout.x;
                         y = n.layout.y;
                         scale = 1;
+                    } else {
+                        return;
                     }
 
                     var box = this.container.node().getBoundingClientRect();
@@ -572,7 +581,7 @@ directive('knowledgeMap', function(knowledgeMap, $filter) {
 
             scope.$watch('visible', function(currently, previously) {
                 if(km && currently && !previously) {
-                    km.refresh();
+                    km.render();
                     if(scope.focus) {
                         km.panTo('n' + scope.focus);
                     } else {
