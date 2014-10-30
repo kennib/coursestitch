@@ -180,9 +180,26 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                 // Reset map cache
                 mapCache.remove(mapId+userId);
 
-                // Reload page with the new resource
-                var url = $scope.makeURL(map, resource);
-                $location.path(url.slice(3));
+                // Add the resource to the map.
+                knowledgeMap.addResource(resource);
+
+                getMap(mapId, userId)
+                .then(function(map) {
+                    $scope.map = map;
+
+                    // Get the resources and concepts of this map
+                    var resources = map.get('resources');
+                    var concepts = map.concepts;
+
+                    $scope.resources = resources;
+                    $scope.concepts = concepts;
+
+                    // Reload page with the new resource
+                    setTimeout(function(){
+                        $scope.setView(resource);
+                        $scope.$apply();
+                    }, 20);
+                });
             });
         };
     });
