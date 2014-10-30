@@ -1,20 +1,18 @@
-<div class="media">
-    <a class="pull-left" ng-href="{{ resource.attributes.url }}">
-        <img class="media-object" ng-src="{{ resource.attributes.image }}" alt="{{ resource.attributes.title }}" width="60px">
-    </a>
+<div class="media well" ng-if="!editMode"
+     ng-click="goTo(resource.attributes.url)">
     <div class="media-body">
         <blockquote>
-            <span ng-if="!editMode"
-                  ng-bind="resource.attributes.summary">
-            </span>
-            <span ng-if="editMode">
-                <textarea class="form-control" rows="10"
-                          ng-model="resource.attributes.summary">
-                </textarea>
-            </span>
+            <span ng-bind="resource.attributes.summary"></span>
             <a ng-href="{{ resource.attributes.url }}">
                 <small ng-bind="resource.attributes.url"></small>
             </a>
         </blockquote>
+    </div>
+</div>
+<div class="media well" ng-if="editMode">
+    <div class="media-body">
+        <textarea class="form-control" rows="10"
+                  ng-model="resource.attributes.summary">
+        </textarea>
     </div>
 </div>
