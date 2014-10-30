@@ -75,6 +75,10 @@ understanding-slider label {
     stroke: #aaa;
 }
 
+#km .edgePath.focused path {
+    stroke: #aaa;
+}
+
 #km #arrowhead {
     fill: #eee !important;
 }

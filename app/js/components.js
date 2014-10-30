@@ -310,7 +310,7 @@ service('knowledgeMap', function() {
                 .unhold()
                 .render()
                 .panTo('n'+this.focus.id, 500)
-                .highlightEdges('n'+this.focus.id);
+                .highlightEdges('n'+this.focus.id, 'focused');
         }
         return this;
     };
@@ -496,10 +496,10 @@ directive('knowledgeMap', function(knowledgeMap, $filter) {
                 if(km) {
                     if(scope.focus) {
                         km.panTo('n'+scope.focus, 500);
-                        km.highlightEdges('n'+scope.focus);
+                        km.highlightEdges('n'+scope.focus, 'focused');
                     } else {
                         km.panOut(500);
-                        km.highlightNone();
+                        km.highlightNone('focused');
                     }
                 }
             });
@@ -561,18 +561,30 @@ directive('knowledgeMap', function(knowledgeMap, $filter) {
 
             var highlightPlugin = function(km) {
                 var d3 = knowledgeMap.d3;
-                km.highlightNone = function() {
-                    this.element.selectAll('.active').classed('active', false);
+                km.removeHighlight = function(css) {
+                    this.element.selectAll('.'+css).classed(css, false);
                 };
 
-                km.highlightEdges = function(id) {
-                    this.highlightNone();
+                km.highlightEdges = function(id, css) {
+                    this.removeHighlight(css);
                     if(this.graph.hasNode(id)) {
                         this.graph.incidentEdges(id).forEach(function(edge) {
-                            d3.select('#'+edge).classed('active', true);
+                            d3.select('#'+edge).classed(css, true);
                         });
                     }
                 };
+            };
+
+            var mouseHighlightPlugin = function(km) {
+                km.renderNodes.onNew(function(nodes) {
+                    nodes
+                        .on('mouseover', function(d) {
+                            km.highlightEdges(d.id, 'active');
+                        })
+                        .on('mouseout', function(d) {
+                            km.removeHighlight('active');
+                        });
+                });
             };
 
             scope.$watch('visible', function(currently, previously) {
@@ -602,16 +614,17 @@ directive('knowledgeMap', function(knowledgeMap, $filter) {
                             tredPlugin,
                             linkPlugin,
                             panToPlugin,
-                            highlightPlugin
+                            highlightPlugin,
+                            mouseHighlightPlugin,
                         ],
                     });
 
                     if(scope.focus) {
                         km.panTo('n'+scope.focus);
-                        km.highlightEdges('n'+scope.focus);
+                        km.highlightEdges('n'+scope.focus, 'focused');
                     } else {
                         km.panOut();
-                        km.highlightNone();
+                        km.highlightNone('focused');
                     }
                 }
             } /* no deep watch */);
