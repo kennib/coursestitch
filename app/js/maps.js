@@ -104,6 +104,17 @@ controller('MapsCtrl', function($scope) {
     .then(function(maps) {
         $scope.maps = maps;
     });
+
+    if (Parse.User.current()) {
+        new Parse.Query('Map')
+            .equalTo('owner', Parse.User.current())
+            .find()
+        .then(function(maps) {
+            $scope.myMaps = maps;
+        });
+    } else {
+        $scope.myMaps = undefined;
+    }
 }).
 
 controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,

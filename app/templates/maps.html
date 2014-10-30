@@ -12,6 +12,15 @@
     <loading ng-if="!maps"></loading>
 </div>
 
+<h1>My maps</h1>
+
+<div class="maps row">
+    <div class="col-md-4"
+         ng-repeat="map in myMaps"
+         ng-include="'templates/map-summary.html'"></div>
+    <loading ng-if="!myMaps"></loading>
+</div>
+
 <hr />
 
 <ng-include src="'templates/footer.html'"></ng-include>
