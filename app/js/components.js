@@ -291,10 +291,6 @@ service('knowledgeMap', function() {
 
     this.map = undefined;
     this.create = function(config) {
-        // Enforce singleton behavior.
-        if(this.map) {
-            return this.map;
-        }
         config.resources = config.resources.map(translateResource);
         return this.map = knowledgeMap.create(config);
     };
