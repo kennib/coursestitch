@@ -142,6 +142,13 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
         $scope.mapMode = mode;
     };
 
+    // Save just the name of the map.
+    $scope.saveMapName = function() {
+        return $scope.map.save({
+            title: $scope.map.attributes.title
+        });
+    };
+
     getMap(mapId, userId)
     .then(function(map) {
         // The map has been loaded!

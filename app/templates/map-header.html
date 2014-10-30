@@ -10,15 +10,33 @@
 
 <div class="well"
      ng-if="editMode">
-    <div class="input-group">
-        <input type="text" class="form-control"
-               placeholder="Paste in a resource url"
-               ng-model="newResourceUrl">
-        <span class="input-group-btn">
-            <action-button action="newResource(newResourceUrl, map.id)" label=""
-                           idle-style="btn-primary" success-style="btn-success"
-                           idle-icon="fui-plus" pending-icon="fui-time" success-icon="fui-check" error-icon="fui-cross">
-            </action-button>
-        </span>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="input-group">
+                <input type="text" class="form-control"
+                        placeholder="Name your map..."
+                        ng-model="map.attributes.title">
+                <span class="input-group-btn">
+                    <action-button action="saveMapName()" label="save"
+                                idle-style="btn-primary" success-style="btn-success"
+                                idle-icon="glyphicon glyphicon-floppy-disk" pending-icon="fui-time" success-icon="fui-check" error-icon="fui-cross">
+                    </action-button>
+                </span>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="input-group">
+                <input type="text" class="form-control"
+                    placeholder="Paste in a resource url"
+                    ng-model="newResourceUrl">
+                <span class="input-group-btn">
+                    <action-button action="newResource(newResourceUrl, map.id)" label=""
+                                idle-style="btn-primary" success-style="btn-success"
+                                idle-icon="fui-plus" pending-icon="fui-time" success-icon="fui-check" error-icon="fui-cross">
+                    </action-button>
+                </span>
+            </div>
+        </div>
     </div>
 </div>
