@@ -15,6 +15,10 @@
 <h1>My maps</h1>
 
 <div class="maps row">
+    <p class="col-xs-12">
+        <span ng-if="myMaps.length == 0">You don't have any maps.</span>
+        <span>You can <a href="" ng-click="createMap(user.id)">create a new map</a> or customise a map above.</span>
+    </p>
     <div class="col-md-4"
          ng-repeat="map in myMaps"
          ng-include="'templates/map-summary.html'"></div>
