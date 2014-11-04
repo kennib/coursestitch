@@ -115,7 +115,7 @@ filter('join', function() {
     };
 }).
 
-directive('resource', function(toggleResource, makeURL, isEditor) {
+directive('resource', function(toggleResource, makeURL, isEditor, conceptUnderstandingCache) {
     return {
         restrict: 'E',
         templateUrl: 'templates/resource.html',
@@ -169,8 +169,13 @@ directive('resource', function(toggleResource, makeURL, isEditor) {
 
             // Update the understanding as necessary
             scope.$watch('understanding.attributes.understands', function(understanding, oldUnderstanding) {
-                if (understanding != oldUnderstanding)
-                    scope.understanding.save(scope.understanding.attributes);
+                if (understanding != oldUnderstanding) {
+                    scope.understanding.save(scope.understanding.attributes)
+                    .then(function() {;
+                        // Remove the cache of concept understandings since they have changed now
+                        conceptUnderstandingCache.cache.removeAll();
+                    });
+                }
             });
 
             // Function to use ng-click as a link

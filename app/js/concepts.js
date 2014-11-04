@@ -20,7 +20,7 @@ service('conceptUnderstandingCache', function(objectCache) {
         if (userId)
             return Parse.Cloud.run('getConceptUnderstanding', {conceptId: conceptId, userId: userId});
         else
-            return Parse.Promise.as(undefined)
+            return Parse.Promise.as(undefined);
     });
 }).
 service('getConcept', function() {
