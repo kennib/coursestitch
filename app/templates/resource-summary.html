@@ -14,7 +14,7 @@
             <div class="panel-image">
                 <p ng-bind-template="{{ resource.understanding() | result | understandingLabel }}"></p>
                 <div class="img-circle">
-                    <img ng-src="{{ resource.attributes.image || 'lib/Flat-UI/images/icons/png/Book.png' }}" alt="{{ resource.attributes.title }}" width="60px">
+                    <img ng-src="{{ resource | resourceImageURL }}" alt="{{ resource.attributes.title }}" width="60px">
                 </div>
             </div>
             <h4>

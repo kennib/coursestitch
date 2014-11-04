@@ -184,6 +184,16 @@ filter('result', function() {
             return undefined;
     };
 }).
+filter('resourceImageURL', function() {
+    return function(resource) {
+        var type = resource.attributes.type;
+        if (type === 'video') {
+            return 'images/icons/camera6.svg';
+        } else {
+            return 'images/icons/leaf5.svg';
+        }
+    };
+}).
 filter('understandingClass', function() {
     return function(u) {
         if (u < 0) {
@@ -247,13 +257,6 @@ controller('RootCtrl', function($scope, $auth, $location, $window, makeURL, isEd
     $scope.isEditor = false;
     isEditor().then(function(editor) {
         $scope.isEditor = editor;
-    });
-
-    // Fix broken images
-    $(document).bind("DOMSubtreeModified", function() {
-        $('img').error(function() {
-            $(this).attr('src', 'lib/Flat-UI/images/icons/png/Book.png');
-        });
     });
 
     // Function to use ng-click as a link

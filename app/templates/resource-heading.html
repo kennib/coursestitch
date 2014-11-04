@@ -12,7 +12,7 @@
     <div class="panel-image">
         <div class="img-circle">
             <a ng-href="{{ resource.attributes.url }}">
-                <img ng-src="{{ resource.attributes.image || 'lib/Flat-UI/images/icons/png/Book.png' }}" alt="{{ resource.attributes.title }}" width="60px">
+                <img ng-src="{{ resource | resourceImageURL }}" alt="{{ resource.attributes.title }}" width="60px">
             </a>
         </div>
     </div>

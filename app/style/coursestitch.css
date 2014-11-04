@@ -91,9 +91,14 @@
     margin-right: 10px;
     margin-bottom: 20px;
 }
+
+.panel-heading .panel-image .img-circle {
+    background-color: #FAFAFA;
+}
 .panel-heading .panel-image img {
     height: 85px;
     width: auto;
+    padding: 15px;
 }
 .panel-heading .panel-image p {
     width: 85px;
