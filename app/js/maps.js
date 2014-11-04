@@ -180,6 +180,10 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
 
         $scope.resources = resources;
         $scope.concepts = concepts;
+        
+        // Automatically jump to edit mode if the map has no resource
+        if ($scope.resources.length === 0)
+            $scope.editMode = true;
 
         // Update the view
         $scope.$watchCollection('[viewType, viewId]', function() {
