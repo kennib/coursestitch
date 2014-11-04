@@ -187,17 +187,17 @@ filter('result', function() {
 filter('understandingClass', function() {
     return function(u) {
         if (u < 0) {
-            return 'palette-alizarin';
+            return 'understanding understanding-confusing';
         } else if (u == 0) {
-            return 'palette-midnight-blue';
+            return 'understanding understanding-unread';
         } else if (u > 0 && u < 0.5) {
-            return 'palette-belize-hole';
+            return 'understanding understanding-starting';
         } else if (u >= 0.5 && u < 1) {
-            return 'palette-peter-river';
+            return 'understanding understanding-finishing';
         } else if (u == 1) {
-            return 'palette-turquoise';
+            return 'understanding understanding-understood';
         } else {
-            return 'palette-asbestos';
+            return 'understanding';
         }
     };
 }).
