@@ -168,8 +168,9 @@ directive('resource', function(toggleResource, makeURL, isEditor) {
             });
 
             // Update the understanding as necessary
-            scope.$watch('understanding.attributes.understands', function() {
-                scope.understanding.save(scope.understanding.attributes);
+            scope.$watch('understanding.attributes.understands', function(understanding, oldUnderstanding) {
+                if (understanding != oldUnderstanding)
+                    scope.understanding.save(scope.understanding.attributes);
             });
 
             // Function to use ng-click as a link
