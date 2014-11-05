@@ -309,7 +309,7 @@ service('knowledgeMap', function() {
             this.map
                 .unhold()
                 .render()
-                .panTo('n'+this.focus.id, 500)
+                .panTo('n'+this.focus.id, 1000)
                 .highlightEdges('n'+this.focus.id, 'focused');
         }
         return this;
@@ -587,6 +587,26 @@ directive('knowledgeMap', function(knowledgeMap, $filter) {
                 });
             };
 
+            var animateNodesPlugin = function(km) {
+                km.positionNodes
+                    .offUpdate(km.defaultUpdateNodePositions)
+                    .onUpdate(function(nodes) {
+                        nodes.transition().duration(1000).attr('transform', function(n) {
+                            var x = n.layout.x;
+                            var y = n.layout.y;
+                            return 'translate('+ x + ',' + y + ')';
+                        });
+                    });
+            };
+
+            var splitLabelsPlugin = function(km) {
+                km.renderNodes.onUpdate(function(nodes) {
+                    nodes.select('text')
+                        .text('')
+                        .append('tspan'
+                }).onUpdate(km.calculateNodeSizes);
+            };
+
             scope.$watch('visible', function(currently, previously) {
                 if(km && currently && !previously) {
                     km.render();
@@ -616,6 +636,7 @@ directive('knowledgeMap', function(knowledgeMap, $filter) {
                             panToPlugin,
                             highlightPlugin,
                             mouseHighlightPlugin,
+                            animateNodesPlugin,
                         ],
                     });
 
