@@ -599,14 +599,6 @@ directive('knowledgeMap', function(knowledgeMap, $filter) {
                     });
             };
 
-            var splitLabelsPlugin = function(km) {
-                km.renderNodes.onUpdate(function(nodes) {
-                    nodes.select('text')
-                        .text('')
-                        .append('tspan'
-                }).onUpdate(km.calculateNodeSizes);
-            };
-
             scope.$watch('visible', function(currently, previously) {
                 if(km && currently && !previously) {
                     km.render();
