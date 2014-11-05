@@ -6,7 +6,7 @@
     "cartographer": "knowledge-map/cartographer#v0.1.4",
     "angular": "1.2.x",
     "angular-route": "1.2.x",
-    "Flat-UI": "https://github.com/designmodo/Flat-UI.git",
+    "Flat-UI": "https://github.com/designmodo/Flat-UI.git#792b662a9ace8c6f4d68558b01abd3210f70948e",
     "angular-tags": "~0.2.10",
     "parse-angular-patch": "*",
     "es6-shim": "~0.15.1",
