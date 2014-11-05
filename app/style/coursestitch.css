@@ -44,6 +44,7 @@
 }
 
 /* Tabs styling */
+@media (min-width: 768px) {
 .nav-tabs > li > a:hover,
 .nav-tabs.nav-justified > li > a {
     border-bottom: 1px dashed rgba(0,0,0, 0.2);
@@ -54,6 +55,7 @@
     border-style: dashed;
     border-color: rgba(0,0,0, 0.2);
     border-bottom: none;
+}
 }
 
 /* Map page */
