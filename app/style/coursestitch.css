@@ -125,6 +125,10 @@
     border-top: none;
 }
 
+#km svg {
+    height: 80vh;
+}
+
 /* Understanding Slider */
 understanding-slider .row {
     margin-bottom: -15px;
