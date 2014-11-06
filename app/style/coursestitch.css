@@ -208,3 +208,28 @@ understanding-slider label {
     transition: all ease-in 0.6s;
     background: white;
 }
+
+/* OAuth sign up buttons */
+.btn-facebook {
+    background-color: #3b5998;
+    color: #fff;
+}
+.btn-facebook:hover {
+    background-color: #395777;
+}
+
+.btn-github {
+    background-color: #444;
+    color: #fff;
+}
+.btn-github:hover {
+    background-color: #424222;
+}
+
+.btn-google {
+    background-color: #dd4b39;
+    color: #fff;
+}
+.btn-google:hover {
+    background-color: #db4917;
+}
