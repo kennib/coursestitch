@@ -4,14 +4,18 @@
     <div ng-switch-when="loaded">
         <ng-include src="'templates/map-header.html'"></ng-include>
 
-        <div class="row">
+        <div class="row" ng-show="resources.length == 0">
+            <center>
+                <p>This map is empty! Add some resources using the form above.</p>
+            </center>
+        </div>
+        <div class="row" ng-show="resources.length > 0">
             <div class="view col-md-5"
                  ng-if="viewType && viewId"
                  ng-class="{resource: viewType == 'resource', concept: viewType == 'concept'}">
                 <article ng-switch="viewType">
                     <div ng-switch-when="resource">
-                        <resource map="map" resource="resource" concepts="concepts" set-view="setView">
-                    </resource>
+                        <resource map="map" resource="resource" concepts="concepts" set-view="setView"></resource>
                     </div>
                     <div ng-switch-when="concept">
                         <concept map="map" concept="concept" set-view="setView"></concept>
