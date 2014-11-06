@@ -174,15 +174,21 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
         // (defined below).
         if (!$scope.settingView) {
             if (next.match(/\/map\//)) {
-                // Stop regular navigation within a map view.
-                event.preventDefault();
-
-                // Instead, use setView for single-page navigation. This is a
-                // repeat of the code that's in setView :(.
-                var matches = next.match(/(concept|resource)\/([^\/]+)/);
+                // Use setView for single-page navigation.
+                var matches = next.match(/\/(concept|resource)\/([^\/]+)/);
                 if (matches) {
+                    // Stop regular navigation within a map view.
+                    event.preventDefault();
+
+                    // We're trying to view a single concept/resource.
+                    // HACK: This is a copy of the code that's in setView :(.
                     $scope.viewType = matches[1];
                     $scope.viewId = matches[2];
+                } else {
+                    // The lack of the above regex fragment indicates we're
+                    // viewing a map, with no particular map/concept.
+                    $scope.settingView = false;
+                    $scope.setView();
                 }
             }
         }
