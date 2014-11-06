@@ -168,6 +168,29 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
         });
     };
 
+    $scope.settingView = false;
+    $scope.$on('$locationChangeStart', function(event, next) {
+        // Make sure this is a change *not* caused by calling the setView method
+        // (defined below).
+        if (!$scope.settingView) {
+            if (next.match(/\/map\//)) {
+                // Stop regular navigation within a map view.
+                event.preventDefault();
+
+                // Instead, use setView for single-page navigation. This is a
+                // repeat of the code that's in setView :(.
+                var matches = next.match(/(concept|resource)\/([^\/]+)/);
+                if (matches) {
+                    $scope.viewType = matches[1];
+                    $scope.viewId = matches[2];
+                }
+            }
+        }
+
+        // And register that we have completed our setView process.
+        $scope.settingView = false;
+    });
+
     getMap(mapId, userId)
     .then(function(map) {
         // The map has been loaded!
@@ -207,11 +230,17 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
 
         // Function to change map view
         $scope.setView = function(viewObject) {
+            // settingView flag is used so that we don't block locationChange
+            // events from happening. We want them to happen if they've been
+            // caused by calling setView. THis flag is unset in the locationChange
+            // event.
+            $scope.settingView = true;
+
             // Update view
             $scope.viewType = viewObject ? viewObject.className.toLowerCase() : '';
             $scope.viewId = viewObject ? viewObject.id : '';
             
-            // Update URL
+            // Update URL, triggering a locationChange event.
             var url = $scope.makeURL($scope.map, viewObject).slice(2);
             $location.path(url, false);
 
