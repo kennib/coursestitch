@@ -5,15 +5,15 @@
   "dependencies": {
     "cartographer": "knowledge-map/cartographer#v0.1.4",
     "angular": "1.2.23",
-    "angular-route": "1.2.x",
+    "angular-route": "1.2.23",
     "Flat-UI": "https://github.com/designmodo/Flat-UI.git#792b662a9ace8c6f4d68558b01abd3210f70948e",
     "angular-tags": "~0.2.10",
     "parse-angular-patch": "*",
     "es6-shim": "~0.15.1",
-    "angular-animate": "~1.2.23",
+    "angular-animate": "1.2.23",
     "satellizer": "~0.6.3"
   },
   "resolutions": {
-    "angular": "1.2.x"
+    "angular": "1.2.23"
   }
 }
