@@ -545,7 +545,7 @@ directive('knowledgeMap', function(knowledgeMap, $filter) {
                     // the element and the graph.
                     var svgWidth = km.container.node().getBoundingClientRect().width;
                     bb = km.element.node().getBBox()
-                    minZoom = Math.min(0.5, svgWidth / (bb.width + 100));
+                    minZoom = Math.max(0.1, Math.min(0.5, svgWidth / (bb.width + 100)));
                     km.zoom.scaleExtent([minZoom, 1]);
                 });
 
