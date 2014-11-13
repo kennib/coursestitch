@@ -1,5 +1,5 @@
 <div class="understanding progress progress-vertical">
-    <a ng-repeat="resource in resources"
+    <a ng-repeat="resource in resources | topologicalSort"
        ng-click="setView(resource)"
        class="progress-bar {{ resource.understanding() | result | understandingClass }}"
        ng-class="{current: resource.id == $parent.resource.id}"
