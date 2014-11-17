@@ -129,18 +129,6 @@ service('getUserRoles', function() {
             return Parse.Promise.as([]);
     };
 }).
-service('isEditor', function(getUserRoles) {
-    return function() {
-        return getUserRoles()
-        .then(function(roles) {
-            if (roles.find(function(role) { return role.get('name') == 'editor'; })) {
-                return true;
-            } else {
-                return false;
-            }
-        });
-    };
-}).
 service('makeURL', function(urlizeFilter) {
     // Create a URL string from various attributes of a given map
     // and view object (which can be a resource or a concept).
@@ -228,7 +216,7 @@ filter('understandingLabel', function() {
 }).
 
 
-controller('RootCtrl', function($scope, $auth, $location, $window, makeURL, isEditor, createMap) {
+controller('RootCtrl', function($scope, $auth, $location, $window, makeURL, createMap) {
     $scope.makeURL = makeURL;
     // Creates a new map and the goes to its URL
     $scope.createMap = function(user) {
@@ -252,12 +240,6 @@ controller('RootCtrl', function($scope, $auth, $location, $window, makeURL, isEd
         $scope.user = user;
     };
     $scope.setUser = setUser;
-
-    // Does the current user have editor permissions?
-    $scope.isEditor = false;
-    isEditor().then(function(editor) {
-        $scope.isEditor = editor;
-    });
 
     // Function to use ng-click as a link
     // This is useful for linking block tags which can't be wrapped in anchor tags

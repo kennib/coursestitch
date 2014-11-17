@@ -115,7 +115,7 @@ filter('join', function() {
     };
 }).
 
-directive('resource', function(toggleResource, makeURL, isEditor, conceptUnderstandingCache) {
+directive('resource', function(toggleResource, makeURL, conceptUnderstandingCache) {
     return {
         restrict: 'E',
         templateUrl: 'templates/resource.html',
@@ -128,13 +128,6 @@ directive('resource', function(toggleResource, makeURL, isEditor, conceptUnderst
             scope.makeURL = makeURL;
             scope.tags = ["teaches", "requires"];
             scope.editMode = false;
-
-            // Check whether user can edit the resource
-            scope.isEditor = false;
-            isEditor()
-            .then(function(editor) {
-                scope.isEditor = editor;
-            });
 
             // Toggle between edit and view modes
             scope.setEditMode = function(mode) {
