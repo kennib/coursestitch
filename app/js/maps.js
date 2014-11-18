@@ -81,20 +81,20 @@ service('getMap', function(Map, Resource, Concept, fetchMap,
 }).
 
 filter('topologicalSort', function(requires) {
-	return function(resources) {
-		var sortedResources = [];
-		
-		resources.forEach(function(resource) {
-			var index = 0;
-			sortedResources.forEach(function(sortedResource, i) {
-				if (requires(resource, sortedResource))
-					index = i;
-			});
-			sortedResources.splice(index, 0, resource);
-		});
+    return function(resources) {
+        var sortedResources = [];
+        
+        resources.forEach(function(resource) {
+            var index = 0;
+            sortedResources.forEach(function(sortedResource, i) {
+                if (requires(resource, sortedResource))
+                    index = i;
+            });
+            sortedResources.splice(index, 0, resource);
+        });
 
-		return sortedResources;
-	}
+        return sortedResources;
+    }
 }).
 
 controller('MapsCtrl', function($scope) {
@@ -224,10 +224,13 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                 });
             } else if ($scope.viewType === 'concept') {
                 getConcept($scope.viewId)
-                .then(function(concept, resources) {
+                .then(function(concept, taughtby, neededfor) {
                     if (concept) {
                         $scope.concept = concept;
-                        $scope.concept.resources = resources;
+                        $scope.concept.resources = {
+                            taughtby: taughtby,
+                            neededfor: neededfor,
+                        };
                     }
                     knowledgeMap.setFocus(concept);
                 });

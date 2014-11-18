@@ -28,10 +28,15 @@ service('getConcept', function() {
         var conceptQuery = new Parse.Query('Concept')
             .get(conceptId)
         .then(function(concept) {
-            var resourceQuery = new Parse.Query('Resource')
+            // Resources this concept can be taught by
+            var teachesQuery = new Parse.Query('Resource')
                 .equalTo('teaches', concept)
                 .find();
-            return Parse.Promise.when(concept, resourceQuery);
+            // Resources this concept teaches
+            var requiresQuery = new Parse.Query('Resource')
+                .equalTo('requires', concept)
+                .find();
+            return Parse.Promise.when(concept, teachesQuery, requiresQuery);
         });
         return conceptQuery;
     };

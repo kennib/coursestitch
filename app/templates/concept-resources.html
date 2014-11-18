@@ -1,6 +1,12 @@
 <h3 ng-bind-template="Taught by"></h3>
 <div>
     <span
-        ng-repeat="resource in concept.resources"
+        ng-repeat="resource in concept.resources.taughtby"
+        ng-include="'templates/resource-summary.html'"></span>
+</div>
+<h3 ng-bind-template="Needed by"></h3>
+<div>
+    <span
+        ng-repeat="resource in concept.resources.neededfor"
         ng-include="'templates/resource-summary.html'"></span>
 </div>
