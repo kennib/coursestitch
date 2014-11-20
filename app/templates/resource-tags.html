@@ -1,33 +1,30 @@
-<div class="row"
-     ng-repeat="tagLabel in tags">
-    <div class="col-xs-12">
-        <span ng-bind-template="{{ tagLabel }}:"></span>
+<div ng-repeat="tagLabel in tags">
+    <span ng-bind-template="{{ tagLabel }}:"></span>
 
-        <span ng-if="!editMode">
-            <ul class="list-inline">
-                <li ng-repeat="concept in resource.attributes[tagLabel]">
-                    <a href ng-click="setView(concept)">
-                        <span class="label {{ concept.understanding() | result | understandingClass }}"
-                              ng-bind="concept.attributes.title || concept.name"></span>
-                    </a>
-                </li>
-            </ul>
+    <span ng-if="!editMode">
+        <ul class="list-inline">
+            <li ng-repeat="concept in resource.attributes[tagLabel]">
+                <a href ng-click="setView(concept)">
+                    <span class="label {{ concept.understanding() | result | understandingClass }}"
+                          ng-bind="concept.attributes.title || concept.name"></span>
+                </a>
+            </li>
+        </ul>
 
-            <span ng-switch="tagLabel" ng-hide="resource.attributes[tagLabel]">
-                <span ng-switch-when="requires">
-                    nothing! You could learn from this resource right now.
-                </span>
-                <span ng-switch-when="teaches">
-                    nothing! You can use this resource to better understand things you already know.
-                </span>
-                <span ng-switch-default>
-                   nothing! Maybe you should add a concept.
-                </span>
+        <span ng-switch="tagLabel" ng-hide="resource.attributes[tagLabel]">
+            <span ng-switch-when="requires">
+                nothing! You could learn from this resource right now.
+            </span>
+            <span ng-switch-when="teaches">
+                nothing! You can use this resource to better understand things you already know.
+            </span>
+            <span ng-switch-default>
+               nothing! Maybe you should add a concept.
             </span>
         </span>
+    </span>
 
-        <span ng-if="editMode">
-            <concept-tags concepts="concepts" ng-model="resource.attributes[tagLabel]"></concept-tags>
-        </span>
-    </div>
+    <span ng-if="editMode">
+        <concept-tags concepts="concepts" ng-model="resource.attributes[tagLabel]"></concept-tags>
+    </span>
 </div>
