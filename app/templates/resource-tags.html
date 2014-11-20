@@ -3,7 +3,7 @@
 
     <span ng-if="!editMode">
         <ul class="list-inline">
-            <li ng-repeat="concept in resource.attributes[tagLabel]">
+            <li class="concept" ng-repeat="concept in resource.attributes[tagLabel]">
                 <a href ng-click="setView(concept)">
                     <span class="label {{ concept.understanding() | result | understandingClass }}"
                           ng-bind="concept.attributes.title || concept.name"></span>
