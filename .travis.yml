@@ -11,4 +11,4 @@ after_success:
   - chmod +x ssh
   - export GIT_SSH='./ssh'
   - git remote add deploy root@104.236.191.162:/var/www
-  - git push deploy
+  - [ "${TRAVIS_BRANCH}" = "master" ] && git push deploy master
