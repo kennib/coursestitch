@@ -149,6 +149,11 @@ understanding-slider label {
     background: white;
 }
 
+/* Resource tags */
+resource-concept-tags .list-inline {
+    display: inline;
+}
+
 /* Resource list */
 .resources {
     overflow-x: hidden;
