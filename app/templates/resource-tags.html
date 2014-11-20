@@ -13,9 +13,15 @@
                 </li>
             </ul>
 
-            <span ng-hide="resource.attributes[tagLabel]">
-                <span>
-                   "{{ resource.attributes.title }}" {{ tagLabel }} no concepts.
+            <span ng-switch="tagLabel" ng-hide="resource.attributes[tagLabel]">
+                <span ng-switch-when="requires">
+                    nothing! You could learn from this resource right now.
+                </span>
+                <span ng-switch-when="teaches">
+                    nothing! You can use this resource to better understand things you already know.
+                </span>
+                <span ng-switch-default>
+                   nothing! Maybe you should add a concept.
                 </span>
             </span>
         </span>
