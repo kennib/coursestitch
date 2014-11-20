@@ -203,7 +203,7 @@ directive('resourceConceptTags', function(Concept) {
             setView: '=',
         },
         link: function(scope, elem, attrs) {
-            scope.tags = ["teaches", "requires"];
+            scope.tags = ["requires", "teaches"];
         },
     };
 }).
