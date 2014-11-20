@@ -1,5 +1,13 @@
 <div class="panel resource">
     <div class="panel-heading {{ resource.understanding() | result | understandingClass }}">
+        <span class="pull-right">
+            <button class="btn btn-primary" title="{{ showSummary ? 'Hide summary' : 'Show summary' }}"
+                    ng-click="showSummary = !showSummary">
+                <i ng-class="{'glyphicon': true,
+                              'glyphicon-chevron-down': !showSummary,
+                              'glyphicon-chevron-up': showSummary}"></i>
+            </button>
+        </span>
         <a href ng-click="setView(resource)">
             <div class="panel-image">
                 <p ng-bind-template="{{ resource.understanding() | result | understandingLabel }}"></p>
@@ -12,9 +20,9 @@
                 <small ng-bind="resource.attributes.subtitle"></small>
             </h4>
         </a>
-        <div style="clear: both;"></div>
+        <div style="clear: left;"></div>
     </div>
-    <div class="panel-body" ng-hide="true">
+    <div class="panel-body" ng-show="showSummary">
         <blockquote ng-bind="resource.attributes.summary">
         </blockquote>
     </div>
