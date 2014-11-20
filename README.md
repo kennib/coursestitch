@@ -1,4 +1,6 @@
 # course stitch
+[![Build Status](https://travis-ci.org/kennib/coursestitch.svg)](https://travis-ci.org/kennib/coursestitch)
+
 A platform for displaying, exploring and crafting knowledge maps.
 
 To run (assuming you have npm installed):
