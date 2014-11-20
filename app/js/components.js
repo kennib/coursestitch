@@ -193,6 +193,21 @@ directive('understandingSlider', function($timeout, understandingClassFilter, kn
     };
 }).
 
+directive('resourceConceptTags', function(Concept) {
+    return {
+        restrict: 'E',
+        templateUrl: 'templates/resource-tags.html',
+        scope: {
+            resource: '=',
+            editMode: '=',
+            setView: '=',
+        },
+        link: function(scope, elem, attrs) {
+            scope.tags = ["teaches", "requires"];
+        },
+    };
+}).
+
 directive('conceptTags', function(Concept, knowledgeMap) {
     return {
         restrict: 'E',

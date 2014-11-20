@@ -126,7 +126,6 @@ directive('resource', function(toggleResource, makeURL, conceptUnderstandingCach
         },
         link: function(scope, elem, attrs) {
             scope.makeURL = makeURL;
-            scope.tags = ["teaches", "requires"];
             scope.editMode = false;
 
             // Toggle between edit and view modes
