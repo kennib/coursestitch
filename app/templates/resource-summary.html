@@ -1,13 +1,11 @@
 <div class="panel resource">
-    <div class="panel-heading {{ resource.understanding() | result | understandingClass }}">
+    <div class="panel-heading resource {{ resource.understanding() | result | understandingClass }}">
         <span class="pull-right">
-            <button class="btn" title="{{ resource.inMap(map) ? 'Remove from map' : 'Add to map' }}"
-                    ng-class="{'btn-primary': !resource.inMap(map),
-                               'btn-danger':   resource.inMap(map)}"
-                    ng-click="resource.toggleMap(map)">
+            <button class="btn btn-primary" title="{{ showSummary ? 'Hide summary' : 'Show summary' }}"
+                    ng-click="showSummary = !showSummary">
                 <i ng-class="{'glyphicon': true,
-                              'glyphicon-plus': !resource.inMap(map),
-                              'glyphicon-minus': resource.inMap(map)}"></i>
+                              'glyphicon-chevron-down': !showSummary,
+                              'glyphicon-chevron-up': showSummary}"></i>
             </button>
         </span>
         <a href ng-click="setView(resource)">
@@ -22,8 +20,10 @@
                 <small ng-bind="resource.attributes.subtitle"></small>
             </h4>
         </a>
+        <resource-concept-tags resource="resource" set-view="setView"></resource-concept-tags>
+        <div style="clear: left;"></div>
     </div>
-    <div class="panel-body">
+    <div class="panel-body" ng-show="showSummary">
         <blockquote ng-bind="resource.attributes.summary">
         </blockquote>
     </div>

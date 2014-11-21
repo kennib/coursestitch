@@ -3,7 +3,7 @@
 
     <div ng-switch-when="loaded">
         <div class="panel resource">
-            <div class="panel-heading {{ resource.understanding() | result | understandingClass }}"
+            <div class="panel-heading resource {{ resource.understanding() | result | understandingClass }}"
                  ng-include src="'templates/resource-heading.html'"></div>
             <div class="panel-body">
                 <ng-include src="'templates/resource-preview.html'"></ng-include>

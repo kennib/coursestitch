@@ -71,6 +71,7 @@
 .panel-heading {
     margin: none;
     padding: 10px;
+    color: white;
 }
 .panel-heading h4,
 .panel-heading p {
