@@ -1,5 +1,5 @@
 <div class="panel resource">
-    <div class="panel-heading {{ resource.understanding() | result | understandingClass }}">
+    <div class="panel-heading resource {{ resource.understanding() | result | understandingClass }}">
         <span class="pull-right">
             <button class="btn btn-primary" title="{{ showSummary ? 'Hide summary' : 'Show summary' }}"
                     ng-click="showSummary = !showSummary">
