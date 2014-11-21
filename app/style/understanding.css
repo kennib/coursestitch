@@ -1,9 +1,9 @@
-.progress-bar.understanding           , .resource.understanding            { background-color: #7f8c8d; }
-.progress-bar.understanding-confusing , .resource.understanding-confusing  { background-color: #e74c3c; }
-.progress-bar.understanding-unread    , .resource.understanding-unread     { background-color: #2c3e50; }
-.progress-bar.understanding-starting  , .resource.understanding-starting   { background-color: #2980b9; }
-.progress-bar.understanding-finishing , .resource.understanding-finishing  { background-color: #3498db; }
-.progress-bar.understanding-understood, .resource.understanding-understood { background-color: #1abc9c; }
+.progress-bar.understanding           , .resource.understanding            { background-color: #7f8c8d; color: white; }
+.progress-bar.understanding-confusing , .resource.understanding-confusing  { background-color: #e74c3c; color: white; }
+.progress-bar.understanding-unread    , .resource.understanding-unread     { background-color: #2c3e50; color: white; }
+.progress-bar.understanding-starting  , .resource.understanding-starting   { background-color: #2980b9; color: white; }
+.progress-bar.understanding-finishing , .resource.understanding-finishing  { background-color: #3498db; color: white; }
+.progress-bar.understanding-understood, .resource.understanding-understood { background-color: #1abc9c; color: white; }
 
 .concept.understanding            { color: #7f8c8d; border: 1px dashed #7f8c8d; }
 .concept.understanding-confusing  { background-color: white; border-color: #e74c3c; color: #e74c3c;}
