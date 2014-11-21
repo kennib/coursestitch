@@ -193,6 +193,21 @@ directive('understandingSlider', function($timeout, understandingClassFilter, kn
     };
 }).
 
+directive('resourceRead', function(Concept, makeURL) {
+    return {
+        restrict: 'E',
+        templateUrl: 'templates/resource-read.html',
+        scope: {
+            resource: '=',
+            map: '=',
+            size: '@',
+        },
+        link: function(scope, elem, attrs) {
+            scope.makeURL = makeURL;
+        },
+    };
+}).
+
 directive('resourceConceptTags', function(Concept, makeURL) {
     return {
         restrict: 'E',
