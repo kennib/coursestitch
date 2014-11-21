@@ -1,5 +1,6 @@
 <a href="#" ng-href="{{ resource.attributes.url }}" target="_blank">
-    <button class="btn btn-lg btn-primary"
+    <button class="btn btn-primary"
+            ng-class="{'btn-lg': size=='large', 'btn-sm': size=='small'}"
             ng-switch="resource.attributes.type">
         <span ng-switch-when="video">
             <i class="glyphicon glyphicon-facetime-video"></i>

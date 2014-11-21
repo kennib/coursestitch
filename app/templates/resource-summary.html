@@ -6,6 +6,7 @@
             <div class="img-circle">
                 <img ng-src="{{ resource | resourceImageURL }}" alt="{{ resource.attributes.title }}" width="60px">
             </div>
+            <resource-read resource="resource" map="map" size="small"></resource-read>
         </div>
         <div class="col-xs-9 col-sm-8 col-md-9 col-lg-10">
             <a ng-href="{{ makeURL(map, resource) }}">
