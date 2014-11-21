@@ -130,6 +130,13 @@
     height: 80vh;
 }
 
+/* Concept styling and structure */
+.concept h2 {
+    text-align: center;
+    border-width: 3px !important;
+    border-radius: 8px;
+}
+
 /* Resource styling and structure */
 .resource h2 {
     font-size: 40px;
