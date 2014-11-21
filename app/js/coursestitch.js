@@ -67,20 +67,6 @@ config(function($authProvider) {
     });
 }).
 
-run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
-    var original = $location.path;
-    $location.path = function (path, reload) {
-        if (reload === false) {
-            var lastRoute = $route.current;
-            var un = $rootScope.$on('$locationChangeSuccess', function () {
-                $route.current = lastRoute;
-                un();
-            });
-        }
-        return original.apply($location, [path]);
-    };
-}]).
-
 service('objectCache', function($cacheFactory) {
     // Return an object which caches or fetches objects
     return function(name, fetch) {
@@ -135,10 +121,13 @@ service('makeURL', function(urlizeFilter) {
     // The return string should match the URL format given in
     // the routeProvider above.
     return function(mapObject, viewObject) {
-        var fields = [
-            mapObject.id,
-            urlizeFilter(mapObject.attributes.title)
-        ];
+        var fields = [];
+        if (mapObject) {
+            fields = fields.concat([
+                mapObject.id,
+                urlizeFilter(mapObject.attributes.title)
+            ]);
+        }
         if (viewObject) {
             fields = fields.concat([   
                 viewObject.className.toLowerCase(),

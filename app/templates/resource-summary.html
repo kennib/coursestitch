@@ -8,7 +8,7 @@
                               'glyphicon-chevron-up': showSummary}"></i>
             </button>
         </span>
-        <a href ng-click="setView(resource)">
+        <a ng-href="{{ makeMapURL(resource) }}">
             <div class="panel-image">
                 <p ng-bind-template="{{ resource.understanding() | result | understandingLabel }}"></p>
                 <div class="img-circle">
@@ -20,7 +20,7 @@
                 <small ng-bind="resource.attributes.subtitle"></small>
             </h4>
         </a>
-        <resource-concept-tags resource="resource" set-view="setView"></resource-concept-tags>
+        <resource-concept-tags resource="resource" map="map"></resource-concept-tags>
         <div style="clear: left;"></div>
     </div>
     <div class="panel-body" ng-show="showSummary">

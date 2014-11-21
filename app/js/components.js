@@ -193,16 +193,17 @@ directive('understandingSlider', function($timeout, understandingClassFilter, kn
     };
 }).
 
-directive('resourceConceptTags', function(Concept) {
+directive('resourceConceptTags', function(Concept, makeURL) {
     return {
         restrict: 'E',
         templateUrl: 'templates/resource-tags.html',
         scope: {
             resource: '=',
+            map: '=',
             editMode: '=',
-            setView: '=',
         },
         link: function(scope, elem, attrs) {
+            scope.makeURL = makeURL;
             scope.tags = ["requires", "teaches"];
         },
     };

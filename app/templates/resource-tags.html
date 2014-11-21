@@ -4,7 +4,7 @@
     <span ng-if="!editMode">
         <ul class="list-inline">
             <li ng-repeat="concept in resource.attributes[tagLabel]">
-                <a href ng-click="setView(concept)">
+                <a ng-href="{{ makeURL(map, concept) }}">
                     <span class="label concept {{ concept.understanding() | result | understandingClass }}"
                           ng-bind="concept.attributes.title || concept.name"></span>
                 </a>
