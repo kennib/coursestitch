@@ -1,39 +1,41 @@
-<div ng-if="!editMode">
-    <span class="pull-right">
-        <button class="btn" title="{{ resource.inMap(map) ? 'Remove from map' : 'Add to map' }}"
-                ng-class="{'btn-primary': !resource.inMap(map),
-                           'btn-danger':   resource.inMap(map)}"
-                ng-click="resource.toggleMap(map)">
+<div class="row">
+    <div class="col-xs-11" ng-if="!editMode">
+        <div class="panel-image">
+            <div class="img-circle">
+                <a ng-href="{{ resource.attributes.url }}">
+                    <img ng-src="{{ resource | resourceImageURL }}" alt="{{ resource.attributes.title }}" width="60px">
+                </a>
+            </div>
+        </div>
+        <a ng-href="{{ resource.attributes.url }}">
+            <h4>
+                <span ng-bind="resource.attributes.title"></span>
+                <small ng-bind="resource.attributes.subtitle"></small>
+            </h4>
+        </a>
+    </div>
+
+    <div class="col-xs-11" ng-if="editMode">
+        <form role="form">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input id="title" class="form-control"
+                       ng-model="resource.attributes.title"></input>
+
+                <label for="subtitle">Subtitle</label>
+                <input id="subtitle" class="form-control"
+                       ng-model="resource.attributes.subtitle"></input>
+            </div>
+        </form>
+    </div>
+
+    <span class="col-xs-1">
+        <button class="btn pull-right" title="{{ editMode ? 'Preview resource' : 'Edit resource' }}"
+                ng-class="{'btn-primary': editMode}"
+                ng-click="setEditMode(!editMode)">
             <i ng-class="{'glyphicon': true,
-                          'glyphicon-plus': !resource.inMap(map),
-                          'glyphicon-minus': resource.inMap(map)}"></i>
+                          'glyphicon-edit': !editMode,
+                          'glyphicon-eye-open': editMode}"></i>
         </button>
     </span>
-    <div class="panel-image">
-        <div class="img-circle">
-            <a ng-href="{{ resource.attributes.url }}">
-                <img ng-src="{{ resource | resourceImageURL }}" alt="{{ resource.attributes.title }}" width="60px">
-            </a>
-        </div>
-    </div>
-    <a ng-href="{{ resource.attributes.url }}">
-        <h4>
-            <span ng-bind="resource.attributes.title"></span>
-            <small ng-bind="resource.attributes.subtitle"></small>
-        </h4>
-    </a>
-</div>
-
-<div ng-if="editMode">
-    <form role="form">
-        <div class="form-group">
-            <label for="title">Title</label>
-            <input id="title" class="form-control"
-                   ng-model="resource.attributes.title"></input>
-
-            <label for="subtitle">Subtitle</label>
-            <input id="subtitle" class="form-control"
-                   ng-model="resource.attributes.subtitle"></input>
-        <div>
-    </form>
 </div>
