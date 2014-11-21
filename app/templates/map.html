@@ -4,13 +4,23 @@
     <div ng-switch-when="loaded">
         <ng-include src="'templates/map-header.html'"></ng-include>
 
-        <div class="row" ng-show="resources.length == 0">
-            <center>
-                <p>This map is empty! Add some resources using the form above.</p>
-            </center>
-        </div>
-        <div class="row" ng-show="resources.length > 0">
-            <ng-include src="'templates/resources.html'"></ng-include>
+        <div ng-switch="viewType">
+            <div ng-switch-when="resource">
+                <resource resource="resource" map="map"></resource>
+            </div>
+            <div ng-switch-when="concept">
+                <concept concept="concept" map="map"></concept>
+            </div>
+            <div ng-switch-default>
+                <div class="row" ng-show="resources.length == 0">
+                    <center>
+                        <p>This map is empty! Add some resources using the form above.</p>
+                    </center>
+                </div>
+                <div class="row" ng-show="resources.length > 0">
+                    <ng-include src="'templates/resources.html'"></ng-include>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -168,35 +168,6 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
         });
     };
 
-    $scope.settingView = false;
-    $scope.$on('$locationChangeStart', function(event, next) {
-        // Make sure this is a change *not* caused by calling the setView method
-        // (defined below).
-        if (!$scope.settingView) {
-            if (next.match(/\/map\//)) {
-                // Use setView for single-page navigation.
-                var matches = next.match(/\/(concept|resource)\/([^\/]+)/);
-                if (matches) {
-                    // Stop regular navigation within a map view.
-                    event.preventDefault();
-
-                    // We're trying to view a single concept/resource.
-                    // HACK: This is a copy of the code that's in setView :(.
-                    $scope.viewType = matches[1];
-                    $scope.viewId = matches[2];
-                } else {
-                    // The lack of the above regex fragment indicates we're
-                    // viewing a map, with no particular map/concept.
-                    $scope.settingView = false;
-                    $scope.setView();
-                }
-            }
-        }
-
-        // And register that we have completed our setView process.
-        $scope.settingView = false;
-    });
-
     getMap(mapId, userId)
     .then(function(map) {
         // The map has been loaded!
@@ -236,27 +207,6 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                 });
             }
         });
-
-        // Function to change map view
-        $scope.setView = function(viewObject) {
-            // settingView flag is used so that we don't block locationChange
-            // events from happening. We want them to happen if they've been
-            // caused by calling setView. THis flag is unset in the locationChange
-            // event.
-            $scope.settingView = true;
-
-            // Update view
-            $scope.viewType = viewObject ? viewObject.className.toLowerCase() : '';
-            $scope.viewId = viewObject ? viewObject.id : '';
-            
-            // Update URL, triggering a locationChange event.
-            var url = $scope.makeURL($scope.map, viewObject).slice(2);
-            $location.path(url, false);
-
-            // Scrolling
-            if ($scope.viewType === 'resource')
-                viewObject.scrollTo();
-        };
 
         // Function to add new resources
         $scope.newResource = function(resourceUrl, mapId) {
