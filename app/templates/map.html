@@ -10,24 +10,7 @@
             </center>
         </div>
         <div class="row" ng-show="resources.length > 0">
-            <div class="view col-md-5"
-                 ng-if="viewType && viewId"
-                 ng-class="{resource: viewType == 'resource', concept: viewType == 'concept'}">
-                <article ng-switch="viewType">
-                    <div ng-switch-when="resource">
-                        <resource map="map" resource="resource" concepts="concepts" set-view="setView"></resource>
-                    </div>
-                    <div ng-switch-when="concept">
-                        <concept map="map" concept="concept" set-view="setView"></concept>
-                    </div>
-                </article>
-            </div>
-            <div class="explorer" ng-class="{'col-md-7': viewType && viewId, 'col-xs-12': !(viewType && viewId)}">
-                <ng-include src="'templates/map-controls.html'"></ng-include>
-                <ng-include src="'templates/map-progress.html'" ng-hide="mapMode"></ng-include>
-                <ng-include src="'templates/resources.html'" ng-hide="mapMode"></ng-include>
-                <ng-include src="'templates/knowledge-map.html'" ng-show="mapMode"></ng-include>
-            </div>
+            <ng-include src="'templates/resources.html'"></ng-include>
         </div>
     </div>
 
