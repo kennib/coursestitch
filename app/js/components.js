@@ -241,12 +241,14 @@ directive('conceptTags', function(Concept, knowledgeMap) {
 
             // Convert concepts into tags
             scope.$watch('concepts', function(concepts) {
-                var tags = concepts
-                .map(function(concept) {
-                    return {name: concept.attributes.title, value: concept};
-                });
+                if (concepts) {
+                    var tags = concepts
+                    .map(function(concept) {
+                        return {name: concept.attributes.title, value: concept};
+                    });
 
-                scope.srcTags = uniqueItems(tags, function(tag) { return tag.name; });
+                    scope.srcTags = uniqueItems(tags, function(tag) { return tag.name; });
+                }
             });
 
             // When the tag input changes update the model

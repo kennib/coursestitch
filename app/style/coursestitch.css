@@ -130,6 +130,41 @@
     height: 80vh;
 }
 
+/* Resource styling and structure */
+.resource h2 {
+    font-size: 40px;
+    margin-top: 0px;
+    padding-top: 10px;
+}
+.resource h2 small {
+    display: block;
+    padding-bottom: 10px;
+}
+
+.navbar-right {
+    margin-right: 15px !important;
+}
+.resource .btn.pull-right {
+    margin: 15px;
+}
+
+.resource .panel-image {
+    float: left;
+    position: relative;
+    margin: 20px;
+}
+
+.resource .panel-image .img-circle {
+    background-color: white;
+}
+
+.resource .panel-image img {
+    height: 85px;
+    width: auto;
+    padding: 15px;
+}
+
+
 /* Understanding Slider */
 understanding-slider .row {
     margin-bottom: -15px;
@@ -149,6 +184,7 @@ understanding-slider label {
 .well.understanding {
     background: white;
 }
+
 
 /* Resource tags */
 resource-concept-tags .list-inline {
