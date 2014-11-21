@@ -85,6 +85,7 @@
 .panel-heading h4 small {
     display: block;
 }
+
 .panel-heading .panel-image {
     float: left;
     position: relative;
@@ -94,7 +95,13 @@
     margin-right: 10px;
     margin-bottom: 20px;
 }
-
+.resource.panel-heading .panel-image {
+    position: initial;
+    margin: 0px;
+}
+.resource.panel-heading .panel-image .img-circle {
+    display: inline-block;
+}
 .panel-heading .panel-image .img-circle {
     background-color: #FAFAFA;
 }
@@ -104,6 +111,7 @@
     padding: 15px;
 }
 .panel-heading .panel-image p {
+    display:inline-block;
     width: 85px;
 
     margin-top: -20px;
@@ -155,17 +163,17 @@
     margin: 15px;
 }
 
-.resource .panel-image {
+.resource .heading-image {
     float: left;
     position: relative;
     margin: 20px;
 }
 
-.resource .panel-image .img-circle {
+.resource .img-circle {
     background-color: white;
 }
 
-.resource .panel-image img {
+.resource img {
     height: 85px;
     width: auto;
     padding: 15px;
