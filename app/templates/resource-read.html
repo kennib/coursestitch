@@ -1,0 +1,13 @@
+<a href="#" ng-href="{{ resource.attributes.url }}" target="_blank">
+    <button class="btn btn-lg btn-primary"
+            ng-switch="resource.attributes.type">
+        <span ng-switch-when="video">
+            <i class="glyphicon glyphicon-facetime-video"></i>
+            Watch it
+        </span>
+        <span ng-switch-default>
+            <i class="glyphicon glyphicon-book"></i>
+            Read it
+        </span>
+    </button>
+</a>
