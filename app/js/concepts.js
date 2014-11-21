@@ -57,8 +57,22 @@ directive('concept', function(makeURL) {
 
             // Watch to see if a concept has been loaded
             scope.$watch('concept', function(concept) {
-                if(concept !== undefined)
+                if(concept !== undefined) {
                     scope.status = 'loaded';
+                    
+                    // Get the understanding of this resource
+                    concept.understandingObj()
+                    .then(function(understanding) {
+                        scope.understanding = understanding;
+                    });
+                }
+            });
+            
+            // Update the understanding as necessary
+            scope.$watch('understanding.attributes.understands', function(understanding, oldUnderstanding) {
+                if (understanding != oldUnderstanding) {
+                    scope.understanding.save(scope.understanding.attributes);
+                }
             });
         },
     };

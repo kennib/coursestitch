@@ -6,7 +6,7 @@
             <li ng-repeat="concept in resource.attributes[tagLabel]">
                 <a ng-href="{{ makeURL(map, concept) }}">
                     <span class="label concept {{ concept.understanding() | result | understandingClass }}"
-                          ng-bind="concept.attributes.title || concept.name"></span>
+                          ng-bind="concept.attributes.title || concept.name || concept.fetch().attributes.title"></span>
                 </a>
             </li>
         </ul>
