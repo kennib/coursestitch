@@ -211,50 +211,6 @@ resource-concept-tags .list-inline {
     background: #fefefe;
 }
 
-/* Animations */
-.resource-summary.ng-move,
-.resource-summary.ng-enter,
-.resource-summary.ng-leave {
-    position: relative;
-    -webkit-transition: all linear 1.0s;
-    transition: all linear 1.0s;
-}
-
-.resource-summary.ng-leave.ng-leave-active,
-.resource-summary.ng-move,
-.resource-summary.ng-enter {
-    opacity: 0;
-    left: 100px;
-}
-
-
-.resource-summary.ng-leave,
-.resource-summary.ng-move.ng-move-active,
-.resource-summary.ng-enter.ng-enter-active {
-    opacity: 1;
-    left: 0px;
-}
-
-/* View Animations */
-.view {
-    -webkit-transition: all linear 0.6s;
-    transition: all linear 0.6s;
-}
-
-.view.ng-move,
-.view.ng-enter,
-.view.ng-leave {
-    position: fixed;
-}
-
-/* Explorer Animations */
-.explorer { 
-    float: right;
-    -webkit-transition: all ease-in 0.6s;
-    transition: all ease-in 0.6s;
-    background: white;
-}
-
 /* OAuth sign up buttons */
 .btn-facebook {
     background-color: #3b5998;
