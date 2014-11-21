@@ -8,7 +8,7 @@
                               'glyphicon-chevron-up': showSummary}"></i>
             </button>
         </span>
-        <a ng-href="{{ makeMapURL(resource) }}">
+        <a ng-href="{{ makeURL(map, resource) }}">
             <div class="panel-image">
                 <p ng-bind-template="{{ resource.understanding() | result | understandingLabel }}"></p>
                 <div class="img-circle">
