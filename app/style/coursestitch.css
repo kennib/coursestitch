@@ -85,6 +85,7 @@
 .panel-heading h4 small {
     display: block;
 }
+
 .panel-heading .panel-image {
     float: left;
     position: relative;
@@ -94,7 +95,13 @@
     margin-right: 10px;
     margin-bottom: 20px;
 }
-
+.resource.panel-heading .panel-image {
+    position: initial;
+    margin: 0px;
+}
+.resource.panel-heading .panel-image .img-circle {
+    display: inline-block;
+}
 .panel-heading .panel-image .img-circle {
     background-color: #FAFAFA;
 }
@@ -104,6 +111,7 @@
     padding: 15px;
 }
 .panel-heading .panel-image p {
+    display:inline-block;
     width: 85px;
 
     margin-top: -20px;
@@ -155,17 +163,17 @@
     margin: 15px;
 }
 
-.resource .panel-image {
+.resource .heading-image {
     float: left;
     position: relative;
     margin: 20px;
 }
 
-.resource .panel-image .img-circle {
+.resource .img-circle {
     background-color: white;
 }
 
-.resource .panel-image img {
+.resource img {
     height: 85px;
     width: auto;
     padding: 15px;
@@ -200,9 +208,6 @@ resource-concept-tags .list-inline {
 
 /* Resource list */
 .resources {
-    overflow-x: hidden;
-    overflow-y: auto;
-    height: 740px;
 }
 
 /* External resources */
@@ -212,50 +217,6 @@ resource-concept-tags .list-inline {
 }
 .media.well[ng-click]:hover {
     background: #fefefe;
-}
-
-/* Animations */
-.resource-summary.ng-move,
-.resource-summary.ng-enter,
-.resource-summary.ng-leave {
-    position: relative;
-    -webkit-transition: all linear 1.0s;
-    transition: all linear 1.0s;
-}
-
-.resource-summary.ng-leave.ng-leave-active,
-.resource-summary.ng-move,
-.resource-summary.ng-enter {
-    opacity: 0;
-    left: 100px;
-}
-
-
-.resource-summary.ng-leave,
-.resource-summary.ng-move.ng-move-active,
-.resource-summary.ng-enter.ng-enter-active {
-    opacity: 1;
-    left: 0px;
-}
-
-/* View Animations */
-.view {
-    -webkit-transition: all linear 0.6s;
-    transition: all linear 0.6s;
-}
-
-.view.ng-move,
-.view.ng-enter,
-.view.ng-leave {
-    position: fixed;
-}
-
-/* Explorer Animations */
-.explorer { 
-    float: right;
-    -webkit-transition: all ease-in 0.6s;
-    transition: all ease-in 0.6s;
-    background: white;
 }
 
 /* OAuth sign up buttons */

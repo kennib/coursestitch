@@ -1,27 +1,30 @@
 <div class="panel resource">
     <div class="panel-heading resource {{ resource.understanding() | result | understandingClass }}">
-        <span class="pull-right">
-            <button class="btn btn-primary" title="{{ showSummary ? 'Hide summary' : 'Show summary' }}"
+    <div class="row">
+        <div class="panel-image col-xs-3 col-sm-2 col-lg-1">
+            <p ng-bind-template="{{ resource.understanding() | result | understandingLabel }}"></p>
+            <div class="img-circle">
+                <img ng-src="{{ resource | resourceImageURL }}" alt="{{ resource.attributes.title }}" width="60px">
+            </div>
+        </div>
+        <div class="col-xs-9 col-sm-8 col-md-9 col-lg-10">
+            <a ng-href="{{ makeURL(map, resource) }}">
+                <h4>
+                    {{ resource.attributes.title }}
+                    <small ng-bind="resource.attributes.subtitle"></small>
+                </h4>
+            </a>
+            <resource-concept-tags resource="resource" map="map"></resource-concept-tags>
+        </div>
+        <div class="hidden-xs col-sm-2 col-md-1">
+            <button class="btn btn-primary pull-right" title="{{ showSummary ? 'Hide summary' : 'Show summary' }}"
                     ng-click="showSummary = !showSummary">
                 <i ng-class="{'glyphicon': true,
                               'glyphicon-chevron-down': !showSummary,
                               'glyphicon-chevron-up': showSummary}"></i>
             </button>
-        </span>
-        <a ng-href="{{ makeURL(map, resource) }}">
-            <div class="panel-image">
-                <p ng-bind-template="{{ resource.understanding() | result | understandingLabel }}"></p>
-                <div class="img-circle">
-                    <img ng-src="{{ resource | resourceImageURL }}" alt="{{ resource.attributes.title }}" width="60px">
-                </div>
-            </div>
-            <h4>
-                {{ resource.attributes.title }}
-                <small ng-bind="resource.attributes.subtitle"></small>
-            </h4>
-        </a>
-        <resource-concept-tags resource="resource" map="map"></resource-concept-tags>
-        <div style="clear: left;"></div>
+        </div>
+    </div>
     </div>
     <div class="panel-body" ng-show="showSummary">
         <blockquote ng-bind="resource.attributes.summary">
