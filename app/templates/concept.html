@@ -1,12 +1,6 @@
 <article ng-switch="status">
-    <ng-include src="'templates/concept-controls.html'"></ng-include>
-
     <div ng-switch-when="loaded">
-        <div class="panel concept">
-            <div class="panel-heading {{ concept.understanding() | result | understandingClass }}"
-                 ng-include="'templates/concept-heading.html'"></div>
-            <ng-include src="'templates/concept-preview.html'"></ng-include>
-        </div>
+        <ng-include src="'templates/concept-heading.html'"></ng-include>
         <ng-include src="'templates/concept-resources.html'"></ng-include>
     </div>
     <loading status="status" ng-switch-default></loading>
