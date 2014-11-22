@@ -122,11 +122,10 @@ directive('resource', function(toggleResource, makeURL, conceptUnderstandingCach
         scope: {
             map: '=',
             resource: '=',
-            setView: '=',
         },
         link: function(scope, elem, attrs) {
             scope.makeURL = makeURL;
-            scope.tags = ["teaches", "requires"];
+            scope.makeMapURL = function(obj) { return scope.makeUrl(scope.map, obj); };
             scope.editMode = false;
 
             // Toggle between edit and view modes
@@ -144,8 +143,11 @@ directive('resource', function(toggleResource, makeURL, conceptUnderstandingCach
                 return scope.resource.fetch();
             };
 
-            scope.$watch('resource', function(resource) {
-                if (resource !== undefined) {
+            scope.$watchCollection('[resource, map]', function() {
+                var resource = scope.resource;
+                var map = scope.map;
+
+                if (resource !== undefined && map !== undefined) {
                     // Resource has been loaded
                     scope.status = 'loaded';
 
@@ -156,7 +158,7 @@ directive('resource', function(toggleResource, makeURL, conceptUnderstandingCach
                     });
 
                     // Get list of concepts for autocompletion
-                    scope.concepts = scope.map.concepts;
+                    scope.concepts = map.concepts;
                 }
             });
 

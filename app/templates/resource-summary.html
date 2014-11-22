@@ -1,29 +1,35 @@
 <div class="panel resource">
-    <div class="panel-heading {{ resource.understanding() | result | understandingClass }}">
-        <span class="pull-right">
-            <button class="btn" title="{{ resource.inMap(map) ? 'Remove from map' : 'Add to map' }}"
-                    ng-class="{'btn-primary': !resource.inMap(map),
-                               'btn-danger':   resource.inMap(map)}"
-                    ng-click="resource.toggleMap(map)">
+    <div class="panel-heading resource {{ resource.understanding() | result | understandingClass }}">
+        <div class="pull-right">
+            <button class="btn btn-primary pull-right" title="{{ showSummary ? 'Hide summary' : 'Show summary' }}"
+                    ng-click="showSummary = !showSummary">
                 <i ng-class="{'glyphicon': true,
-                              'glyphicon-plus': !resource.inMap(map),
-                              'glyphicon-minus': resource.inMap(map)}"></i>
+                              'glyphicon-chevron-down': !showSummary,
+                              'glyphicon-chevron-up': showSummary}"></i>
             </button>
-        </span>
-        <a href ng-click="setView(resource)">
-            <div class="panel-image">
-                <p ng-bind-template="{{ resource.understanding() | result | understandingLabel }}"></p>
-                <div class="img-circle">
-                    <img ng-src="{{ resource | resourceImageURL }}" alt="{{ resource.attributes.title }}" width="60px">
-                </div>
+        </div>
+        <div class="panel-image">
+            <p ng-bind-template="{{ resource.understanding() | result | understandingLabel }}"></p>
+            <div class="img-circle">
+                <img ng-src="{{ resource | resourceImageURL }}" alt="{{ resource.attributes.title }}" width="60px">
             </div>
-            <h4>
-                {{ resource.attributes.title }}
-                <small ng-bind="resource.attributes.subtitle"></small>
-            </h4>
-        </a>
+            <p>
+                <resource-read resource="resource" map="map" size="small"></resource-read>
+            </p>
+        </div>
+        <div class="">
+            <a ng-href="{{ makeURL(map, resource) }}">
+                <h4>
+                    {{ resource.attributes.title }}
+                    <small ng-bind="resource.attributes.subtitle"></small>
+                </h4>
+            </a>
+            <resource-concept-tags resource="resource" map="map"></resource-concept-tags>
+        </div>
+        <div style="clear: both;"></div>
     </div>
-    <div class="panel-body">
+
+    <div class="panel-body" ng-show="showSummary">
         <blockquote ng-bind="resource.attributes.summary">
         </blockquote>
     </div>

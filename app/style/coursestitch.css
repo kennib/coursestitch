@@ -71,6 +71,7 @@
 .panel-heading {
     margin: none;
     padding: 10px;
+    color: white;
 }
 .panel-heading h4,
 .panel-heading p {
@@ -84,17 +85,22 @@
 .panel-heading h4 small {
     display: block;
 }
+
 .panel-heading .panel-image {
     float: left;
     position: relative;
     top: 20px;
+    margin-right: 10px;
 
     text-align: center;
-    margin-right: 10px;
-    margin-bottom: 20px;
 }
-
+.resource.panel-heading .panel-image {
+    top: 0px;
+    padding: 5px;
+}
 .panel-heading .panel-image .img-circle {
+    margin-bottom: 20px;
+
     background-color: #FAFAFA;
 }
 .panel-heading .panel-image img {
@@ -103,6 +109,7 @@
     padding: 15px;
 }
 .panel-heading .panel-image p {
+    display:inline-block;
     width: 85px;
 
     margin-top: -20px;
@@ -110,6 +117,9 @@
 
     font-size: 15px;
     line-height: 1.2;
+}
+.panel-heading .panel-image button {
+    display: inline-block;
 }
 .panel-heading label {
     color: white;
@@ -128,6 +138,48 @@
 #km svg {
     height: 80vh;
 }
+
+/* Concept styling and structure */
+.concept h2 {
+    text-align: center;
+    border-width: 3px !important;
+    border-radius: 8px;
+}
+
+/* Resource styling and structure */
+.resource h2 {
+    font-size: 40px;
+    margin-top: 0px;
+    padding-top: 10px;
+}
+.resource h2 small {
+    display: block;
+    padding-bottom: 10px;
+}
+
+.navbar-right {
+    margin-right: 15px !important;
+}
+.resource .btn.pull-right {
+    margin: 15px;
+}
+
+.resource .heading-image {
+    float: left;
+    position: relative;
+    margin: 20px;
+}
+
+.resource .img-circle {
+    background-color: white;
+}
+
+.resource img {
+    height: 85px;
+    width: auto;
+    padding: 15px;
+}
+
 
 /* Understanding Slider */
 understanding-slider .row {
@@ -149,11 +201,14 @@ understanding-slider label {
     background: white;
 }
 
+
+/* Resource tags */
+resource-concept-tags .list-inline {
+    display: inline;
+}
+
 /* Resource list */
 .resources {
-    overflow-x: hidden;
-    overflow-y: auto;
-    height: 740px;
 }
 
 /* External resources */
@@ -163,50 +218,6 @@ understanding-slider label {
 }
 .media.well[ng-click]:hover {
     background: #fefefe;
-}
-
-/* Animations */
-.resource-summary.ng-move,
-.resource-summary.ng-enter,
-.resource-summary.ng-leave {
-    position: relative;
-    -webkit-transition: all linear 1.0s;
-    transition: all linear 1.0s;
-}
-
-.resource-summary.ng-leave.ng-leave-active,
-.resource-summary.ng-move,
-.resource-summary.ng-enter {
-    opacity: 0;
-    left: 100px;
-}
-
-
-.resource-summary.ng-leave,
-.resource-summary.ng-move.ng-move-active,
-.resource-summary.ng-enter.ng-enter-active {
-    opacity: 1;
-    left: 0px;
-}
-
-/* View Animations */
-.view {
-    -webkit-transition: all linear 0.6s;
-    transition: all linear 0.6s;
-}
-
-.view.ng-move,
-.view.ng-enter,
-.view.ng-leave {
-    position: fixed;
-}
-
-/* Explorer Animations */
-.explorer { 
-    float: right;
-    -webkit-transition: all ease-in 0.6s;
-    transition: all ease-in 0.6s;
-    background: white;
 }
 
 /* OAuth sign up buttons */

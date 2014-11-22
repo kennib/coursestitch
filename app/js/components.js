@@ -193,6 +193,37 @@ directive('understandingSlider', function($timeout, understandingClassFilter, kn
     };
 }).
 
+directive('resourceRead', function(Concept, makeURL) {
+    return {
+        restrict: 'E',
+        templateUrl: 'templates/resource-read.html',
+        scope: {
+            resource: '=',
+            map: '=',
+            size: '@',
+        },
+        link: function(scope, elem, attrs) {
+            scope.makeURL = makeURL;
+        },
+    };
+}).
+
+directive('resourceConceptTags', function(Concept, makeURL) {
+    return {
+        restrict: 'E',
+        templateUrl: 'templates/resource-tags.html',
+        scope: {
+            resource: '=',
+            map: '=',
+            editMode: '=',
+        },
+        link: function(scope, elem, attrs) {
+            scope.makeURL = makeURL;
+            scope.tags = ["requires", "teaches"];
+        },
+    };
+}).
+
 directive('conceptTags', function(Concept, knowledgeMap) {
     return {
         restrict: 'E',
@@ -225,12 +256,14 @@ directive('conceptTags', function(Concept, knowledgeMap) {
 
             // Convert concepts into tags
             scope.$watch('concepts', function(concepts) {
-                var tags = concepts
-                .map(function(concept) {
-                    return {name: concept.attributes.title, value: concept};
-                });
+                if (concepts) {
+                    var tags = concepts
+                    .map(function(concept) {
+                        return {name: concept.attributes.title, value: concept};
+                    });
 
-                scope.srcTags = uniqueItems(tags, function(tag) { return tag.name; });
+                    scope.srcTags = uniqueItems(tags, function(tag) { return tag.name; });
+                }
             });
 
             // When the tag input changes update the model
