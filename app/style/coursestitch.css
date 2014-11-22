@@ -90,19 +90,17 @@
     float: left;
     position: relative;
     top: 20px;
+    margin-right: 10px;
 
     text-align: center;
-    margin-right: 10px;
-    margin-bottom: 20px;
 }
 .resource.panel-heading .panel-image {
-    position: initial;
-    margin: 0px;
-}
-.resource.panel-heading .panel-image .img-circle {
-    display: inline-block;
+    top: 0px;
+    padding: 5px;
 }
 .panel-heading .panel-image .img-circle {
+    margin-bottom: 20px;
+
     background-color: #FAFAFA;
 }
 .panel-heading .panel-image img {

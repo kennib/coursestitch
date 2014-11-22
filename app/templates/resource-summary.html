@@ -1,14 +1,23 @@
 <div class="panel resource">
     <div class="panel-heading resource {{ resource.understanding() | result | understandingClass }}">
-    <div class="row">
-        <div class="panel-image col-xs-3 col-sm-2 col-lg-1">
+        <div class="pull-right">
+            <button class="btn btn-primary pull-right" title="{{ showSummary ? 'Hide summary' : 'Show summary' }}"
+                    ng-click="showSummary = !showSummary">
+                <i ng-class="{'glyphicon': true,
+                              'glyphicon-chevron-down': !showSummary,
+                              'glyphicon-chevron-up': showSummary}"></i>
+            </button>
+        </div>
+        <div class="panel-image">
             <p ng-bind-template="{{ resource.understanding() | result | understandingLabel }}"></p>
             <div class="img-circle">
                 <img ng-src="{{ resource | resourceImageURL }}" alt="{{ resource.attributes.title }}" width="60px">
             </div>
-            <resource-read resource="resource" map="map" size="small"></resource-read>
+            <p>
+                <resource-read resource="resource" map="map" size="small"></resource-read>
+            </p>
         </div>
-        <div class="col-xs-9 col-sm-8 col-md-9 col-lg-10">
+        <div class="">
             <a ng-href="{{ makeURL(map, resource) }}">
                 <h4>
                     {{ resource.attributes.title }}
@@ -17,16 +26,9 @@
             </a>
             <resource-concept-tags resource="resource" map="map"></resource-concept-tags>
         </div>
-        <div class="hidden-xs col-sm-2 col-md-1">
-            <button class="btn btn-primary pull-right" title="{{ showSummary ? 'Hide summary' : 'Show summary' }}"
-                    ng-click="showSummary = !showSummary">
-                <i ng-class="{'glyphicon': true,
-                              'glyphicon-chevron-down': !showSummary,
-                              'glyphicon-chevron-up': showSummary}"></i>
-            </button>
-        </div>
+        <div style="clear: both;"></div>
     </div>
-    </div>
+
     <div class="panel-body" ng-show="showSummary">
         <blockquote ng-bind="resource.attributes.summary">
         </blockquote>
