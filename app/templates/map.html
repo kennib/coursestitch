@@ -8,9 +8,24 @@
             <div ng-switch-when="resource">
                 <resource resource="resource" map="map"></resource>
             </div>
+
             <div ng-switch-when="concept">
                 <concept concept="concept" map="map"></concept>
             </div>
+
+            <div ng-switch-when="next">
+                <h3>What's next</h3>
+               
+                <div class="row" ng-show="resources.length == 0">
+                    <center>
+                        <p>Looks like you've learned everything here! Try adding some new resources.</p>
+                    </center>
+                </div>
+                <div class="row" ng-show="resources.length > 0">
+                    <ng-include src="'templates/resources.html'"></ng-include>
+                </div>
+            </div>
+
             <div ng-switch-default>
                 <div class="row" ng-show="resources.length == 0">
                     <center>

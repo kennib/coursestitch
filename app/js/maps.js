@@ -238,4 +238,23 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
             });
         };
     });
+}).
+
+controller('MapNextCtrl', function($scope, $location, $routeParams,
+                                   deurlizeFilter) {
+    var mapId = $routeParams.mapId;
+    var mapTitle = $routeParams.mapTitle;
+    var viewType = 'next';
+
+    $scope.viewType = viewType;
+
+    $scope.map = {
+        id: mapId,
+        attributes: {
+            title: deurlizeFilter(mapTitle),
+        },
+    };
+    $scope.resources = [];
+
+    $scope.status = 'loaded';
 });
