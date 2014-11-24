@@ -1,20 +1,18 @@
 <header class="external-resource">
-    <nav class="navbar navbar-default" role="navigation">
-        <div class="navbar-header">
-            <a class="navbar-brand course-stitch" href="#!/">
+    <nav class="row navbar navbar-default" role="navigation">
+        <div class="col-xs-4 col-sm-6 col-md-3">
+            <a class="course-stitch" href="#!/">
                 <span class="course">course</span><span class="stitch">stitch</span>
             </a>
-            <span class="navbar-brand beta">
+            <span class="beta">
                 <span class="badge palette-peter-river">BETA</span>
             </span>
         </div>
-        <div class="navbar-brand pull-right">
-            <ng-include src="'templates/resource-understanding.html'"></ng-include>
+        <div class="col-xs-8 col-sm-6 col-md-4">
+            <a ng-bind-template="{{ resource.attributes.title }}" ng-href="{{ resourceURL }}"></a>
         </div>
-        <div class="collapse navbar-collapse" id="header-collapse">
-            <ul class="nav navbar-nav"> 
-                <li><a ng-bind-template="External resource: {{ resource.attributes.title }}" ng-href="{{ resourceURL }}"></a></li>
-            </ul>
+        <div class="col-xs-12 col-sm-12 col-md-5">
+            <ng-include src="'templates/resource-understanding.html'"></ng-include>
         </div>
     </nav>
 </header>
