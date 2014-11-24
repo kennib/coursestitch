@@ -120,8 +120,10 @@ filter('join', function() {
     };
 }).
 
-controller('ExternalCtrl', function($scope, $routeParams, $sce,
+controller('ExternalCtrl', function($scope, $routeParams, $sce, makeURL,
                                     getMap, resourceCache) {
+    $scope.makeURL = makeURL;
+
     var mapId = $routeParams.mapId;
     var mapTitle = $routeParams.mapTitle;
     var viewType = $routeParams.viewType;
@@ -132,6 +134,9 @@ controller('ExternalCtrl', function($scope, $routeParams, $sce,
     // Get map
     $scope.map = {
         id: mapId,
+        attributes: {
+            title: mapTitle,
+        },
     };
 
     // Get resource
