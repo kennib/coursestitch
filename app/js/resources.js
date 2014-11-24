@@ -120,6 +120,57 @@ filter('join', function() {
     };
 }).
 
+controller('ExternalCtrl', function($scope, $routeParams, $sce, makeURL,
+                                    getMap, resourceCache) {
+    $scope.makeURL = makeURL;
+
+    var mapId = $routeParams.mapId;
+    var mapTitle = $routeParams.mapTitle;
+    var viewType = $routeParams.viewType;
+    var viewId = $routeParams.viewId;
+    var viewTitle = $routeParams.viewTitle;
+    var viewSubtitle = $routeParams.viewSubtitle;
+    
+    // Get map
+    $scope.map = {
+        id: mapId,
+        attributes: {
+            title: mapTitle,
+        },
+    };
+
+    // Get resource
+    resourceCache.get(viewId)
+    .then(function(resource) {
+        $scope.resource = resource;
+        $scope.resourceURL = $sce.trustAsResourceUrl(resource.attributes.url);
+    });
+
+    // Finish loading resource/map
+    $scope.$watchCollection('[resource, map]', function() {
+        var resource = $scope.resource;
+        var map = $scope.map;
+
+        if (resource !== undefined && map !== undefined) {
+            // Resource has been loaded
+            $scope.status = 'loaded';
+
+            // Get the understanding of this resource
+            resource.understandingObj()
+            .then(function(understanding) {
+                $scope.understanding = understanding;
+            });
+        }
+    });
+
+    // Update the understanding as necessary
+    $scope.$watch('understanding.attributes.understands', function(understanding, oldUnderstanding) {
+        if (understanding != oldUnderstanding) {
+            $scope.understanding.save($scope.understanding.attributes);
+        }
+    });
+}).
+
 directive('resource', function(toggleResource, makeURL, conceptUnderstandingCache) {
     return {
         restrict: 'E',

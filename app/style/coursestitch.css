@@ -211,13 +211,70 @@ resource-concept-tags .list-inline {
 .resources {
 }
 
-/* External resources */
+/* External resources previews */
 .media.well[ng-click] {
     cursor: pointer;
     box-shadow: 0px 0px 3px rgba(0,0,0, 0.2);
 }
 .media.well[ng-click]:hover {
     background: #fefefe;
+}
+
+/* External resources view */
+header.external-resource {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 110px;
+}
+
+header.external-resource > nav {
+    padding: 10px;
+
+    font-size: 28px;
+    white-space: nowrap;
+}
+
+header.external-resource .course-stitch {
+    font-size: 38px;
+    line-height: 1.0;
+}
+
+header.external-resource .well.understanding {
+    padding: 0px;
+
+    background: inherit;
+    border: none;
+    box-shadow: none;
+}
+
+header.external-resource .ui-slider {
+    margin-bottom: 0px;
+}
+
+iframe.external-resource {
+    position: fixed;
+    top: 110px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+
+    border: none;
+}
+
+@media (min-width: 990px) {
+    header.external-resource {
+        height: 55px;
+    }
+
+    header.external-resource .well.understanding {
+        margin-right: 20px;
+    }
+
+    iframe.external-resource {
+        top: 55px;
+    }
 }
 
 /* OAuth sign up buttons */
