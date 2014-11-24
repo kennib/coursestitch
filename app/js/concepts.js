@@ -15,6 +15,9 @@ service('Concept', function(conceptUnderstandingCache) {
         },
     })
 }).
+service('ConceptUnderstanding', function() {
+    return Parse.Object.extend('ConceptUnderstanding');
+}).
 service('conceptUnderstandingCache', function(objectCache) {
     return objectCache('concept-understanding', function(conceptId, userId) {
         if (userId)
