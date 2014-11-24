@@ -35,6 +35,17 @@
                 <div class="row" ng-show="resources.length > 0">
                     <ng-include src="'templates/resources.html'"></ng-include>
                 </div>
+                <p class="row">
+                    <span ng-if="completedResources(resources)">
+                        Congratulations! You've learned all of the resources in your map.
+                    </span>
+                    <span ng-if="!completedResources(resources)">
+                        Don't want to learn any of the above resources?
+                    </span>
+                    <span>
+                        Take a look at <a ng-href="{{ makeURL(map) }}/next">what you can learn next.</a>
+                    </span>
+                </p>
             </div>
         </div>
     </div>

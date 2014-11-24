@@ -165,7 +165,9 @@ controller('MapsCtrl', function($scope) {
 controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                                getMap, mapCache,
                                resourceCache, newResource, getConcept,
+                               completedResources,
                                knowledgeMap) {
+    $scope.completedResources = completedResources;
     $scope.newResource = newResource;
 
     var mapId = $routeParams.mapId;
