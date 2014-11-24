@@ -165,8 +165,7 @@ controller('MapsCtrl', function($scope) {
 controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                                getMap, mapCache,
                                resourceCache, newResource, getConcept,
-                               completedResources,
-                               knowledgeMap) {
+                               completedResources) {
     $scope.completedResources = completedResources;
     $scope.newResource = newResource;
 
@@ -240,7 +239,6 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                 resourceCache.get($scope.viewId)
                 .then(function(resource) {;
                     $scope.resource = resource;
-                    knowledgeMap.setFocus(resource);
                 });
             } else if ($scope.viewType === 'concept') {
                 getConcept($scope.viewId)
@@ -252,7 +250,6 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                             neededfor: neededfor,
                         };
                     }
-                    knowledgeMap.setFocus(concept);
                 });
             }
         });
@@ -263,9 +260,6 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
             .then(function(resource) {
                 // Reset map cache
                 mapCache.remove(mapId+userId);
-
-                // Add the resource to the map.
-                knowledgeMap.addResource(resource);
 
                 getMap(mapId, userId)
                 .then(function(map) {
