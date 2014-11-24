@@ -120,6 +120,22 @@ filter('join', function() {
     };
 }).
 
+controller('ExternalCtrl', function($scope, $routeParams, $sce,
+                                    resourceCache) {
+    var mapId = $routeParams.mapId;
+    var mapTitle = $routeParams.mapTitle;
+    var viewType = $routeParams.viewType;
+    var viewId = $routeParams.viewId;
+    var viewTitle = $routeParams.viewTitle;
+    var viewSubtitle = $routeParams.viewSubtitle;
+    
+    resourceCache.get(viewId)
+    .then(function(resource) {;
+        $scope.resource = resource;
+        $scope.resourceURL = $sce.trustAsResourceUrl(resource.attributes.url);
+    });
+}).
+
 directive('resource', function(toggleResource, makeURL, conceptUnderstandingCache) {
     return {
         restrict: 'E',

@@ -40,6 +40,10 @@ config(function($routeProvider, $locationProvider) {
     .when('/map/:mapId/:mapTitle?/:viewType/:viewId/:viewTitle?/:viewSubtitle?', {
         templateUrl: 'templates/map.html',
         controller: 'MapCtrl',
+    })
+    .when('/map/:mapId/:mapTitle?/:viewType/:viewId/:viewTitle?/:viewSubtitle?/view', {
+        templateUrl: 'templates/external.html',
+        controller: 'ExternalCtrl',
     });
 
     $locationProvider
