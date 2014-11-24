@@ -79,6 +79,13 @@ service('newResource', function() {
         return Parse.Cloud.run('summariseResource', {url: resourceUrl, mapId: mapId});
     };
 }).
+service('completedResources', function(resultFilter) {
+    return function(resources) {
+        return resources.every(function(resource) {
+            return resultFilter(resource.understanding()) == 1.0;
+        });
+    };
+}).
 service('toggleResource', function() {
     return function(map, resource) {
         var resources = map.get('resources');

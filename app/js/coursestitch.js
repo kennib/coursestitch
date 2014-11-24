@@ -33,6 +33,10 @@ config(function($routeProvider, $locationProvider) {
         templateUrl: 'templates/map.html',
         controller: 'MapCtrl',
     })
+    .when('/map/:mapId/:mapTitle?/next', {
+        templateUrl: 'templates/map.html',
+        controller: 'MapNextCtrl',
+    })
     .when('/map/:mapId/:mapTitle?/:viewType/:viewId/:viewTitle?/:viewSubtitle?', {
         templateUrl: 'templates/map.html',
         controller: 'MapCtrl',

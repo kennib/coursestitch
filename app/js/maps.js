@@ -79,6 +79,53 @@ service('getMap', function(Map, Resource, Concept, fetchMap,
         return mapCache.get(mapId+userId);
     };
 }).
+service('nextResources', function(Map, Resource, Concept, ConceptUnderstanding) {
+    return function(mapId, userId) {
+        // Get resources from this map
+        var mapResources = new Parse.Query(Map)
+            .include('resources')
+            .include('resources.teaches')
+            .include('resources.requires')
+            .get(mapId)
+        .then(function(map) {
+            return map.get('resources');
+        });
+        
+        // Get concepts being taught by this map
+        var taughtConcepts = mapResources.then(function(resources) {
+            var teaches = resources.map(function(resource) {
+                return resource.get('teaches');
+            }).reduce(function(a, b) { return a.concat(b); }, []);
+            
+            return teaches;
+        });
+
+        // Get concepts learned by this user
+        var learnedConcepts = taughtConcepts.then(function(concepts) {
+            return new Parse.Query(ConceptUnderstanding)
+                .containedIn('concept', concepts)
+                .equalTo('user', {__type: 'Pointer', className: "_User", objectId: userId})
+                .include('concept')
+                .find();
+        }).then(function(understandings) {
+            return understandings.map(function(understanding) {
+                return understanding.get('concept');
+            });
+        });
+
+        // Get resources which require the learned concepts
+        var nextResources = Parse.Promise.when(mapResources, learnedConcepts)
+        .then(function(resources, concepts) {
+            var resourceIds = resources.map(function(resource) { return resource.id; })
+            return new Parse.Query(Resource)
+                .containedIn('requires', concepts)
+                .notContainedIn('objectId', resourceIds)
+                .find();
+        });
+
+        return nextResources;
+    }
+}).
 
 filter('topologicalSort', function(requires) {
     return function(resources) {
@@ -117,7 +164,9 @@ controller('MapsCtrl', function($scope) {
 
 controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                                getMap, mapCache,
-                               resourceCache, newResource, getConcept) {
+                               resourceCache, newResource, getConcept,
+                               completedResources) {
+    $scope.completedResources = completedResources;
     $scope.newResource = newResource;
 
     var mapId = $routeParams.mapId;
@@ -231,5 +280,33 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                 });
             });
         };
+    });
+}).
+
+controller('MapNextCtrl', function($scope, $location, $routeParams,
+                                   deurlizeFilter,
+                                   nextResources) {
+    var userId;
+    if (Parse.User.current())
+        userId = Parse.User.current().id
+    else
+        userId = undefined;
+
+    var mapId = $routeParams.mapId;
+    var mapTitle = $routeParams.mapTitle;
+    var viewType = 'next';
+
+    $scope.viewType = viewType;
+
+    $scope.map = {
+        id: mapId,
+        attributes: {
+            title: deurlizeFilter(mapTitle),
+        },
+    };
+
+    nextResources(mapId, userId).then(function(resources) {
+        $scope.status = 'loaded';
+        $scope.resources = resources;
     });
 });
