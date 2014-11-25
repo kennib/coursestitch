@@ -118,6 +118,8 @@ service('nextResources', function(Map, Resource, Concept, ConceptUnderstanding) 
         .then(function(resources, concepts) {
             var resourceIds = resources.map(function(resource) { return resource.id; })
             return new Parse.Query(Resource)
+                .include('teaches')
+                .include('requires')
                 .containedIn('requires', concepts)
                 .notContainedIn('objectId', resourceIds)
                 .find();

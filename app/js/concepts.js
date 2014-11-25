@@ -34,10 +34,14 @@ service('getConcept', function() {
             // Resources this concept can be taught by
             var teachesQuery = new Parse.Query('Resource')
                 .equalTo('teaches', concept)
+                .include('teaches')
+                .include('requires')
                 .find();
             // Resources this concept teaches
             var requiresQuery = new Parse.Query('Resource')
                 .equalTo('requires', concept)
+                .include('teaches')
+                .include('requires')
                 .find();
             return Parse.Promise.when(concept, teachesQuery, requiresQuery);
         });
