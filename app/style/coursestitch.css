@@ -98,6 +98,9 @@
     top: 0px;
     padding: 5px;
 }
+.resource.panel-heading .panel-image .img-circle {
+    margin-bottom: 5px;
+}
 .panel-heading .panel-image .img-circle {
     margin-bottom: 20px;
 
@@ -109,11 +112,8 @@
     padding: 15px;
 }
 .panel-heading .panel-image p {
-    display:inline-block;
+    display: inline-block;
     width: 85px;
-
-    margin-top: -20px;
-    margin-bottom: 5px;
 
     font-size: 15px;
     line-height: 1.2;
