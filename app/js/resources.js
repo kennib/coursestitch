@@ -130,14 +130,19 @@ controller('ExternalCtrl', function($scope, $routeParams, $sce, makeURL,
     var viewId = $routeParams.viewId;
     var viewTitle = $routeParams.viewTitle;
     var viewSubtitle = $routeParams.viewSubtitle;
-    
+
+    // Get user
+    var userId;
+    if (Parse.User.current())
+        userId = Parse.User.current().id
+    else
+        userId = undefined;
+
     // Get map
-    $scope.map = {
-        id: mapId,
-        attributes: {
-            title: mapTitle,
-        },
-    };
+    getMap(mapId, userId)
+    .then(function(map) {
+        $scope.map = map;
+    });
 
     // Get resource
     resourceCache.get(viewId)
@@ -159,7 +164,25 @@ controller('ExternalCtrl', function($scope, $routeParams, $sce, makeURL,
             resource.understandingObj()
             .then(function(understanding) {
                 $scope.understanding = understanding;
+
+                // Move understanding from unread
+                if (understanding.get('understands') == 0)
+                    understanding.set('understands', 0.1);
             });
+
+            // Add the resource to the map
+            var inMap = map.get('resources').findIndex(function(r) { return r.id == resource.id; }) != -1;
+            console.log(map.get('resources'), inMap);
+            if (!inMap) {
+                map.get('resources').push({
+                    __type: 'Pointer',
+                    className: 'Resource',
+                    objectId: resource.id,
+                });
+                map.save({
+                    resources: map.get('resources'),
+                });
+            }
         }
     });
 
