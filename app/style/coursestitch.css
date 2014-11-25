@@ -127,6 +127,10 @@
 .panel-body blockquote {
     margin-bottom: 5px;
 }
+.resource.panel-heading .btn.pull-right {
+    margin: 0px;
+    margin-top: 50px;
+}
 
 /* Map Styling */
 #km {

@@ -1,6 +1,9 @@
 <div class="panel resource">
     <div class="panel-heading resource {{ resource.understanding() | result | understandingClass }}">
         <div class="pull-right">
+            <p>
+                <resource-read resource="resource" map="map"></resource-read>
+            </p>
             <button class="btn btn-primary pull-right" title="{{ showSummary ? 'Hide summary' : 'Show summary' }}"
                     ng-click="showSummary = !showSummary">
                 <i ng-class="{'glyphicon': true,
@@ -13,9 +16,6 @@
             <div class="img-circle">
                 <img ng-src="{{ resource | resourceImageURL }}" alt="{{ resource.attributes.title }}" width="60px">
             </div>
-            <p>
-                <resource-read resource="resource" map="map" size="small"></resource-read>
-            </p>
         </div>
         <div class="">
             <a ng-href="{{ makeURL(map, resource) }}">
