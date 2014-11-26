@@ -172,7 +172,6 @@ controller('ExternalCtrl', function($scope, $routeParams, $sce, makeURL,
 
             // Add the resource to the map
             var inMap = map.get('resources').findIndex(function(r) { return r.id == resource.id; }) != -1;
-            console.log(map.get('resources'), inMap);
             if (!inMap) {
                 map.get('resources').push({
                     __type: 'Pointer',
