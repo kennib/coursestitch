@@ -10,5 +10,5 @@ after_success:
   - echo 'ssh -o StrictHostKeyChecking=no $*' > ssh
   - chmod +x ssh
   - export GIT_SSH='./ssh'
-  - git remote add deploy deploy@104.236.191.162:/var/www
+  - git remote add deploy deploy@104.236.191.162:/home/git
   - '[ "${TRAVIS_BRANCH}" = "master" ] && git push deploy master'
