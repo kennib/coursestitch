@@ -79,6 +79,55 @@ service('getMap', function(Map, Resource, Concept, fetchMap,
         return mapCache.get(mapId+userId);
     };
 }).
+service('nextResources', function(Map, Resource, Concept, ConceptUnderstanding) {
+    return function(mapId, userId) {
+        // Get resources from this map
+        var mapResources = new Parse.Query(Map)
+            .include('resources')
+            .include('resources.teaches')
+            .include('resources.requires')
+            .get(mapId)
+        .then(function(map) {
+            return map.get('resources');
+        });
+        
+        // Get concepts being taught by this map
+        var taughtConcepts = mapResources.then(function(resources) {
+            var teaches = resources.map(function(resource) {
+                return resource.get('teaches');
+            }).reduce(function(a, b) { return a.concat(b); }, []);
+            
+            return teaches;
+        });
+
+        // Get concepts learned by this user
+        var learnedConcepts = taughtConcepts.then(function(concepts) {
+            return new Parse.Query(ConceptUnderstanding)
+                .containedIn('concept', concepts)
+                .equalTo('user', {__type: 'Pointer', className: "_User", objectId: userId})
+                .include('concept')
+                .find();
+        }).then(function(understandings) {
+            return understandings.map(function(understanding) {
+                return understanding.get('concept');
+            });
+        });
+
+        // Get resources which require the learned concepts
+        var nextResources = Parse.Promise.when(mapResources, learnedConcepts)
+        .then(function(resources, concepts) {
+            var resourceIds = resources.map(function(resource) { return resource.id; })
+            return new Parse.Query(Resource)
+                .include('teaches')
+                .include('requires')
+                .containedIn('requires', concepts)
+                .notContainedIn('objectId', resourceIds)
+                .find();
+        });
+
+        return nextResources;
+    }
+}).
 
 filter('topologicalSort', function(requires) {
     return function(resources) {
@@ -118,7 +167,8 @@ controller('MapsCtrl', function($scope) {
 controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                                getMap, mapCache,
                                resourceCache, newResource, getConcept,
-                               knowledgeMap) {
+                               completedResources) {
+    $scope.completedResources = completedResources;
     $scope.newResource = newResource;
 
     var mapId = $routeParams.mapId;
@@ -168,35 +218,6 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
         });
     };
 
-    $scope.settingView = false;
-    $scope.$on('$locationChangeStart', function(event, next) {
-        // Make sure this is a change *not* caused by calling the setView method
-        // (defined below).
-        if (!$scope.settingView) {
-            if (next.match(/\/map\//)) {
-                // Use setView for single-page navigation.
-                var matches = next.match(/\/(concept|resource)\/([^\/]+)/);
-                if (matches) {
-                    // Stop regular navigation within a map view.
-                    event.preventDefault();
-
-                    // We're trying to view a single concept/resource.
-                    // HACK: This is a copy of the code that's in setView :(.
-                    $scope.viewType = matches[1];
-                    $scope.viewId = matches[2];
-                } else {
-                    // The lack of the above regex fragment indicates we're
-                    // viewing a map, with no particular map/concept.
-                    $scope.settingView = false;
-                    $scope.setView();
-                }
-            }
-        }
-
-        // And register that we have completed our setView process.
-        $scope.settingView = false;
-    });
-
     getMap(mapId, userId)
     .then(function(map) {
         // The map has been loaded!
@@ -220,7 +241,6 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                 resourceCache.get($scope.viewId)
                 .then(function(resource) {;
                     $scope.resource = resource;
-                    knowledgeMap.setFocus(resource);
                 });
             } else if ($scope.viewType === 'concept') {
                 getConcept($scope.viewId)
@@ -232,31 +252,9 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                             neededfor: neededfor,
                         };
                     }
-                    knowledgeMap.setFocus(concept);
                 });
             }
         });
-
-        // Function to change map view
-        $scope.setView = function(viewObject) {
-            // settingView flag is used so that we don't block locationChange
-            // events from happening. We want them to happen if they've been
-            // caused by calling setView. THis flag is unset in the locationChange
-            // event.
-            $scope.settingView = true;
-
-            // Update view
-            $scope.viewType = viewObject ? viewObject.className.toLowerCase() : '';
-            $scope.viewId = viewObject ? viewObject.id : '';
-            
-            // Update URL, triggering a locationChange event.
-            var url = $scope.makeURL($scope.map, viewObject).slice(2);
-            $location.path(url, false);
-
-            // Scrolling
-            if ($scope.viewType === 'resource')
-                viewObject.scrollTo();
-        };
 
         // Function to add new resources
         $scope.newResource = function(resourceUrl, mapId) {
@@ -264,9 +262,6 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
             .then(function(resource) {
                 // Reset map cache
                 mapCache.remove(mapId+userId);
-
-                // Add the resource to the map.
-                knowledgeMap.addResource(resource);
 
                 getMap(mapId, userId)
                 .then(function(map) {
@@ -287,5 +282,33 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
                 });
             });
         };
+    });
+}).
+
+controller('MapNextCtrl', function($scope, $location, $routeParams,
+                                   deurlizeFilter,
+                                   nextResources) {
+    var userId;
+    if (Parse.User.current())
+        userId = Parse.User.current().id
+    else
+        userId = undefined;
+
+    var mapId = $routeParams.mapId;
+    var mapTitle = $routeParams.mapTitle;
+    var viewType = 'next';
+
+    $scope.viewType = viewType;
+
+    $scope.map = {
+        id: mapId,
+        attributes: {
+            title: deurlizeFilter(mapTitle),
+        },
+    };
+
+    nextResources(mapId, userId).then(function(resources) {
+        $scope.status = 'loaded';
+        $scope.resources = resources;
     });
 });

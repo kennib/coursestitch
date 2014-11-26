@@ -33,9 +33,17 @@ config(function($routeProvider, $locationProvider) {
         templateUrl: 'templates/map.html',
         controller: 'MapCtrl',
     })
+    .when('/map/:mapId/:mapTitle?/next', {
+        templateUrl: 'templates/map.html',
+        controller: 'MapNextCtrl',
+    })
     .when('/map/:mapId/:mapTitle?/:viewType/:viewId/:viewTitle?/:viewSubtitle?', {
         templateUrl: 'templates/map.html',
         controller: 'MapCtrl',
+    })
+    .when('/map/:mapId/:mapTitle?/:viewType/:viewId/:viewTitle?/:viewSubtitle?/view', {
+        templateUrl: 'templates/external.html',
+        controller: 'ExternalCtrl',
     });
 
     $locationProvider
@@ -66,20 +74,6 @@ config(function($authProvider) {
         clientId: '580207549424-oss6pia8ldpj7rps65afh18johr1vp2q.apps.googleusercontent.com',
     });
 }).
-
-run(['$route', '$rootScope', '$location', function ($route, $rootScope, $location) {
-    var original = $location.path;
-    $location.path = function (path, reload) {
-        if (reload === false) {
-            var lastRoute = $route.current;
-            var un = $rootScope.$on('$locationChangeSuccess', function () {
-                $route.current = lastRoute;
-                un();
-            });
-        }
-        return original.apply($location, [path]);
-    };
-}]).
 
 service('objectCache', function($cacheFactory) {
     // Return an object which caches or fetches objects
@@ -135,10 +129,13 @@ service('makeURL', function(urlizeFilter) {
     // The return string should match the URL format given in
     // the routeProvider above.
     return function(mapObject, viewObject) {
-        var fields = [
-            mapObject.id,
-            urlizeFilter(mapObject.attributes.title)
-        ];
+        var fields = [];
+        if (mapObject) {
+            fields = fields.concat([
+                mapObject.id,
+                urlizeFilter(mapObject.attributes.title)
+            ]);
+        }
         if (viewObject) {
             fields = fields.concat([   
                 viewObject.className.toLowerCase(),

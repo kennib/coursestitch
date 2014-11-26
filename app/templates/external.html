@@ -1,0 +1,22 @@
+<header class="external-resource">
+    <nav class="row navbar navbar-default" role="navigation">
+        <div class="col-xs-4 col-sm-6 col-md-3">
+            <i class="glyphicon glyphicon-arrow-left"></i>
+            <a class="course-stitch" ng-href="{{ makeURL(map, resource) }}">
+                <span class="course">course</span><span class="stitch">stitch</span>
+            </a>
+            <span class="beta">
+                <span class="badge palette-peter-river">BETA</span>
+            </span>
+        </div>
+        <div class="col-xs-8 col-sm-6 col-md-4">
+            <a ng-bind-template="{{ resource.attributes.title }}" ng-href="{{ resourceURL }}"></a>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-5">
+            <ng-include src="'templates/resource-understanding.html'"></ng-include>
+        </div>
+    </nav>
+</header>
+
+<iframe class="external-resource" ng-src="{{ resourceURL }}">
+</iframe>

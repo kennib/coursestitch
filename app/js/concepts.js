@@ -15,6 +15,9 @@ service('Concept', function(conceptUnderstandingCache) {
         },
     })
 }).
+service('ConceptUnderstanding', function() {
+    return Parse.Object.extend('ConceptUnderstanding');
+}).
 service('conceptUnderstandingCache', function(objectCache) {
     return objectCache('concept-understanding', function(conceptId, userId) {
         if (userId)
@@ -31,10 +34,14 @@ service('getConcept', function() {
             // Resources this concept can be taught by
             var teachesQuery = new Parse.Query('Resource')
                 .equalTo('teaches', concept)
+                .include('teaches')
+                .include('requires')
                 .find();
             // Resources this concept teaches
             var requiresQuery = new Parse.Query('Resource')
                 .equalTo('requires', concept)
+                .include('teaches')
+                .include('requires')
                 .find();
             return Parse.Promise.when(concept, teachesQuery, requiresQuery);
         });
@@ -57,8 +64,22 @@ directive('concept', function(makeURL) {
 
             // Watch to see if a concept has been loaded
             scope.$watch('concept', function(concept) {
-                if(concept !== undefined)
+                if(concept !== undefined) {
                     scope.status = 'loaded';
+                    
+                    // Get the understanding of this resource
+                    concept.understandingObj()
+                    .then(function(understanding) {
+                        scope.understanding = understanding;
+                    });
+                }
+            });
+            
+            // Update the understanding as necessary
+            scope.$watch('understanding.attributes.understands', function(understanding, oldUnderstanding) {
+                if (understanding != oldUnderstanding) {
+                    scope.understanding.save(scope.understanding.attributes);
+                }
             });
         },
     };

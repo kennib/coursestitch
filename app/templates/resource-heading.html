@@ -1,39 +1,36 @@
-<div ng-if="!editMode">
-    <span class="pull-right">
-        <button class="btn" title="{{ resource.inMap(map) ? 'Remove from map' : 'Add to map' }}"
-                ng-class="{'btn-primary': !resource.inMap(map),
-                           'btn-danger':   resource.inMap(map)}"
-                ng-click="resource.toggleMap(map)">
-            <i ng-class="{'glyphicon': true,
-                          'glyphicon-plus': !resource.inMap(map),
-                          'glyphicon-minus': resource.inMap(map)}"></i>
-        </button>
-    </span>
-    <div class="panel-image">
-        <div class="img-circle">
-            <a ng-href="{{ resource.attributes.url }}">
-                <img ng-src="{{ resource | resourceImageURL }}" alt="{{ resource.attributes.title }}" width="60px">
-            </a>
+<div class="row">
+    <div class="col-xs-12" ng-if="!editMode">
+        <div class="heading-image">
+            <div class="img-circle">
+                <a ng-href="{{ makeURL(map, resource) }}/view" target="_blank">
+                    <img ng-src="{{ resource | resourceImageURL }}" alt="{{ resource.attributes.title }}" width="60px">
+                </a>
+            </div>
         </div>
+        <button class="btn pull-right" title="Edit resource"
+                ng-click="setEditMode(true)">
+            <i class="glyphicon glyphicon-edit"></i>
+        </button>
+    
+        <a ng-href="{{ makeURL(map, resource) }}/view" target="_blank">
+            <h2 class="resource {{ resource.understanding() | result | understandingClass }}">
+                <span ng-bind="resource.attributes.title"></span>
+                <small ng-bind="resource.attributes.subtitle"></small>
+            </h2>
+        </a>
     </div>
-    <a ng-href="{{ resource.attributes.url }}">
-        <h4>
-            <span ng-bind="resource.attributes.title"></span>
-            <small ng-bind="resource.attributes.subtitle"></small>
-        </h4>
-    </a>
-</div>
 
-<div ng-if="editMode">
-    <form role="form">
-        <div class="form-group">
-            <label for="title">Title</label>
-            <input id="title" class="form-control"
-                   ng-model="resource.attributes.title"></input>
+    <div class="col-xs-12" ng-if="editMode">
+        <form role="form">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input id="title" class="form-control"
+                       ng-model="resource.attributes.title"></input>
 
-            <label for="subtitle">Subtitle</label>
-            <input id="subtitle" class="form-control"
-                   ng-model="resource.attributes.subtitle"></input>
-        <div>
-    </form>
+                <label for="subtitle">Subtitle</label>
+                <input id="subtitle" class="form-control"
+                       ng-model="resource.attributes.subtitle"></input>
+            </div>
+        </form>
+    </div>
 </div>

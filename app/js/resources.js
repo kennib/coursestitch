@@ -1,6 +1,6 @@
 angular.module('coursestitch-resources', ['decipher.tags', 'ui.bootstrap.typeahead']).
 
-service('Resource', function(resourceUnderstandingCache, knowledgeMap) {
+service('Resource', function(resourceUnderstandingCache) {
     return Parse.Object.extend('Resource', {
         understandingObj: function() {
             var user = Parse.User.current();
@@ -34,12 +34,10 @@ service('Resource', function(resourceUnderstandingCache, knowledgeMap) {
             // Add the resource if it was missing from the map
             if (index === -1) {
                 resources.push(this);
-                knowledgeMap.addResource(this);
             }
             // Remove the resource if it was in the map
             else {
                 resources.splice(index, 1);
-                knowledgeMap.removeResource(this);
             }
             
             // Save map to the server
@@ -81,6 +79,13 @@ service('newResource', function() {
         return Parse.Cloud.run('summariseResource', {url: resourceUrl, mapId: mapId});
     };
 }).
+service('completedResources', function(resultFilter) {
+    return function(resources) {
+        return resources.every(function(resource) {
+            return resultFilter(resource.understanding()) == 1.0;
+        });
+    };
+}).
 service('toggleResource', function() {
     return function(map, resource) {
         var resources = map.get('resources');
@@ -115,6 +120,79 @@ filter('join', function() {
     };
 }).
 
+controller('ExternalCtrl', function($scope, $routeParams, $sce, makeURL,
+                                    getMap, resourceCache) {
+    $scope.makeURL = makeURL;
+
+    var mapId = $routeParams.mapId;
+    var mapTitle = $routeParams.mapTitle;
+    var viewType = $routeParams.viewType;
+    var viewId = $routeParams.viewId;
+    var viewTitle = $routeParams.viewTitle;
+    var viewSubtitle = $routeParams.viewSubtitle;
+
+    // Get user
+    var userId;
+    if (Parse.User.current())
+        userId = Parse.User.current().id
+    else
+        userId = undefined;
+
+    // Get map
+    getMap(mapId, userId)
+    .then(function(map) {
+        $scope.map = map;
+    });
+
+    // Get resource
+    resourceCache.get(viewId)
+    .then(function(resource) {
+        $scope.resource = resource;
+        $scope.resourceURL = $sce.trustAsResourceUrl(resource.attributes.url);
+    });
+
+    // Finish loading resource/map
+    $scope.$watchCollection('[resource, map]', function() {
+        var resource = $scope.resource;
+        var map = $scope.map;
+
+        if (resource !== undefined && map !== undefined) {
+            // Resource has been loaded
+            $scope.status = 'loaded';
+
+            // Get the understanding of this resource
+            resource.understandingObj()
+            .then(function(understanding) {
+                $scope.understanding = understanding;
+
+                // Move understanding from unread
+                if (understanding.get('understands') == 0)
+                    understanding.set('understands', 0.1);
+            });
+
+            // Add the resource to the map
+            var inMap = map.get('resources').findIndex(function(r) { return r.id == resource.id; }) != -1;
+            if (!inMap) {
+                map.get('resources').push({
+                    __type: 'Pointer',
+                    className: 'Resource',
+                    objectId: resource.id,
+                });
+                map.save({
+                    resources: map.get('resources'),
+                });
+            }
+        }
+    });
+
+    // Update the understanding as necessary
+    $scope.$watch('understanding.attributes.understands', function(understanding, oldUnderstanding) {
+        if (understanding != oldUnderstanding) {
+            $scope.understanding.save($scope.understanding.attributes);
+        }
+    });
+}).
+
 directive('resource', function(toggleResource, makeURL, conceptUnderstandingCache) {
     return {
         restrict: 'E',
@@ -122,11 +200,10 @@ directive('resource', function(toggleResource, makeURL, conceptUnderstandingCach
         scope: {
             map: '=',
             resource: '=',
-            setView: '=',
         },
         link: function(scope, elem, attrs) {
             scope.makeURL = makeURL;
-            scope.tags = ["teaches", "requires"];
+            scope.makeMapURL = function(obj) { return scope.makeUrl(scope.map, obj); };
             scope.editMode = false;
 
             // Toggle between edit and view modes
@@ -144,8 +221,11 @@ directive('resource', function(toggleResource, makeURL, conceptUnderstandingCach
                 return scope.resource.fetch();
             };
 
-            scope.$watch('resource', function(resource) {
-                if (resource !== undefined) {
+            scope.$watchCollection('[resource, map]', function() {
+                var resource = scope.resource;
+                var map = scope.map;
+
+                if (resource !== undefined && map !== undefined) {
                     // Resource has been loaded
                     scope.status = 'loaded';
 
@@ -156,7 +236,7 @@ directive('resource', function(toggleResource, makeURL, conceptUnderstandingCach
                     });
 
                     // Get list of concepts for autocompletion
-                    scope.concepts = scope.map.concepts;
+                    scope.concepts = map.concepts;
                 }
             });
 

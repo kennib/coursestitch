@@ -1,12 +1,3 @@
-<ul class="nav nav-tabs nav-justified" role="tablist">
-    <li ng-class="{active: !editMode}">
-        <a href ng-click="setEditMode(false)">Resource</a>
-    </li>
-    <li ng-class="{active: editMode}">
-        <a href ng-click="setEditMode(true)">Edit</a>
-    </li>
-</ul>
-
 <div class="navbar navbar-default"
      ng-if="editMode">
     <div class="navbar-text">
@@ -18,5 +9,11 @@
                        idle-style="btn-primary" success-style="btn-success"
                        idle-icon="glyphicon glyphicon-floppy-disk" pending-icon="fui-time" success-icon="fui-check" error-icon="fui-cross">
         </action-button>
+    </div>
+    <div class="navbar-text navbar-right">
+        <button class="btn btn-primary" title="Preview resource"
+                ng-click="setEditMode(false)">
+            <i class="glyphicon glyphicon-eye-open"></i>
+        </button>
     </div>
 </div>
