@@ -1,15 +1,16 @@
 <div class="panel resource">
     <div class="panel-heading resource {{ resource.understanding() | result | understandingClass }}">
-        <div class="pull-right">
+        <div class="pull-right text-right">
             <p>
                 <resource-read resource="resource" map="map"></resource-read>
             </p>
-            <button class="btn btn-primary pull-right" title="{{ showSummary ? 'Hide summary' : 'Show summary' }}"
-                    ng-click="showSummary = !showSummary">
-                <i ng-class="{'glyphicon': true,
-                              'glyphicon-chevron-down': !showSummary,
-                              'glyphicon-chevron-up': showSummary}"></i>
-            </button>
+            <p ng-hide="!resource.attributes.summary.trim()">
+                <button class="btn btn-primary" title="{{ showSummary ? 'Hide summary' : 'Show summary' }}"
+                        ng-click="showSummary = !showSummary">
+                    <i class="glyphicon glyphicon-align-left"></i>
+                    Info
+                </button>
+            </p>
         </div>
         <div class="panel-image">
             <div class="img-circle">
