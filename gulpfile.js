@@ -125,3 +125,11 @@ gulp.task('server', function() {
 });
 
 gulp.task('dev-server', ['server', 'watch']);
+
+gulp.task('prod-server', function() {
+    connect.server({
+        root: paths.app.base.path,
+        port: 80,
+        livereload: true,
+    });
+});
