@@ -10,3 +10,5 @@ To run (assuming you have npm installed):
 ```
 
 Then navigate to localhost:8000 in your nearest web browser.
+
+This project is sponsored by [NICTA](http://nicta.com.au/).
