@@ -12,3 +12,4 @@ after_success:
   - export GIT_SSH='./ssh'
   - git remote add deploy deploy@104.236.191.162:/home/deploy/git
   - '[ "${TRAVIS_BRANCH}" = "master" ] && git push deploy master'
+  - '[ "${TRAVIS_BRANCH}" = "staging" ] && git push deploy staging'
