@@ -191,7 +191,7 @@ directive('understandingSlider', function($timeout, understandingClassFilter) {
     };
 }).
 
-directive('resourceRead', function(Concept, makeURL, $location) {
+directive('resourceRead', function(Concept) {
     return {
         restrict: 'E',
         templateUrl: 'templates/resource-read.html',
@@ -199,12 +199,6 @@ directive('resourceRead', function(Concept, makeURL, $location) {
             resource: '=',
             map: '=',
             size: '@',
-        },
-        link: function(scope, elem, attrs) {
-            scope.makeURL = makeURL;
-            scope.setLocation = function(loc) {
-                $location.path(loc.replace("#!/",""));
-            };
         },
     };
 }).
