@@ -211,7 +211,7 @@ directive('resourceRead', function(Concept) {
                     .then(function(understanding) {
                         // Move understanding from unread
                         if (understanding.get('understands') == 0)
-                            understanding.set('understands', 0.1).save();
+                            understanding.set('understands', 0.001).save();
                     });
 
                     // Is this resource already inside our personal map?
