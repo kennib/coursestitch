@@ -191,7 +191,7 @@ directive('understandingSlider', function($timeout, understandingClassFilter) {
     };
 }).
 
-directive('resourceRead', function(Concept) {
+directive('resourceRead', function(Concept, mapCache) {
     return {
         restrict: 'E',
         templateUrl: 'templates/resource-read.html',
@@ -215,12 +215,12 @@ directive('resourceRead', function(Concept) {
                     });
 
                     // Is this resource already inside our personal map?
-                    console.log(scope);
                     var inMap = map.get('resources').findIndex(function(r) {
                         return r.id == resource.id;
                     }) != -1;
 
                     if (!inMap) {
+                        mapCache.remove(map.id+Parse.User.current().id);
                         // Add the resource to the map
                         map.get('resources').push({
                             __type: 'Pointer',
