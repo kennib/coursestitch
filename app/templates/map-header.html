@@ -1,57 +1,66 @@
 <div class="page-header">
-    <a ng-href="{{ makeURL(map) }}" style="cursor: pointer;">
-        <h1 ng-bind="map.attributes.title"></h1>
-    </a>
-    <button class="btn" ng-class="{'btn-primary': editMode, 'btn-default': !editMode}"
-            ng-click="editMode = !editMode">
-        <i class="glyphicon glyphicon-edit"></i>
-    </button>
+    <div class="row">
+        <div class="col-md-11">
+            <a ng-href="{{ makeURL(map) }}" style="cursor: pointer;">
+                <h1 ng-bind="map.attributes.title" ng-if="!editMode"></h1>
+            </a>
+            <input type="text" class="form-control"
+                   placeholder="Name your map..."
+                   ng-model="map.attributes.title" ng-if="editMode">
+        </div>
+        <div class="input-group">
+            <span class="input-group=btn">
+                <button class="btn" ng-class="{'btn-primary': editMode, 'btn-default': !editMode}"
+                        ng-click="editMode = !editMode">
+                    <i class="glyphicon glyphicon-edit"></i> Edit
+                </button>
+            </span>
+        </div>
+    </div>
 </div>
 
-<div class="well"
-     ng-if="editMode">
-    <div class="row">
-        <div class="col-md-4">
-            <input type="text" class="form-control"
-                    placeholder="Name your map..."
-                    ng-model="map.attributes.title">
-        </div>
+<div class="row">
+    <div class="col-md-12">
+        <p ng-bind="map.attributes.summary" ng-if="!editMode"></p>
+        <p>
+            <textarea class="form-control"
+                placeholder="Describe your map"
+                rows="3"
+                ng-model="map.attributes.summary"
+                ng-if="editMode">
+            </textarea>
+        </p>
+    </div>
+</div>
+<div class="row" ng-if="editMode">
+    <div class="col-md-12">
+        <p>
+            <action-button action="resetMapMeta()" label="Reset"
+                        idle-style="btn-inverse"
+                        idle-icon="glyphicon glyphicon-refresh" pending-icon="fui-time">
+            </action-button>
+            <action-button action="saveMapMeta()" label="Save"
+                        idle-style="btn-primary" success-style="btn-success"
+                        idle-icon="glyphicon glyphicon-floppy-disk" pending-icon="fui-time" success-icon="fui-check" error-icon="fui-cross">
+            </action-button>
+        </p>
+    </div>
+</div>
 
-        <div class="col-md-8">
+<div class="well">
+    <div class="row">
+        <div class="col-md-12">
             <div class="input-group">
                 <input type="text" class="form-control"
-                    placeholder="Paste in a resource url"
+                    placeholder="Paste in a resource url to add it to the map"
                     ng-model="newResourceUrl">
                 <span class="input-group-btn">
-                    <action-button action="newResource(newResourceUrl, map.id)" label=""
+                    <action-button action="newResource(newResourceUrl, map.id)" label="Add resource"
                                 idle-style="btn-primary" success-style="btn-success"
                                 idle-icon="fui-plus" pending-icon="fui-time" success-icon="fui-check" error-icon="fui-cross">
                     </action-button>
                 </span>
             </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <textarea class="form-control"
-                placeholder="Describe your map"
-                rows="3"
-                ng-model="map.attributes.summary">
-            </textarea>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="navbar-text navbar-right">
-            <action-button action="resetMapMeta()" label="reset"
-                        idle-style="btn-inverse"
-                        idle-icon="glyphicon glyphicon-refresh" pending-icon="fui-time">
-            </action-button>
-            <action-button action="saveMapMeta()" label="save"
-                        idle-style="btn-primary" success-style="btn-success"
-                        idle-icon="glyphicon glyphicon-floppy-disk" pending-icon="fui-time" success-icon="fui-check" error-icon="fui-cross">
-            </action-button>
         </div>
     </div>
 </div>

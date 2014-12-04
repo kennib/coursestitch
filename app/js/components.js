@@ -245,6 +245,7 @@ directive('resourceConceptTags', function(Concept, makeURL) {
             resource: '=',
             map: '=',
             editMode: '=',
+            concepts: '=',
         },
         link: function(scope, elem, attrs) {
             scope.makeURL = makeURL;
