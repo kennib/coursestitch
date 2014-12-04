@@ -286,29 +286,36 @@ controller('MapCtrl', function($scope, $location, $routeParams, deurlizeFilter,
 }).
 
 controller('MapNextCtrl', function($scope, $location, $routeParams,
-                                   deurlizeFilter,
+                                   getMap, deurlizeFilter,
                                    nextResources) {
+    var mapId = $routeParams.mapId;
+    var mapTitle = $routeParams.mapTitle;
+    var viewType = 'next';
+
     var userId;
     if (Parse.User.current())
         userId = Parse.User.current().id
     else
         userId = undefined;
 
-    var mapId = $routeParams.mapId;
-    var mapTitle = $routeParams.mapTitle;
-    var viewType = 'next';
-
-    $scope.viewType = viewType;
-
-    $scope.map = {
-        id: mapId,
-        attributes: {
-            title: deurlizeFilter(mapTitle),
-        },
+    $scope.makeMapURL = function(id) {
+        return $scope.makeURL($scope.map, id);
     };
 
-    nextResources(mapId, userId).then(function(resources) {
-        $scope.status = 'loaded';
-        $scope.resources = resources;
+    // Map or list mode
+    $scope.mapMode = true;
+    $scope.setMapMode = function(mode) {
+        $scope.mapMode = mode;
+    };
+
+    getMap(mapId, userId)
+    .then(function(map) {
+        // The map has been loaded!
+        $scope.map = map;
+
+        nextResources(mapId, userId).then(function(resources) {
+            $scope.status = 'loaded';
+            $scope.resources = resources;
+        });
     });
 });

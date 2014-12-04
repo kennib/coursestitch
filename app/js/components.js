@@ -191,7 +191,7 @@ directive('understandingSlider', function($timeout, understandingClassFilter) {
     };
 }).
 
-directive('resourceRead', function(Concept, makeURL, $location) {
+directive('resourceRead', function(Concept, mapCache) {
     return {
         restrict: 'E',
         templateUrl: 'templates/resource-read.html',
@@ -201,9 +201,37 @@ directive('resourceRead', function(Concept, makeURL, $location) {
             size: '@',
         },
         link: function(scope, elem, attrs) {
-            scope.makeURL = makeURL;
-            scope.setLocation = function(loc) {
-                $location.path(loc.replace("#!/",""));
+            scope.read = function() {
+                var resource = scope.resource;
+                var map = scope.map;
+
+                if (resource !== undefined && map !== undefined) {
+                    // Get the understanding of this resource
+                    resource.understandingObj()
+                    .then(function(understanding) {
+                        // Move understanding from unread
+                        if (understanding.get('understands') == 0)
+                            understanding.set('understands', 0.001).save();
+                    });
+
+                    // Is this resource already inside our personal map?
+                    var inMap = map.get('resources').findIndex(function(r) {
+                        return r.id == resource.id;
+                    }) != -1;
+
+                    if (!inMap) {
+                        mapCache.remove(map.id+Parse.User.current().id);
+                        // Add the resource to the map
+                        map.get('resources').push({
+                            __type: 'Pointer',
+                            className: 'Resource',
+                            objectId: resource.id,
+                        });
+                        map.save({
+                            resources: map.get('resources'),
+                        });
+                    }
+                }
             };
         },
     };
