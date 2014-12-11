@@ -48,6 +48,14 @@ service('getConcept', function() {
         return conceptQuery;
     };
 }).
+service('getAllConcepts', function() {
+    return function() {
+        var conceptQuery = new Parse.Query('Concept')
+            .find();
+
+        return conceptQuery;
+    };
+}).
 
 directive('concept', function(makeURL) {
     return {
