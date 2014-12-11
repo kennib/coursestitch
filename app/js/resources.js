@@ -193,7 +193,7 @@ controller('ExternalCtrl', function($scope, $routeParams, $sce, makeURL,
     });
 }).
 
-directive('resource', function(toggleResource, makeURL, conceptUnderstandingCache) {
+directive('resource', function(toggleResource, makeURL, conceptUnderstandingCache, getAllConcepts) {
     return {
         restrict: 'E',
         templateUrl: 'templates/resource.html',
@@ -235,8 +235,11 @@ directive('resource', function(toggleResource, makeURL, conceptUnderstandingCach
                         scope.understanding = understanding;
                     });
 
-                    // Get list of concepts for autocompletion
-                    scope.concepts = map.concepts;
+                    // Get list of all concepts for autocompletion
+                    getAllConcepts()
+                    .then(function(concepts) {
+                        scope.concepts = concepts;
+                    });
                 }
             });
 
