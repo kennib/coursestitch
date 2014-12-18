@@ -10,6 +10,7 @@ var minifyCss = require('gulp-minify-css');
 var usemin = require('gulp-usemin');
 
 var connect = require('gulp-connect');
+var livereload = require('gulp-livereload');
 
 var paths = {
     app: {
@@ -31,6 +32,7 @@ var paths = {
         templates: [
             'app/templates/**/*.html',
         ],
+        main: 'app/**/app.js',
     },
     build: {
         base: {
@@ -52,18 +54,18 @@ gulp.task('less', function() {
     gulp.src(paths.app.less)
         .pipe(less())
         .pipe(gulp.dest('build/css'))
-        .pipe(connect.reload());
+        .pipe(livereload());
 });
 
 gulp.task('templates', function() {
     gulp.src(paths.app.templates, {base: paths.app.base.path})
         .pipe(gulp.dest(paths.build.base.path))
-        .pipe(connect.reload());
+        .pipe(livereload());
 });
 
 gulp.task('js', function() {
     gulp.src(paths.app.js)
-        .pipe(connect.reload());
+        .pipe(livereload());
 });
 
 gulp.task('usemin', function() {
@@ -75,7 +77,7 @@ gulp.task('usemin', function() {
             js: [jshint.reporter('default'), uglify(), rev()],
         }))
         .pipe(gulp.dest(paths.build.base.path))
-        .pipe(connect.reload());
+        .pipe(livereload());
 });
 
 gulp.task('libcopy', function() {
@@ -110,26 +112,34 @@ gulp.task('test', ['jshint'], function(){
 */
 
 gulp.task('watch', function () {
+    gulp.watch([paths.app.main], livereload);
     gulp.watch([paths.app.templates], ['templates']);
     gulp.watch([paths.app.less], ['less']);
-    gulp.watch([paths.app.js], ['js']);
+    gulp.watch([paths.app.js, paths.app.main], ['js']);
     gulp.watch([paths.app.pages], ['usemin']);
 });
 
-gulp.task('server', function() {
-    connect.server({
-        root: paths.app.base.path,
-        port: 8000,
-        livereload: true,
-    });
+gulp.task('livereload', function() {
+    livereload.listen();
 });
 
-gulp.task('dev-server', ['server', 'watch']);
-
-gulp.task('prod-server', function() {
-    connect.server({
-        root: paths.app.base.path,
-        port: 80,
-        livereload: true,
+var appListen = function(port) {
+    app.listen(port, function() {
+        console.log('App running on port ' + port);
     });
+};
+
+var app;
+gulp.task('server', ['livereload'], function() {
+    app = require('./app/app.js').app;
+});
+
+gulp.task('dev-server', ['server', 'watch'], function() {
+    app.set('port', 8000);
+    appListen(app.get('port'));
+});
+
+gulp.task('prod-server', ['server', 'watch'], function() {
+    app.set('port', 80);
+    appListen(app.get('port'));
 });
