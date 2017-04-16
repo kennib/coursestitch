@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/kennib/coursestitch.png?label=ready&title=Ready)](https://waffle.io/kennib/coursestitch)
 # course stitch
 [![Build Status](https://travis-ci.org/kennib/coursestitch.svg)](https://travis-ci.org/kennib/coursestitch)
 
